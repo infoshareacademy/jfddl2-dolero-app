@@ -1,0 +1,58 @@
+.sidebar-bg {
+    background-color: #1f2480;
+    height: 100vh;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+}
+
+h2,
+h3,
+p,
+.radio-btn {
+    text-align: center;
+    color: #fff;
+    text-shadow: 2px 2px #000;
+}
+
+h2 {
+    margin: 0 auto 2vh auto;
+    padding-top: 10vh;
+    font-size: 30px;
+}
+
+h3 {
+    margin: 0 auto 8vh auto;
+    font-size: 40px;
+}
+
+p {
+    font-size: 25px;
+}
+
+.radio-btn {
+    text-align: left;
+}
+
+div.btn-group {
+    width: 100%;
+    margin-bottom: 4vh;
+}
+
+.btn-group > .btn {
+    margin-top: 13px;
+}
+
+.btn-warning {
+    width: 100%;
+}
+
+.copyRights {
+    position: absolute;
+    bottom: 2vh;
+    left: 50%;
+    transform: translate(-50%);
+    font-size: 12px;
+}
