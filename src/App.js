@@ -1,23 +1,21 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import { Button } from 'react-bootstrap';
-
+import React, {Component} from 'react';
+import {Grid, Col} from 'react-bootstrap';
 import './App.css';
 import Sidebar from "./Sidebar";
 import Diagrams from "./Diagrams";
 
 class App extends Component {
-  render() {
-    return (
-<div>
-     <Sidebar />
-     <Diagrams />
-</div>
-    );
-  }
+    render() {
+        return (
+            <Grid
+                fluid
+            >
+                <Col xs={6} md={4}><Sidebar/></Col>
+                {/*<Col xs={6} md={8}><Diagrams/></Col>*/}
+
+            </Grid>
+        )
+    }
 }
-
-
-
 
 export default App;
