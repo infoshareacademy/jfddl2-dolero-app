@@ -11,7 +11,8 @@ class App extends Component {
                 fluid
             >
                 <Col xs={6} md={4}><Sidebar/></Col>
-                <Col xs={6} md={8}><Diagrams/></Col>
+                {/*<Col xs={6} md={8}><Diagrams/></Col>*/}
+
             </Grid>
         )
     }
