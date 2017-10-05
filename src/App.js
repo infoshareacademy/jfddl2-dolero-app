@@ -20,7 +20,7 @@ class App extends Component {
                 <Grid fluid>
 
                     <Col xs={6} md={4}><Sidebar/></Col>
-                    <Col xs={6} md={8}>
+                    <Col xs={6} md={8} className='columns'>
                     <MainMenu/>
                     <Route path='/history' component={History}/>
                     {/*<Route path='/diagrams' component={Diagrams}/>*/}

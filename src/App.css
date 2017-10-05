@@ -1,3 +1,9 @@
+.columns {
+  overflow-y: scroll;
+  overflow-x: hidden;
+  height: 100vh;
+}
+
 .container-fluid {
   padding-left: 0;
 }

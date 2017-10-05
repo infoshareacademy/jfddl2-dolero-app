@@ -1,3 +1,7 @@
+.history {
+    overflow: scroll;
+}
+
 input {
     margin-right: 5%;
 }
