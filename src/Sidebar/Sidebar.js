@@ -17,8 +17,18 @@ class Sidebar extends React.Component {
 
     state = {
         userName: 'Andrzej',
-        accountBalance: 0
+        accountBalance: 0,
+        selectedCategory : 'Kategoria wydatków'
     }
+
+    changeAccountBalance = event => {
+        console.log('change');
+        this.setState({accountBalance: this.state.accountBalance + event.target.value})
+    }
+
+    handleCategorySelect = eventKey => this.setState({
+        selectedCategory: eventKey
+    })
 
     render() {
         return (
@@ -26,12 +36,14 @@ class Sidebar extends React.Component {
                 <div>
                     <h2>Witaj {this.state.userName}!</h2>
                     <p>Twój aktualny stan konta wynosi</p>
+                    {/*// tutaj uzyc reduce*/}
                     <h3>{this.state.accountBalance}</h3>
                 </div>
                 <Form horizontal>
                     <FormGroup controlId="formHorizontalText">
                         <Col smOffset={1} sm={10}>
-                            <FormControl type="number" placeholder="Wprowadź kwotę"/>
+                            <FormControl onChange={this.changeAccountBalance} type="number"
+                                         placeholder="Wprowadź kwotę"/>
                         </Col>
                     </FormGroup>
 
@@ -43,15 +55,19 @@ class Sidebar extends React.Component {
 
                     <ButtonGroup sm={12}>
                         <Col smOffset={1} sm={4}>
-                            {/*<DropdownButton title="Kategorie wydatków" id="bg-nested-dropdown">*/}
-                            {/*<MenuItem eventKey="1">Jedzenie</MenuItem>*/}
-                            {/*<MenuItem eventKey="2">Mieszkanie</MenuItem>*/}
-                            {/*<MenuItem eventKey="3">Inne opłaty i rachunki</MenuItem>*/}
-                            {/*<MenuItem eventKey="4">Zdrowie, higiena i chemia</MenuItem>*/}
-                            {/*<MenuItem eventKey="5">Ubranie</MenuItem>*/}
-                            {/*<MenuItem eventKey="6">Relaks</MenuItem>*/}
-                            {/*<MenuItem eventKey="7">Transport</MenuItem>*/}
-                            {/*<MenuItem eventKey="8">Inne wydatki</MenuItem>*/}
+                            {/*<DropdownButton*/}
+                                {/*title={this.state.selectedCategory}*/}
+                                {/*id="bg-nested-dropdown"*/}
+                                {/*onSelect={this.handleCategorySelect}*/}
+                            {/*>*/}
+                                {/*<MenuItem eventKey="Jedzenie">Jedzenie</MenuItem>*/}
+                                {/*<MenuItem eventKey="Mieszkanie">Mieszkanie</MenuItem>*/}
+                                {/*<MenuItem eventKey="Inne opłaty i rachunki">Inne opłaty i rachunki</MenuItem>*/}
+                                {/*<MenuItem eventKey="Zdrowie, higiena i chemia">Zdrowie, higiena i chemia</MenuItem>*/}
+                                {/*<MenuItem eventKey="Ubranie">Ubranie</MenuItem>*/}
+                                {/*<MenuItem eventKey="Relaks">Relaks</MenuItem>*/}
+                                {/*<MenuItem eventKey="Transport">Transport</MenuItem>*/}
+                                {/*<MenuItem eventKey="Inne wydatki">Inne wydatki</MenuItem>*/}
                             {/*</DropdownButton>*/}
 
                             <FormGroup controlId="formControlsSelect">
@@ -68,7 +84,7 @@ class Sidebar extends React.Component {
                                 </FormControl>
                             </FormGroup>
                         </Col>
-                        <Col smOffset={1} sm={6} style={{paddingTop : 10}}>
+                        <Col smOffset={1} sm={6} style={{paddingTop: 10}}>
                             <Radio checked name="gender" className="radio-btn" readOnly>
                                 Wydatek jednorazowy
                             </Radio>
@@ -80,7 +96,7 @@ class Sidebar extends React.Component {
                     </ButtonGroup>
 
                     <FormGroup>
-                        <Col smOffset={4} sm={6}>
+                        <Col smOffset={6} sm={5}>
                             <Button
                                 type="submit"
                                 bsSize="large"

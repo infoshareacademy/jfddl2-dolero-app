@@ -13,50 +13,50 @@ body {
     padding: 0;
 }
 
-h2,
-h3,
-p,
-.radio-btn,
-.control-label,
-sidebar-submit-btn{
+.sidebar-bg h2,
+.sidebar-bg h3,
+.sidebar-bg p,
+.sidebar-bg .radio-btn,
+.sidebar-bg .control-label,
+.sidebar-bg .sidebar-submit-btn{
     text-align: center;
     color: #fff;
     text-shadow: 1px 1px #000;
 }
 
-h2 {
+.sidebar-bg h2 {
     margin: 0 auto 2vh auto;
     padding-top: 10vh;
     font-size: 30px;
 }
 
-h3 {
+.sidebar-bg h3 {
     margin: 0 auto 8vh auto;
     font-size: 40px;
 }
 
-p {
+.sidebar-bg p {
     font-size: 25px;
 }
 
-.radio-btn {
+.sidebar-bg .radio-btn {
     text-align: left;
 }
 
-div.btn-group {
+.sidebar-bg div.btn-group {
     width: 100%;
     margin-bottom: 4vh;
 }
 
-.btn-group > .btn {
+.sidebar-bg .btn-group > .btn {
     margin-top: 13px;
 }
 
-.btn-warning {
+.sidebar-bg .btn-warning {
     width: 100%;
 }
 
-.copyRights {
+.sidebar-bg .copyRights {
     position: absolute;
     bottom: 2vh;
     left: 50%;
@@ -64,7 +64,7 @@ div.btn-group {
     font-size: 12px;
 }
 
-.control-label {
+.sidebar-bg .control-label {
     color: #fff;
 }
 
