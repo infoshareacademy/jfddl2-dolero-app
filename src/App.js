@@ -1,13 +1,10 @@
 import React, {Component} from 'react';
 import {Grid, Col} from 'react-bootstrap';
-import React, {Component} from 'react';
 import {
     BrowserRouter as Router,
     Route,
 } from 'react-router-dom'
-import {
-    Grid
-} from 'react-bootstrap'
+
 import './App.css';
 import Sidebar from "./Sidebar";
 // import Diagrams from "./Diagrams";
@@ -22,11 +19,13 @@ class App extends Component {
             <Router>
                 <Grid fluid>
 
-                    <Col xs={6} md={4}><Sidebar/></Col>                    <MainMenu/>
+                    <Col xs={6} md={4}><Sidebar/></Col>
+                    <Col xs={6} md={8}>
+                    <MainMenu/>
                     <Route path='/history' component={History}/>
                     {/*<Route path='/diagrams' component={Diagrams}/>*/}
                     {/*<Route path='/shorthistory' component={ShortHistory}/>*/}
-
+                    </Col>
                 </Grid>
             </Router>
         );
