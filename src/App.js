@@ -1,4 +1,6 @@
 import React, {Component} from 'react';
+import {Grid, Col} from 'react-bootstrap';
+import React, {Component} from 'react';
 import {
     BrowserRouter as Router,
     Route,
@@ -18,10 +20,9 @@ class App extends Component {
     render() {
         return (
             <Router>
-                <Grid>
+                <Grid fluid>
 
-                    <Sidebar/>
-                    <MainMenu/>
+                    <Col xs={6} md={4}><Sidebar/></Col>                    <MainMenu/>
                     <Route path='/history' component={History}/>
                     {/*<Route path='/diagrams' component={Diagrams}/>*/}
                     {/*<Route path='/shorthistory' component={ShortHistory}/>*/}
