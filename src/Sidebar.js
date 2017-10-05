@@ -1,4 +1,17 @@
 import React from 'react'
+import {
+    Button,
+    FormControl,
+    FormGroup,
+    Col,
+    Form,
+    ButtonGroup,
+    ControlLabel,
+    DropdownButton,
+    MenuItem,
+    Radio
+} from 'react-bootstrap'
+import './Sidebar.css'
 
 class Sidebar extends React.Component {
 
@@ -9,16 +22,12 @@ class Sidebar extends React.Component {
 
     render() {
         return (
-            <div>
+            <div className="sidebar-bg">
                 <div>
-                    <h2>Witaj {this.state.userName}</h2>
+                    <h2>Witaj {this.state.userName}!</h2>
+                    <p>Twój aktualny stan konta wynosi</p>
                     <h3>{this.state.accountBalance}</h3>
                 </div>
-<<<<<<< Updated upstream
-                <form>
-                    <input type="number" placeholder="Wprowadź kwotę"/>
-                </form>
-=======
                 <Form horizontal>
                     <FormGroup controlId="formHorizontalText">
                         <Col smOffset={1} sm={10}>
@@ -71,7 +80,7 @@ class Sidebar extends React.Component {
                     </ButtonGroup>
 
                     <FormGroup>
-                        <Col smOffset={5} sm={6}>
+                        <Col smOffset={4} sm={6}>
                             <Button
                                 type="submit"
                                 bsSize="large"
@@ -85,10 +94,9 @@ class Sidebar extends React.Component {
 
                 </Form>
                 <p className="copyRights">Made by Dolero</p>
->>>>>>> Stashed changes
             </div>
-        )
+    )
     }
-}
+    }
 
-export default Sidebar
+    export default Sidebar
