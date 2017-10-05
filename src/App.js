@@ -4,10 +4,9 @@ import {
     BrowserRouter as Router,
     Route,
 } from 'react-router-dom'
-
 import './App.css';
 import Sidebar from "./Sidebar";
-// import Diagrams from "./Diagrams";
+import Diagrams from "./Diagrams";
 // import Diagrams from "./ShortHistory";
 
 import History from "./History/History";
@@ -23,7 +22,7 @@ class App extends Component {
                     <Col xs={6} md={8}>
                     <MainMenu/>
                     <Route path='/history' component={History}/>
-                    {/*<Route path='/diagrams' component={Diagrams}/>*/}
+                    <Route path='/diagrams' component={Diagrams}/>
                     {/*<Route path='/shorthistory' component={ShortHistory}/>*/}
                     </Col>
                 </Grid>
@@ -31,6 +30,8 @@ class App extends Component {
         );
     }
 }
+
+
 
 
 export default App;
