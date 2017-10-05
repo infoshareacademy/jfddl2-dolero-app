@@ -1,0 +1,71 @@
+.sidebar-bg {
+    height: 100vh;
+    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#1e5799+0,131666+0,207cca+100,0047c4+100 */
+    background: rgb(30,87,153); /* Old browsers */
+    background: -moz-linear-gradient(top, rgba(30,87,153,1) 0%, rgba(19,22,102,1) 0%, rgba(32,124,202,1) 100%, rgba(0,71,196,1) 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(top, rgba(30,87,153,1) 0%,rgba(19,22,102,1) 0%,rgba(32,124,202,1) 100%,rgba(0,71,196,1) 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to bottom, rgba(30,87,153,1) 0%,rgba(19,22,102,1) 0%,rgba(32,124,202,1) 100%,rgba(0,71,196,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#1e5799', endColorstr='#0047c4',GradientType=0 ); /* IE6-9 */
+}
+
+body {
+    margin: 0;
+    padding: 0;
+}
+
+h2,
+h3,
+p,
+.radio-btn,
+.control-label,
+sidebar-submit-btn{
+    text-align: center;
+    color: #fff;
+    text-shadow: 1px 1px #000;
+}
+
+h2 {
+    margin: 0 auto 2vh auto;
+    padding-top: 10vh;
+    font-size: 30px;
+}
+
+h3 {
+    margin: 0 auto 8vh auto;
+    font-size: 40px;
+}
+
+p {
+    font-size: 25px;
+}
+
+.radio-btn {
+    text-align: left;
+}
+
+div.btn-group {
+    width: 100%;
+    margin-bottom: 4vh;
+}
+
+.btn-group > .btn {
+    margin-top: 13px;
+}
+
+.btn-warning {
+    width: 100%;
+}
+
+.copyRights {
+    position: absolute;
+    bottom: 2vh;
+    left: 50%;
+    transform: translate(-50%);
+    font-size: 12px;
+}
+
+.control-label {
+    color: #fff;
+}
+
+
