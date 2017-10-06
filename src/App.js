@@ -7,8 +7,8 @@ import {
 import './App.css';
 import Sidebar from "./Sidebar";
 import Diagrams from "./Diagrams";
-// import Diagrams from "./ShortHistory";
 
+import ShortHistory from "./ShortHistory/ShortHistory"
 import History from "./History/History";
 import MainMenu from './MainMenu'
 
@@ -23,13 +23,15 @@ class App extends Component {
                     <MainMenu/>
                     <Route path='/history' component={History}/>
                     <Route path='/diagrams' component={Diagrams}/>
-                    {/*<Route path='/shorthistory' component={ShortHistory}/>*/}
+                    <Route path='/shorthistory' component={ShortHistory}/>
                     </Col>
                 </Grid>
             </Router>
         );
     }
 }
+
+
 
 
 export default App;
