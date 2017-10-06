@@ -12,6 +12,8 @@ const data = [
     { name: 'Page F', uv: 2390, pv: 3800, amt: 2500 },
     { name: 'Page G', uv: 3490, pv: 4300, amt: 2100 },
 ]
+
+
 class Diagrams extends React.Component {
     state = {
         startDate: this.props.startDate,
@@ -41,6 +43,8 @@ class Diagrams extends React.Component {
                         })[0];
                         console.log(element);
                         this.setState({
+                            startDate,
+                            endDate,
                             currentBalance: element.currentBalance,
                             totalIncome: element.totalIncome
                         })
@@ -75,21 +79,21 @@ class Diagrams extends React.Component {
                         </div>
                     </Panel>
                 </div>
-                {/*<div>*/}
-                    {/*const SimpleLineChart = () => (*/}
-                    {/*<LineChart width={600} height={300} data={data}*/}
-                               {/*margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>*/}
-                        {/*<XAxis dataKey="name"/>*/}
-                        {/*<YAxis/>*/}
-                        {/*<CartesianGrid strokeDasharray="3 3"/>*/}
-                        {/*<Tooltip/>*/}
-                        {/*<Legend/>*/}
-                        {/*<Line type="monotone" dataKey="pv" stroke="#8884d8" activeDot={{ r: 8 }}/>*/}
-                        {/*<Line type="monotone" dataKey="uv" stroke="#82ca9d"/>*/}
-                      {/*</LineChart>*/}
-                {/*)*/}
+                <div>
+                    const SimpleLineChart = () => (
+                    <LineChart width={600} height={300} data={data}
+                               margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+                        <XAxis dataKey="name"/>
+                        <YAxis/>
+                        <CartesianGrid strokeDasharray="3 3"/>
+                        <Tooltip/>
+                        <Legend/>
+                        <Line type="monotone" dataKey="pv" stroke="#8884d8" activeDot={{ r: 8 }}/>
+                        <Line type="monotone" dataKey="uv" stroke="#82ca9d"/>
+                      </LineChart>
+                )
 
-                {/*</div>*/}
+                </div>
 
             </div>
         )
