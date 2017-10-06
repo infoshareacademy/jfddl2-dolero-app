@@ -17,45 +17,34 @@ class Sidebar extends React.Component {
 
     state = {
         userName: 'Piotr',
-        spendings: JSON.parse(localStorage.getItem('spendings')) || []
+        spendings: []
     }
 
-    addSpendings = event => {
-        const {spendings, newSpendingName, newSpendingValue} = this.state;
-
-        event.preventDefault();
-
-        let sendingObject = {
-            id: 'Dodac numer id',
-            spending: newSpendingName,
-            value: newSpendingValue,
-            isCyclic: false,
-            spendingDate: "Dodac datę"
-        }
+    addSpendings = spending => {
+        const {spendings} = this.state
 
         this.setState({
-                newSpendingName: '',
-                newSpendingValue: '',
-                spendings: spendings.concat(sendingObject)
+                spendings: spendings.concat({
+                    id: 'Dodac numer id',
+                    spending: 'Dodać opis wpisywanej wartości',
+                    value: 'Dodać wartość inputa z wartością',
+                    isCyclic: false,
+                    spendingDate: "Dodac datę"
+                })
             }, () => {
-                localStorage.setItem('spendings', JSON.stringify(this.state.spendings));
-                console.log(this.state.spendings);
+                localStorage.setItem('spending', JSON.stringify(this.state))
             }
         )
     }
 
-    handleInputSpendingChange = event => {
-        this.setState({
-            newSpendingName: event.target.value
-        })
-    }
+    // changeAccountBalance = event => {
+    //     console.log('change');
+    //     this.setState({accountBalance: this.state.accountBalance + event.target.value})
+    // }
 
-    handleInputValueChange = event => {
-        this.setState({
-            newSpendingValue: event.target.value
-        })
-    }
-
+    // handleCategorySelect = eventKey => this.setState({
+    // //     selectedCategory: eventKey
+    // })
 
     render() {
         return (
@@ -64,7 +53,7 @@ class Sidebar extends React.Component {
                     <h2>Witaj {this.state.userName}!</h2>
                     <p>Twój aktualny stan konta wynosi</p>
                     {/*// tutaj uzyc reduce*/}
-                    <h3>{this.state.newSpendingValue}</h3>
+                    <h3>{this.state.accountBalance}</h3>
                 </div>
                 <Form
                     horizontal
@@ -72,32 +61,45 @@ class Sidebar extends React.Component {
                 >
                     <FormGroup controlId="formHorizontalText">
                         <Col smOffset={1} sm={10}>
-                            <FormControl onChange={this.handleInputValueChange} type="number"
-                                         placeholder="Wprowadź kwotę" value={this.state.newSpendingValue}/>
+                            <FormControl onChange={this.changeAccountBalance} type="number"
+                                         placeholder="Wprowadź kwotę"/>
                         </Col>
                     </FormGroup>
 
                     <FormGroup controlId="formHorizontalNumber">
                         <Col smOffset={1} sm={10}>
-                            <FormControl type="text" onChange={this.handleInputSpendingChange}
-                                         placeholder="Opisz wprowadzaną kwotę" value={this.state.newSpendingName}/>
+                            <FormControl type="text" placeholder="Opisz wprowadzaną kwotę"/>
                         </Col>
                     </FormGroup>
 
                     <ButtonGroup sm={12}>
                         <Col smOffset={1} sm={4}>
+                            {/*<DropdownButton*/}
+                            {/*title={this.state.selectedCategory}*/}
+                            {/*id="bg-nested-dropdown"*/}
+                            {/*onSelect={this.handleCategorySelect}*/}
+                            {/*>*/}
+                            {/*<MenuItem eventKey="Jedzenie">Jedzenie</MenuItem>*/}
+                            {/*<MenuItem eventKey="Mieszkanie">Mieszkanie</MenuItem>*/}
+                            {/*<MenuItem eventKey="Inne opłaty i rachunki">Inne opłaty i rachunki</MenuItem>*/}
+                            {/*<MenuItem eventKey="Zdrowie, higiena i chemia">Zdrowie, higiena i chemia</MenuItem>*/}
+                            {/*<MenuItem eventKey="Ubranie">Ubranie</MenuItem>*/}
+                            {/*<MenuItem eventKey="Relaks">Relaks</MenuItem>*/}
+                            {/*<MenuItem eventKey="Transport">Transport</MenuItem>*/}
+                            {/*<MenuItem eventKey="Inne wydatki">Inne wydatki</MenuItem>*/}
+                            {/*</DropdownButton>*/}
 
                             <FormGroup controlId="formControlsSelect">
                                 <ControlLabel className="control-label">Kategorie wydatków</ControlLabel>
                                 <FormControl componentClass="select" placeholder="select">
-                                    <option value="Jedzenie">Jedzenie</option>
-                                    <option value="Mieszkanie">Mieszkanie</option>
-                                    <option value="Inne opłaty i rachunki">Inne opłaty i rachunki</option>
-                                    <option value="Zdrowie, higiena i chemia">Zdrowie, higiena i chemia</option>
-                                    <option value="Ubranie">Ubranie</option>
-                                    <option value="Relaks">Relaks</option>
-                                    <option value="Transport">Transport</option>
-                                    <option value="Inne wydatki">Inne wydatki</option>
+                                    <option value="select">Jedzenie</option>
+                                    <option value="other">Mieszkanie</option>
+                                    <option value="other">Inne opłaty i rachunki</option>
+                                    <option value="other">Zdrowie, higiena i chemia</option>
+                                    <option value="other">Ubranie</option>
+                                    <option value="other">Relaks</option>
+                                    <option value="other">Transport</option>
+                                    <option value="other">Inne wydatki</option>
                                 </FormControl>
                             </FormGroup>
                         </Col>
