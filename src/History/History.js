@@ -9,6 +9,11 @@ import {
     Grid,
     Col
 } from 'react-bootstrap'
+import
+    Select
+ from 'react-select'
+import 'react-select/dist/react-select.css';
+
 
 
 let historyRecords =
@@ -46,13 +51,19 @@ let historyRecords =
         }
     ]
 
-let categories = ['food', 'alcohol','culture','car' ]
+let categories = ['food', 'alcohol', 'culture', 'car']
 
-
-
+const FLAVOURS = [
+    { label: 'Chocolate', value: 'chocolate' },
+    { label: 'Vanilla', value: 'vanilla' },
+    { label: 'Strawberry', value: 'strawberry' },
+    { label: 'Caramel', value: 'caramel' },
+    { label: 'Cookies and Cream', value: 'cookiescream' },
+    { label: 'Peppermint', value: 'peppermint' },
+];
 class History extends React.Component {
 
-
+handleChange = value => console.log(value)
     moreInfo = event => {
         console.log('jest')
     }
@@ -64,19 +75,19 @@ class History extends React.Component {
                 <Col md={12}>
                     <h3>Filtrowanie</h3>
                 </Col>
-                <Col  md={4}>
+                <Col md={4}>
                     <input type="text"/>
                 </Col>
 
 
-                <Col  md={1}>
+                <Col md={1}>
                     <Checkbox>
                         Ulubione
                     </Checkbox>
                 </Col>
 
 
-                <Col  md={4} className='category'>
+                <Col md={4} className='category'>
                     <FormGroup controlId="formControlsSelectMultiple">
                         <ControlLabel>Multiple select</ControlLabel>
                         <FormControl componentClass="select" multiple onChange={
@@ -87,9 +98,9 @@ class History extends React.Component {
                             )
                         }>
                             {
-                                categories.map (
+                                categories.map(
                                     category => (
-                                        <option value={category} >{category}</option>
+                                        <option value={category}>{category}</option>
                                     )
                                 )
                             }
@@ -97,9 +108,16 @@ class History extends React.Component {
                         </FormControl>
                     </FormGroup>
                 </Col>
+                <Col sm={12}>
 
 
-
+                    <Select
+                        name="form-field-name"
+                        value="one"
+                        options={options}
+                        onChange={this.handleChange}
+                    />
+                </Col>
 
                 <h3 className="recordsList">Historia</h3>
 
@@ -119,14 +137,14 @@ class History extends React.Component {
                         //     record => record.category === 'food'
                         // )
                             .map(
-                            record => (
-                                <tr key={record.id} onClick={this.moreInfo}>
-                                    <td>{record.category}</td>
-                                    <td>{record.price}</td>
-                                    <td>{record.describe}</td>
-                                </tr>
-                            )
-                        )}
+                                record => (
+                                    <tr key={record.id} onClick={this.moreInfo}>
+                                        <td>{record.category}</td>
+                                        <td>{record.price}</td>
+                                        <td>{record.describe}</td>
+                                    </tr>
+                                )
+                            )}
 
 
                     </tbody>
