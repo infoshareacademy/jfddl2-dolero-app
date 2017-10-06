@@ -1,6 +1,14 @@
 .history {
     overflow: scroll;
+
 }
+.history h3 {
+    text-align: center;
+}
+
+/*.history .container {*/
+    /*max-width: 100%;*/
+/*}*/
 
 input {
     margin-right: 5%;

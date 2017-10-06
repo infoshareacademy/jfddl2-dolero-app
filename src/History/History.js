@@ -10,6 +10,7 @@ import {
     Col
 } from 'react-bootstrap'
 
+
 let historyRecords =
     [
         {
@@ -68,7 +69,7 @@ class History extends React.Component {
                 </Col>
 
 
-                <Col  md={4}>
+                <Col  md={1}>
                     <Checkbox>
                         Ulubione
                     </Checkbox>
@@ -78,11 +79,17 @@ class History extends React.Component {
                 <Col  md={4} className='category'>
                     <FormGroup controlId="formControlsSelectMultiple">
                         <ControlLabel>Multiple select</ControlLabel>
-                        <FormControl componentClass="select" multiple>
+                        <FormControl componentClass="select" multiple onChange={
+                            event => console.log(
+                                Array.from(event.target.options).filter(
+                                    option => option.selected
+                                ).map(option => option.value)
+                            )
+                        }>
                             {
                                 categories.map (
                                     category => (
-                                        <option value={'select'}>{category}</option>
+                                        <option value={category} active >{category}</option>
                                     )
                                 )
                             }
@@ -90,6 +97,9 @@ class History extends React.Component {
                         </FormControl>
                     </FormGroup>
                 </Col>
+
+
+
 
                 <h3 className="recordsList">Historia</h3>
 
@@ -104,9 +114,11 @@ class History extends React.Component {
                     </thead>
                     <tbody>
                     {
-                        historyRecords.filter(
-                            record => record.category === 'food'
-                        ).map(
+                        historyRecords
+                        //     .filter(
+                        //     record => record.category === 'food'
+                        // )
+                            .map(
                             record => (
                                 <tr key={record.id} onClick={this.moreInfo}>
                                     <td>{record.category}</td>
