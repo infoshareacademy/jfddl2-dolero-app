@@ -89,7 +89,7 @@ class History extends React.Component {
                             {
                                 categories.map (
                                     category => (
-                                        <option value={category} active >{category}</option>
+                                        <option value={category} >{category}</option>
                                     )
                                 )
                             }
