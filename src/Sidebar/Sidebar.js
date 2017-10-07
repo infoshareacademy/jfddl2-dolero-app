@@ -10,22 +10,58 @@ import {
      Radio
 } from 'react-bootstrap'
 import './Sidebar.css'
+import moment from 'moment'
 
 class Sidebar extends React.Component {
 
     state = {
-        userName: 'Andrzej',
-        accountBalance: 0,
-        selectedCategory : 'Kategoria wydatków'
+        userName: 'Piotr',
+        newSpendingCategory: 'Wybierz wydatek',
+        spendings: JSON.parse(localStorage.getItem('spendings')) || []
     }
 
-    changeAccountBalance = event => {
-        console.log('change');
-        this.setState({accountBalance: this.state.accountBalance + event.target.value})
+    addSpendings = event => {
+        const {spendings, newSpendingName, newSpendingValue, newSpendingCategory} = this.state;
+
+        event.preventDefault();
+
+        let sendingObject = {
+            id: 'Dodac numer id',
+            spending: newSpendingName,
+            spendingCategory: newSpendingCategory,
+            value: newSpendingValue,
+            isCyclic: false,
+            spendingDate: moment().format('L')
+        }
+
+        this.setState({
+                newSpendingName: '',
+                newSpendingValue: '',
+                newSpendingCategory: 'Wybierz wydatek',
+                spendings: spendings.concat(sendingObject)
+            }, () => {
+                localStorage.setItem('spendings', JSON.stringify(this.state.spendings));
+                console.log(this.state.spendings);
+            }
+        )
+    }
+
+    handleInputSpendingChange = event => {
+        // ustawia mi NewSpendingName na wartość z inputa spending
+        this.setState({
+            newSpendingName: event.target.value
+        })
+    }
+
+    handleInputValueChange = event => {
+        // ustawia mi newSpendingValue na wartość z inputa value
+        this.setState({
+            newSpendingValue: event.target.value
+        })
     }
 
     handleCategorySelect = eventKey => this.setState({
-        selectedCategory: eventKey
+        newSpendingCategory: eventKey
     })
 
     render() {
@@ -35,55 +71,66 @@ class Sidebar extends React.Component {
                     <h2>Witaj {this.state.userName}!</h2>
                     <p>Twój aktualny stan konta wynosi</p>
                     {/*// tutaj uzyc reduce*/}
-                    <h3>{this.state.accountBalance}</h3>
+                    <h3
+                        style={{height: "40px"}}
+                    >
+                        {this.state.newSpendingValue}
+                    </h3>
                 </div>
-                <Form horizontal>
-                    <FormGroup controlId="formHorizontalText">
+                <Form
+                    horizontal
+                    onSubmit={this.addSpendings}
+                >
+                    <FormGroup
+                        controlId="formHorizontalText"
+                    >
                         <Col smOffset={1} sm={10}>
-                            <FormControl onChange={this.changeAccountBalance} type="number"
-                                         placeholder="Wprowadź kwotę"/>
+                            <FormControl onChange={this.handleInputValueChange} type="number"
+                                         placeholder="Wprowadź kwotę" value={this.state.newSpendingValue}/>
                         </Col>
                     </FormGroup>
 
                     <FormGroup controlId="formHorizontalNumber">
                         <Col smOffset={1} sm={10}>
-                            <FormControl type="text" placeholder="Opisz wprowadzaną kwotę"/>
+                            <FormControl type="text" onChange={this.handleInputSpendingChange}
+                                         placeholder="Opisz wprowadzaną kwotę" value={this.state.newSpendingName}/>
                         </Col>
                     </FormGroup>
 
                     <ButtonGroup sm={12}>
                         <Col smOffset={1} sm={4}>
-                            {/*<DropdownButton*/}
-                                {/*title={this.state.selectedCategory}*/}
-                                {/*id="bg-nested-dropdown"*/}
-                                {/*onSelect={this.handleCategorySelect}*/}
-                            {/*>*/}
-                                {/*<MenuItem eventKey="Jedzenie">Jedzenie</MenuItem>*/}
-                                {/*<MenuItem eventKey="Mieszkanie">Mieszkanie</MenuItem>*/}
-                                {/*<MenuItem eventKey="Inne opłaty i rachunki">Inne opłaty i rachunki</MenuItem>*/}
-                                {/*<MenuItem eventKey="Zdrowie, higiena i chemia">Zdrowie, higiena i chemia</MenuItem>*/}
-                                {/*<MenuItem eventKey="Ubranie">Ubranie</MenuItem>*/}
-                                {/*<MenuItem eventKey="Relaks">Relaks</MenuItem>*/}
-                                {/*<MenuItem eventKey="Transport">Transport</MenuItem>*/}
-                                {/*<MenuItem eventKey="Inne wydatki">Inne wydatki</MenuItem>*/}
-                            {/*</DropdownButton>*/}
-
                             <FormGroup controlId="formControlsSelect">
                                 <ControlLabel className="control-label">Kategorie wydatków</ControlLabel>
-                                <FormControl componentClass="select" placeholder="select">
-                                    <option value="select">Jedzenie</option>
-                                    <option value="other">Mieszkanie</option>
-                                    <option value="other">Inne opłaty i rachunki</option>
-                                    <option value="other">Zdrowie, higiena i chemia</option>
-                                    <option value="other">Ubranie</option>
-                                    <option value="other">Relaks</option>
-                                    <option value="other">Transport</option>
-                                    <option value="other">Inne wydatki</option>
-                                </FormControl>
+                                <DropdownButton
+                                    title={this.state.newSpendingCategory}
+                                    id="bg-nested-dropdown"
+                                    onSelect={this.handleCategorySelect}
+                                    style={{width: '200px'}}
+                                >
+                                    <MenuItem eventKey="Jedzenie">Jedzenie</MenuItem>
+                                    <MenuItem eventKey="Mieszkanie">Mieszkanie</MenuItem>
+                                    <MenuItem eventKey="Inne opłaty i rachunki">Inne opłaty i rachunki</MenuItem>
+                                    <MenuItem eventKey="Zdrowie, higiena i chemia">Zdrowie, higiena i chemia</MenuItem>
+                                    <MenuItem eventKey="Ubranie">Ubranie</MenuItem>
+                                    <MenuItem eventKey="Relaks">Relaks</MenuItem>
+                                    <MenuItem eventKey="Transport">Transport</MenuItem>
+                                    <MenuItem eventKey="Inne wydatki">Inne wydatki</MenuItem>
+                                </DropdownButton>
                             </FormGroup>
                         </Col>
-                        <Col smOffset={1} sm={6} style={{paddingTop: 10}}>
-                            <Radio checked name="gender" className="radio-btn" readOnly>
+
+                        <Col
+                            smOffset={1}
+                            sm={6}
+                            style={
+                                {
+                                    paddingTop: 20,
+                                    paddingLeft: 30
+                                }
+                            }
+                        >
+                            <Radio checked name="gender" className="radio-btn" readOnly
+                                   onChange={event => console.log(event.target.value)}>
                                 Wydatek jednorazowy
                             </Radio>
 
@@ -91,6 +138,7 @@ class Sidebar extends React.Component {
                                 Wydatek cykliczny
                             </Radio>
                         </Col>
+
                     </ButtonGroup>
 
                     <FormGroup>
