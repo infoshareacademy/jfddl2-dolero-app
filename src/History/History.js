@@ -6,6 +6,9 @@ import {
     FormGroup,
     FormControl
 } from 'react-bootstrap'
+import MultiSelectField from './Multiselect'
+import 'react-select/dist/react-select.css';
+
 
 class History extends React.Component {
 
@@ -21,6 +24,7 @@ class History extends React.Component {
                         Ulubione
                     </Checkbox>
                 </div>
+                <MultiSelectField/>
                 <div className='category'>
                     <FormGroup controlId="formControlsSelectMultiple">
                         <ControlLabel>Multiple select</ControlLabel>
@@ -35,6 +39,8 @@ class History extends React.Component {
                 <ul>
                 </ul>
             </div>
+
+
         )
     }
 }

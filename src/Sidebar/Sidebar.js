@@ -7,9 +7,7 @@ import {
     Form,
     ButtonGroup,
     ControlLabel,
-    DropdownButton,
-    MenuItem,
-    Radio
+     Radio
 } from 'react-bootstrap'
 import './Sidebar.css'
 
