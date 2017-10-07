@@ -21,9 +21,10 @@ class App extends Component {
                     <Col xs={6} md={4}><Sidebar/></Col>
                     <Col xs={6} md={8} className='components'>
                     <MainMenu/>
-                    <Route path='/history' component={History}/>
+                    <Route exact path='/history' component={History}/>
                     <Route path='/diagrams' component={Diagrams}/>
                     <Route path='/shorthistory' component={ShortHistory}/>
+
                     </Col>
                 </Grid>
             </Router>
