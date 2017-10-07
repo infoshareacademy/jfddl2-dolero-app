@@ -19,11 +19,14 @@ class Sidebar extends React.Component {
     state = {
         userName: 'Piotr',
         newSpendingCategory: 'Wybierz wydatek',
+        isOneTimeUse: true,
+        isCyclic: false,
         spendings: JSON.parse(localStorage.getItem('spendings')) || []
+
     }
 
     addSpendings = event => {
-        const {spendings, newSpendingName, newSpendingValue, newSpendingCategory} = this.state;
+        const {spendings, isOneTimeUse, isCyclic, newSpendingName, newSpendingValue, newSpendingCategory} = this.state;
 
         event.preventDefault();
 
@@ -32,7 +35,8 @@ class Sidebar extends React.Component {
             spending: newSpendingName,
             spendingCategory: newSpendingCategory,
             value: newSpendingValue,
-            isCyclic: false,
+            isOneTimeUse,
+            isCyclic,
             spendingDate: moment().format('L')
         }
 
@@ -46,6 +50,7 @@ class Sidebar extends React.Component {
                 console.log(this.state.spendings);
             }
         )
+        console.log(sendingObject)
     }
 
     handleInputSpendingChange = event => {
@@ -65,6 +70,15 @@ class Sidebar extends React.Component {
     handleCategorySelect = eventKey => this.setState({
         newSpendingCategory: eventKey
     })
+
+    handleRadiusButtonValueChange = (event) => {
+        console.log(this.event) //for tests aint logging
+        this.setState({
+            isCyclic: !this.state.isCyclic,
+            isOneTimeUse: !this.state.isOneTimeUse
+
+        })
+    }
 
     render() {
         return (
@@ -131,12 +145,22 @@ class Sidebar extends React.Component {
                                 }
                             }
                         >
-                            <Radio checked name="gender" className="radio-btn" readOnly
-                                   onChange={event => console.log(event.target.value)}>
+                            <Radio
+                                checked
+                                name="gender"
+                                className="radio-btn"
+                                readOnly
+                                onChange={this.handleRadiusButtonValueChange}
+                            >
                                 Wydatek jednorazowy
                             </Radio>
 
-                            <Radio name="gender" className="radio-btn" readOnly>
+                            <Radio
+                                name="gender"
+                                className="radio-btn"
+                                readOnly
+                                onChange={this.handleRadiusButtonValueChange}
+                            >
                                 Wydatek cykliczny
                             </Radio>
                         </Col>
