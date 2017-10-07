@@ -12,6 +12,7 @@ import {
     Radio
 } from 'react-bootstrap'
 import './Sidebar.css'
+import moment from 'moment'
 
 class Sidebar extends React.Component {
 
@@ -32,7 +33,7 @@ class Sidebar extends React.Component {
             spendingCategory: newSpendingCategory,
             value: newSpendingValue,
             isCyclic: false,
-            spendingDate: "Dodac datę"
+            spendingDate: moment().format('L')
         }
 
         this.setState({
