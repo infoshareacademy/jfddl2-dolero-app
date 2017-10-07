@@ -13,14 +13,14 @@
 
 
 
-h3 {
+#history h3 {
 text-align: center;
 }
 
-h4 {
+#history h4 {
     text-align: left;
 }
 
-.recordsList {
+#history .recordsList {
     margin-top: 50px;
 }
