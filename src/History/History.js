@@ -16,7 +16,7 @@ import 'react-select/dist/react-select.css';
 import './History.css';
 
 
-let historyRecords =
+let historyRecordss =
     [
         {
             category: 'food',
@@ -52,23 +52,20 @@ let historyRecords =
     ]
 
 let categories = ['food', 'alcohol', 'culture', 'car']
-
+let historyRecords = JSON.parse(localStorage.getItem('spendings') || '[]')
 
 class History extends React.Component {
     state = {
         startDate: this.props.startDate,
         endDate: this.props.endDate,
-        bankHistory:[]
+        bankHistory: []
     }
-
-
-
-
 
 
 
     render() {
         return (
+
             <Grid id='history' className='history'>
                 <Row>
 
@@ -128,7 +125,7 @@ class History extends React.Component {
                             <tr>
                                 <th>Kategoria</th>
                                 <th>Kwota</th>
-                                <th>Opis</th>
+                                <th>Data</th>
 
                             </tr>
                             </thead>
@@ -141,9 +138,10 @@ class History extends React.Component {
                                     .map(
                                         record => (
                                             <tr key={record.id} onClick={this.moreInfo}>
-                                                <td>{record.category}</td>
-                                                <td>{record.price}</td>
-                                                <td>{record.describe}</td>
+                                                <td>{record.spendingCategory}</td>
+                                                <td>{record.value}</td>
+                                                <td>{record.spendingDate}</td>
+
                                             </tr>
                                         )
                                     )}
