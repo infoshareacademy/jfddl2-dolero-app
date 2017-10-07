@@ -17,17 +17,19 @@ class Sidebar extends React.Component {
 
     state = {
         userName: 'Piotr',
+        newSpendingCategory: 'Wybierz wydatek',
         spendings: JSON.parse(localStorage.getItem('spendings')) || []
     }
 
     addSpendings = event => {
-        const {spendings, newSpendingName, newSpendingValue} = this.state;
+        const {spendings, newSpendingName, newSpendingValue, newSpendingCategory} = this.state;
 
         event.preventDefault();
 
         let sendingObject = {
             id: 'Dodac numer id',
             spending: newSpendingName,
+            spendingCategory: newSpendingCategory,
             value: newSpendingValue,
             isCyclic: false,
             spendingDate: "Dodac datę"
@@ -36,6 +38,7 @@ class Sidebar extends React.Component {
         this.setState({
                 newSpendingName: '',
                 newSpendingValue: '',
+                newSpendingCategory: 'Wybierz wydatek',
                 spendings: spendings.concat(sendingObject)
             }, () => {
                 localStorage.setItem('spendings', JSON.stringify(this.state.spendings));
@@ -45,17 +48,22 @@ class Sidebar extends React.Component {
     }
 
     handleInputSpendingChange = event => {
+        // ustawia mi NewSpendingName na wartość z inputa spending
         this.setState({
             newSpendingName: event.target.value
         })
     }
 
     handleInputValueChange = event => {
+        // ustawia mi newSpendingValue na wartość z inputa value
         this.setState({
             newSpendingValue: event.target.value
         })
     }
 
+    handleCategorySelect = eventKey => this.setState({
+        newSpendingCategory: eventKey
+    })
 
     render() {
         return (
@@ -64,13 +72,19 @@ class Sidebar extends React.Component {
                     <h2>Witaj {this.state.userName}!</h2>
                     <p>Twój aktualny stan konta wynosi</p>
                     {/*// tutaj uzyc reduce*/}
-                    <h3>{this.state.newSpendingValue}</h3>
+                    <h3
+                        style={{height: "40px"}}
+                    >
+                        {this.state.newSpendingValue}
+                    </h3>
                 </div>
                 <Form
                     horizontal
                     onSubmit={this.addSpendings}
                 >
-                    <FormGroup controlId="formHorizontalText">
+                    <FormGroup
+                        controlId="formHorizontalText"
+                    >
                         <Col smOffset={1} sm={10}>
                             <FormControl onChange={this.handleInputValueChange} type="number"
                                          placeholder="Wprowadź kwotę" value={this.state.newSpendingValue}/>
@@ -86,22 +100,36 @@ class Sidebar extends React.Component {
 
                     <ButtonGroup sm={12}>
                         <Col smOffset={1} sm={4}>
-
                             <FormGroup controlId="formControlsSelect">
                                 <ControlLabel className="control-label">Kategorie wydatków</ControlLabel>
-                                <FormControl componentClass="select" placeholder="select">
-                                    <option value="Jedzenie">Jedzenie</option>
-                                    <option value="Mieszkanie">Mieszkanie</option>
-                                    <option value="Inne opłaty i rachunki">Inne opłaty i rachunki</option>
-                                    <option value="Zdrowie, higiena i chemia">Zdrowie, higiena i chemia</option>
-                                    <option value="Ubranie">Ubranie</option>
-                                    <option value="Relaks">Relaks</option>
-                                    <option value="Transport">Transport</option>
-                                    <option value="Inne wydatki">Inne wydatki</option>
-                                </FormControl>
+                                <DropdownButton
+                                    title={this.state.newSpendingCategory}
+                                    id="bg-nested-dropdown"
+                                    onSelect={this.handleCategorySelect}
+                                    style={{width: '200px'}}
+                                >
+                                    <MenuItem eventKey="Jedzenie">Jedzenie</MenuItem>
+                                    <MenuItem eventKey="Mieszkanie">Mieszkanie</MenuItem>
+                                    <MenuItem eventKey="Inne opłaty i rachunki">Inne opłaty i rachunki</MenuItem>
+                                    <MenuItem eventKey="Zdrowie, higiena i chemia">Zdrowie, higiena i chemia</MenuItem>
+                                    <MenuItem eventKey="Ubranie">Ubranie</MenuItem>
+                                    <MenuItem eventKey="Relaks">Relaks</MenuItem>
+                                    <MenuItem eventKey="Transport">Transport</MenuItem>
+                                    <MenuItem eventKey="Inne wydatki">Inne wydatki</MenuItem>
+                                </DropdownButton>
                             </FormGroup>
                         </Col>
-                        <Col smOffset={1} sm={6} style={{paddingTop: 10}}>
+
+                        <Col
+                            smOffset={1}
+                            sm={6}
+                            style={
+                                {
+                                    paddingTop: 20,
+                                    paddingLeft: 30
+                                }
+                            }
+                        >
                             <Radio checked name="gender" className="radio-btn" readOnly
                                    onChange={event => console.log(event.target.value)}>
                                 Wydatek jednorazowy
@@ -111,6 +139,7 @@ class Sidebar extends React.Component {
                                 Wydatek cykliczny
                             </Radio>
                         </Col>
+
                     </ButtonGroup>
 
                     <FormGroup>
