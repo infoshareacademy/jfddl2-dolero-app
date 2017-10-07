@@ -1,24 +1,26 @@
-.history {
-    overflow: scroll;
-
+#history {
+    overflow-Y: scroll;
+    overflow-x: hidden;
+    padding: 0 3%;
+    min-height: 100%;
 }
-.history h3 {
-    text-align: center;
+
+#row {
+
+    margin-left: 0;
+    margin-bottom: 3%
 }
 
-/*.history .container {*/
-    /*max-width: 100%;*/
-/*}*/
 
-input {
-    margin-right: 5%;
+
+h3 {
+text-align: center;
+}
+
+h4 {
+    text-align: left;
 }
 
 .recordsList {
-    text-align: center;
-}
-
-.category {
-    width: 20%;
-
+    margin-top: 50px;
 }
