@@ -16,25 +16,10 @@ class App extends Component {
     render() {
         return (
             <Router>
-                <Grid
-                    fluid
-                >
+                <Grid fluid>
 
-                    <Col
-                        xs={6}
-                        md={4}
-                    >
-                        <Sidebar/>
-                    </Col>
-
-                    <Col
-                        xs={6}
-                        md={8}
-                        style={{
-                            height: '100vh',
-                            overflow: 'scroll'
-                        }}
-                    >
+                    <Col xs={6} md={4}><Sidebar/></Col>
+                    <Col xs={6} md={8} className='components'>
                     <MainMenu/>
                     <Route path='/history' component={History}/>
                     <Route path='/diagrams' component={Diagrams}/>
