@@ -4,154 +4,42 @@ import {
     Checkbox,
     ControlLabel,
     FormGroup,
-    FormControl,
-    Table,
-    Grid,
-    Col
+    FormControl
 } from 'react-bootstrap'
-import
-    Select
- from 'react-select'
+import MultiSelectField from './Multiselect'
 import 'react-select/dist/react-select.css';
 
 
-
-let historyRecords =
-    [
-        {
-            category: 'food',
-            price: 3.2,
-            describe: 'dinner food',
-            isFavorite: false,
-            id: 1
-
-        },
-        {
-            category: 'car',
-            price: 100,
-            describe: 'tanking',
-            isFavorite: false,
-            id: 2
-
-        },
-        {
-            category: 'culture',
-            price: 15,
-            describe: 'cinema',
-            isFavorite: false,
-            id: 3
-        },
-        {
-            category: 'alcohol',
-            price: 4.5,
-            describe: 'evening time',
-            isFavorite: false,
-            id: 4
-
-        }
-    ]
-
-let categories = ['food', 'alcohol', 'culture', 'car']
-
-const FLAVOURS = [
-    { label: 'Chocolate', value: 'chocolate' },
-    { label: 'Vanilla', value: 'vanilla' },
-    { label: 'Strawberry', value: 'strawberry' },
-    { label: 'Caramel', value: 'caramel' },
-    { label: 'Cookies and Cream', value: 'cookiescream' },
-    { label: 'Peppermint', value: 'peppermint' },
-];
 class History extends React.Component {
-
-handleChange = value => console.log(value)
-    moreInfo = event => {
-        console.log('jest')
-    }
 
     render() {
         return (
-            <Grid className='history'>
-
-                <Col md={12}>
-                    <h3>Filtrowanie</h3>
-                </Col>
-                <Col md={4}>
+            <div>
+                <div>
+                    <h3>Wprowadź słowo kluczowe</h3>
                     <input type="text"/>
-                </Col>
-
-
-                <Col md={1}>
+                </div>
+                <div>
                     <Checkbox>
                         Ulubione
                     </Checkbox>
-                </Col>
-
-
-                <Col md={4} className='category'>
+                </div>
+                <MultiSelectField/>
+                <div className='category'>
                     <FormGroup controlId="formControlsSelectMultiple">
                         <ControlLabel>Multiple select</ControlLabel>
-                        <FormControl componentClass="select" multiple onChange={
-                            event => console.log(
-                                Array.from(event.target.options).filter(
-                                    option => option.selected
-                                ).map(option => option.value)
-                            )
-                        }>
-                            {
-                                categories.map(
-                                    category => (
-                                        <option value={category}>{category}</option>
-                                    )
-                                )
-                            }
-
+                        <FormControl componentClass="select" multiple>
+                            <option value="select">pierwsza</option>
+                            <option value="other">druga</option>
+                            <option value="other">trzecia</option>
                         </FormControl>
                     </FormGroup>
-                </Col>
-                <Col sm={12}>
+                </div>
+                <h3 className="recordsList">Lista rekordów</h3>
+                <ul>
+                </ul>
+            </div>
 
-
-                    <Select
-                        name="form-field-name"
-                        value="one"
-                        options={options}
-                        onChange={this.handleChange}
-                    />
-                </Col>
-
-                <h3 className="recordsList">Historia</h3>
-
-                <Table striped bordered condensed hover>
-                    <thead>
-                    <tr>
-                        <th>Kategoria</th>
-                        <th>Kwota</th>
-                        <th>Opis</th>
-
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {
-                        historyRecords
-                        //     .filter(
-                        //     record => record.category === 'food'
-                        // )
-                            .map(
-                                record => (
-                                    <tr key={record.id} onClick={this.moreInfo}>
-                                        <td>{record.category}</td>
-                                        <td>{record.price}</td>
-                                        <td>{record.describe}</td>
-                                    </tr>
-                                )
-                            )}
-
-
-                    </tbody>
-                </Table>
-
-
-            </Grid>
 
         )
     }
