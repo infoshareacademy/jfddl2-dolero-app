@@ -26,6 +26,7 @@ const MultiSelectField = createClass({
             value: [],
         };
     },
+
     handleSelectChange (value) {
         console.log('You\'ve selected:', value);
         this.setState({ value });
