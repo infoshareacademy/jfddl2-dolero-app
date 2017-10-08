@@ -9,14 +9,15 @@ import {
     Form,
     Row
 } from 'react-bootstrap'
+import { DateRangePicker } from 'react-dates'
+
 import MultiSelectField from './Multiselect'
-import 'react-select/dist/react-select.css';
-import {DateRangePicker} from 'react-dates';
-import 'react-select/dist/react-select.css';
-import './History.css';
+
+import 'react-select/dist/react-select.css'
+import './History.css'
 
 
-let historyRecords =
+const historyRecords =
     [
         {
             category: 'food',
@@ -51,23 +52,29 @@ let historyRecords =
         }
     ]
 
-let categories = ['food', 'alcohol', 'culture', 'car']
-
 
 class History extends React.Component {
     state = {
         startDate: this.props.startDate,
         endDate: this.props.endDate,
-        bankHistory:[]
+        selectedCategories: [],
+        records: []
     }
 
+    handleSelectedCategoriesChange = value => {
+        this.setState({
+            selectedCategories: value
+        })
+    }
 
-
-
-
-
+    componentDidMount() {
+        this.setState({
+            records: historyRecords
+        })
+    }
 
     render() {
+        // console.log(this.state.selectedCategories)
         return (
             <Grid id='history' className='history'>
                 <Row>
@@ -94,7 +101,19 @@ class History extends React.Component {
 
 
                     <Col md={5} mdOffset={1}>
-                        <MultiSelectField/>
+                        <MultiSelectField
+                            value={this.state.selectedCategories}
+                            onChange={this.handleSelectedCategoriesChange}
+                            options={this.state.records.reduce(
+                                (options, next) => options.filter(
+                                    option => option !== next.category
+                                ).concat({
+                                    label: next.category,
+                                    value: next.category
+                                }),
+                                []
+                            )}
+                        />
                     </Col>
 
                 </Row>
@@ -103,7 +122,7 @@ class History extends React.Component {
                         <DateRangePicker
                             startDate={this.state.startDate}
                             endDate={this.state.endDate}
-                            onDatesChange={({startDate, endDate}) => {
+                            onDatesChange={({ startDate, endDate }) => {
 
                                 this.setState({
                                     startDate,
@@ -112,7 +131,7 @@ class History extends React.Component {
                                 })
                             }}
                             focusedInput={this.state.focusedInput}
-                            onFocusChange={focusedInput => this.setState({focusedInput})}/>
+                            onFocusChange={focusedInput => this.setState({ focusedInput })}/>
                     </Col>
                     <Col>
 
@@ -134,19 +153,22 @@ class History extends React.Component {
                             </thead>
                             <tbody>
                             {
-                                historyRecords
-                                //     .filter(
-                                //     record => record.category === 'food'
-                                // )
-                                    .map(
-                                        record => (
-                                            <tr key={record.id} onClick={this.moreInfo}>
-                                                <td>{record.category}</td>
-                                                <td>{record.price}</td>
-                                                <td>{record.describe}</td>
-                                            </tr>
-                                        )
-                                    )}
+                                this.state.records.filter(
+                                    record =>
+                                        this.state.selectedCategories.length === 0 ?
+                                            true :
+                                            this.state.selectedCategories.some(
+                                                category => category.value === record.category
+                                            )
+                                ).map(
+                                    record => (
+                                        <tr key={record.id} onClick={this.moreInfo}>
+                                            <td>{record.category}</td>
+                                            <td>{record.price}</td>
+                                            <td>{record.describe}</td>
+                                        </tr>
+                                    )
+                                )}
 
 
                             </tbody>
