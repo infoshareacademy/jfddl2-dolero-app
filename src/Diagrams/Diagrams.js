@@ -15,42 +15,81 @@ const data = [
     {name: 'Page G', uv: 3490, pv: 4300, amt: 2100},
 ]
 
+const transactions = [
+    {amount: 300, category: "food", date: new Date(2017, 9, 9)},
+    {amount: -400, category: "food", date: new Date(2017, 9, 9)},
+    {amount: 3500, category: "food", date: new Date(2017, 9, 9)},
+    {amount: 200, category: "food", date: new Date(2017, 9, 10)},
+    {amount: -500, category: "food", date: new Date(2017, 9, 10)},
+    {amount: 3500, category: "food", date: new Date(2017, 9, 11)},
+    {amount: 700, category: "food", date: new Date(2017, 9, 11)}
+];
+
+function getBalance(date, transactions) {
+    return transactions.filter(function (transaction) {
+        return transaction.date.getDate() <= date.getDate()
+    }).map(function (transaction) {
+        return transaction.amount
+    }).reduce((p1, p2) => {
+        return p1 + p2
+    }, 0)
+}
+
+function getIncome(date, transactions) {
+    return transactions.filter(function (transaction) {
+        return transaction.date.getDate() === date.getDate() && transaction.amount>0
+    }).map(function (transaction) {
+        return transaction.amount
+    }).reduce((p1, p2) => {
+        return p1 + p2
+    }, 0)
+}
+
+
+function getExpenses(date, transactions) {
+    return transactions.filter(function (transaction) {
+        return transaction.date.getDate() === date.getDate() && transaction.amount<0
+    }).map(function (transaction) {
+        return transaction.amount
+    }).reduce((p1, p2) => {
+        return p1 + p2
+    }, 0)
+}
+
+function getTransactions(date, transactions) {
+    return transactions.filter(function (transaction) {
+        return transaction.date.getDate() === date.getDate()
+    }).length
+}
+
 class Diagrams extends React.Component {
     state = {
         startDate: this.props.startDate,
         endDate: this.props.endDate,
         currentBalance: 0,
         totalTransactions: 0,
-        totalExpences: 0,
+        totalExpenses: 0,
         totalIncome: 0,
-        bankHistory: [
-            {currentBalance: 2100, totalIncome: 2100, totalTransactions: 1, data: 1},
-            {currentBalance: 2200, totalIncome: 100, data: 2},
-            {currentBalance: 2300, totalIncome: 100, data: 3},
-            {currentBalance: 2400, totalIncome: 100, data: 4}
-        ],
     };
 
     render() {
         return (
-            <div>
+            <div style={{marginLeft: 15 + "px"}}>
                 <h1>Overview/charts</h1>
                 <Grid>
                     <Row className="show-grid">
-                        <Col xs={6} xsOffset={6}>
+                        <Col md={2} mdOffset={6}>
                             <DateRangePicker
                                 startDate={this.state.startDate}
                                 endDate={this.state.endDate}
                                 onDatesChange={({startDate, endDate}) => {
-                                    const element = this.state.bankHistory.filter(function (element) {
-                                        return element.data === 1
-                                    })[0];
-                                    console.log(element);
                                     this.setState({
-                                        startDate,
-                                        endDate,
-                                        currentBalance: element.currentBalance,
-                                        totalIncome: element.totalIncome
+                                        startDate: startDate,
+                                        endDate: endDate,
+                                        currentBalance: getBalance(startDate._d, transactions),
+                                        totalIncome: getIncome(startDate._d, transactions),
+                                        totalTransactions: getTransactions(startDate._d, transactions),
+                                        totalExpenses: getExpenses(startDate._d, transactions)
                                     })
                                 }}
                                 focusedInput={this.state.focusedInput}
@@ -59,36 +98,45 @@ class Diagrams extends React.Component {
                     </Row>
 
                     <Row className="show-grid">
-                        <Col md={6} mdPush={6}>
+                        <Col md={2}>
                             <Panel header="Current balance">
-                                Current balance: {this.state.currentBalance}
-                                {/*<div>
-                                </div>*/}
+                                {this.state.currentBalance}
                             </Panel>
                         </Col>
-                        <Col md={6} mdPull={6}>
+                        <Col md={2}>
                             <Panel header="Total transactions">
                                 <div>
-                                    Total transations: {this.state.totalTransations}
+                                    {this.state.totalTransactions}
+                                </div>
+                            </Panel>
+                        </Col>
+                        <Col md={2}>
+                            <Panel header="Total expenses">
+                                <div>
+                                    {this.state.totalExpenses}
+                                </div>
+                            </Panel>
+                        </Col>
+                        <Col md={2}>
+                            <Panel header="Total income">
+                                <div>
+                                    {this.state.totalIncome}
                                 </div>
                             </Panel>
                         </Col>
                     </Row>
-
                 </Grid>
-                    <LineChart width={600} height={300} data={data}
-                               margin={{top: 5, right: 30, left: 20, bottom: 5}}>
-                        <XAxis dataKey="name"/>
-                        <YAxis/>
-                        <CartesianGrid strokeDasharray="3 3"/>
-                        <Tooltip/>
-                        <Legend/>
-                        <Line type="monotone" dataKey="pv" stroke="#8884d8" activeDot={{r: 8}}/>
-                        <Line type="monotone" dataKey="uv" stroke="#82ca9d"/>
-                    </LineChart>
-                    )
-
-                </div>
+                <LineChart width={600} height={300} data={data}
+                           margin={{top: 5, right: 30, left: 20, bottom: 5}}>
+                    <XAxis dataKey="name"/>
+                    <YAxis/>
+                    <CartesianGrid strokeDasharray="3 3"/>
+                    <Tooltip/>
+                    <Legend/>
+                    <Line type="monotone" dataKey="pv" stroke="#8884d8" activeDot={{r: 8}}/>
+                    <Line type="monotone" dataKey="uv" stroke="#82ca9d"/>
+                </LineChart>
+            </div>
         )
     }
 }
