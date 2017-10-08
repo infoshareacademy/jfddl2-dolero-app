@@ -1,23 +1,67 @@
-/*h2 {*/
-    /*text-align: center;*/
-/*}*/
+
 .style {
-    height:90vh;
-    background:
-            -webkit-linear-gradient(rgba(135, 60, 255, 0.4), rgba(135, 60, 255, 0.0) 80%),
-            -webkit-linear-gradient(-45deg, rgba(120, 155, 255, 0.9) 25%, rgba(255, 160, 65, 0.9) 75%);
+    height: 95vh;
+
+    background: linear-gradient(-45deg, #95A5A6, #D5DBDB, #23A6D5, #23D5AB);
+    background-size: 400% 400%;
+    -webkit-animation: Gradient 20s ease infinite;
+    -moz-animation: Gradient 20s ease infinite;
+    animation: Gradient 20s ease infinite;
 }
 
-th,
-tr,
+@-webkit-keyframes Gradient {
+    0% {
+        background-position: 0% 50%
+    }
+    50% {
+        background-position: 100% 50%
+    }
+    100% {
+        background-position: 0% 50%
+    }
+}
+
+@-moz-keyframes Gradient {
+    0% {
+        background-position: 0% 50%
+    }
+    50% {
+        background-position: 100% 50%
+    }
+    100% {
+        background-position: 0% 50%
+    }
+}
+
+@keyframes Gradient {
+    0% {
+        background-position: 0% 50%
+    }
+    50% {
+        background-position: 100% 50%
+    }
+    100% {
+        background-position: 0% 50%
+    }
+}
+
+
+
 h2
 {
+    font-weight: bold;
     text-align: center;
-    color: #fff;
-    text-shadow: 1px 1px #000;
+    color: #000;
+    text-shadow: 1px 1px #fff;
+    font-size: 20px;
 }
 
 
 .table{
-   font-size:  20px
+   font-size:  15px;
+    /*text-align: center;*/
+}
+.react-bs-container-body {
+    margin-top: -17px;
+    margin-bottom: -14px;
 }
