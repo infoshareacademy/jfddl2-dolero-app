@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Grid, Col} from 'react-bootstrap';
+import {Grid,Row,Col} from 'react-bootstrap';
 import {
     BrowserRouter as Router,
     Route,
@@ -24,15 +24,10 @@ class App extends Component {
                     <Route exact path='/history' component={History}/>
                     <Route path='/diagrams' component={Diagrams}/>
                     <Route path='/shorthistory' component={ShortHistory}/>
-
                     </Col>
                 </Grid>
             </Router>
         );
     }
 }
-
-
-
-
 export default App;
