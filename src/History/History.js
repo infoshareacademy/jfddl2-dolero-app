@@ -9,60 +9,40 @@ import {
     Form,
     Row
 } from 'react-bootstrap'
-import MultiSelectField from './Multiselect'
-import 'react-select/dist/react-select.css';
 import {DateRangePicker} from 'react-dates';
+import MultiSelectField from './Multiselect'
 import 'react-select/dist/react-select.css';
 import './History.css';
 
 
-let historyRecordss =
-    [
-        {
-            category: 'food',
-            price: 3.2,
-            describe: 'dinner food',
-            isFavorite: false,
-            id: 1
 
-        },
-        {
-            category: 'car',
-            price: 100,
-            describe: 'tanking',
-            isFavorite: false,
-            id: 2
 
-        },
-        {
-            category: 'culture',
-            price: 15,
-            describe: 'cinema',
-            isFavorite: false,
-            id: 3
-        },
-        {
-            category: 'alcohol',
-            price: 4.5,
-            describe: 'evening time',
-            isFavorite: false,
-            id: 4
-
-        }
-    ]
-
-let historyRecords = JSON.parse(localStorage.getItem('spendings') || '[]')
+const historyRecords = JSON.parse(localStorage.getItem('spendings') || '[]')
 console.log(historyRecords)
 
 class History extends React.Component {
     state = {
         startDate: this.props.startDate,
         endDate: this.props.endDate,
-        categories: [],
+        selectedCategories: [],
+        records: [],
         currentSearchPhrase: '',
         currentMinPrice: 0,
         currentMaxPrice: 999999,
         isCyclic: true,
+    }
+
+    handleSelectedCategoriesChange = value => {
+        this.setState({
+            selectedCategories: value
+        })
+    }
+
+    componentDidMount() {
+        this.setState({
+            records: historyRecords
+        })
+console.log('konewka')
     }
 
     handleSearchPhraseChange = event => {
@@ -96,7 +76,7 @@ class History extends React.Component {
         return (
             <Grid id='history' className='history'>
                 <Row>
-
+                    debugger;
                     <Col md={5}>
                         <Row id='row'>
                             <Col md={3}>
@@ -122,7 +102,19 @@ class History extends React.Component {
 
 
                     <Col md={5} mdOffset={1}>
-                        <MultiSelectField/>
+                        <MultiSelectField
+                        value={this.state.selectedCategories}
+                        onChange={this.handleSelectedCategoriesChange()}
+                        options={this.state.records.reduce(
+                            (options, next) =>options.filter(
+                                option =>option !== next.category
+                            ).concat({
+                                label:next.category,
+                                value: next.category
+                            }),
+                            []
+                        )}
+                        />
                     </Col>
 
                 </Row>
@@ -188,7 +180,14 @@ class History extends React.Component {
                             </thead>
                             <tbody>
                             {
-                                historyRecords && historyRecords.filter(
+                                this.state.records.filter(
+                                    record =>
+                                        this.state.selectedCategories.length === 0 ?
+                                            true :
+                                            this.state.selectedCategories.some(
+                                                category => category.value === record.category
+                                            )
+                                ).filter(
                                     record => record.spending.includes(this.state.currentSearchPhrase)
                                 ).filter(
                                     record => parseInt(record.value) <= this.state.currentMaxPrice && parseInt(record.value) >= this.state.currentMinPrice
@@ -223,3 +222,13 @@ class History extends React.Component {
 
 
 export default History
+
+
+this.state.records.filter(
+    record =>
+        this.state.selectedCategories.length === 0 ?
+            true :
+            this.state.selectedCategories.some(
+                category => category.value === record.category
+            )
+)
