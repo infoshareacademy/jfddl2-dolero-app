@@ -7,9 +7,9 @@ import {
     Form,
     ButtonGroup,
     ControlLabel,
-    DropdownButton,
+     Radio,
+DropdownButton,
     MenuItem,
-    Radio
 } from 'react-bootstrap'
 import './Sidebar.css'
 import moment from 'moment'
@@ -101,7 +101,7 @@ class Sidebar extends React.Component {
                         controlId="formHorizontalText"
                     >
                         <Col smOffset={1} sm={10}>
-                            <FormControl onChange={this.handleInputValueChange} type="number"
+                            <FormControl onChange={this.handleInputValueChange} type="number" step="0.01"
                                          placeholder="Wprowadź kwotę" value={this.state.newSpendingValue}/>
                         </Col>
                     </FormGroup>
@@ -188,3 +188,4 @@ class Sidebar extends React.Component {
 }
 
 export default Sidebar
+

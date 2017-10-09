@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Grid, Col} from 'react-bootstrap';
+import {Grid,Row,Col} from 'react-bootstrap';
 import {
     BrowserRouter as Router,
     Route,
@@ -16,27 +16,12 @@ class App extends Component {
     render() {
         return (
             <Router>
-                <Grid
-                    fluid
-                >
+                <Grid fluid>
 
-                    <Col
-                        xs={6}
-                        md={4}
-                    >
-                        <Sidebar/>
-                    </Col>
-
-                    <Col
-                        xs={6}
-                        md={8}
-                        style={{
-                            height: '100vh',
-                            overflow: 'scroll'
-                        }}
-                    >
+                    <Col xs={6} md={4}><Sidebar/></Col>
+                    <Col xs={6} md={8} className='components'>
                     <MainMenu/>
-                    <Route path='/history' component={History}/>
+                    <Route exact path='/history' component={History}/>
                     <Route path='/diagrams' component={Diagrams}/>
                     <Route path='/shorthistory' component={ShortHistory}/>
                     </Col>
@@ -45,8 +30,4 @@ class App extends Component {
         );
     }
 }
-
-
-
-
 export default App;
