@@ -14,7 +14,40 @@ import MultiSelectField from './Multiselect'
 import 'react-select/dist/react-select.css';
 import './History.css';
 
-
+const categories = [
+    {
+        label: 'Jedzenie',
+        value: 'Jedzenie'
+    },
+    {
+        label: 'Mieszkanie',
+        value: 'Mieszkanie'
+    },
+    {
+        label: 'Inne opłaty i rachunki',
+        value: 'Inne opłaty i rachunki'
+    },
+    {
+        label: 'Zdrowie, higiena i chemia',
+        value: 'Zdrowie higiena i chemia'
+    },
+    {
+        label: 'Ubranie',
+        value: 'Ubranie'
+    },
+    {
+        label: 'Relaks',
+        value: 'Relaks'
+    },
+    {
+        label: 'Transport',
+        value: 'Transport'
+    },
+    {
+        label: 'Inne wydatki',
+        value: 'Inne wydatki'
+    },
+]
 
 
 const historyRecords = JSON.parse(localStorage.getItem('spendings') || '[]')
@@ -57,6 +90,16 @@ class History extends React.Component {
         console.log(this.state.categories)
 
     }
+
+    handleIsCyclicChange = event => {
+        this.state.isCyclic === false ?
+            (this.setState({
+                isCyclic: true
+            })) : (this.setState({
+                isCyclic: false
+            }))
+    }
+
     handleMaxPriceChange = event => {
         this.setState({
             currentMaxPrice: event.target.value,
@@ -75,14 +118,14 @@ class History extends React.Component {
         return (
             <Grid id='history' className='history'>
                 <Row>
-                    debugger;
+
                     <Col md={5}>
                         <Row id='row'>
                             <Col md={3}>
                                 <h4>Opis</h4>
                             </Col>
                             <Col md={2} mdOffset={7}>
-                                <Checkbox>
+                                <Checkbox onChange={this.handleIsCyclicChange}>
                                     Cykliczne
                                 </Checkbox>
                             </Col>
@@ -102,17 +145,10 @@ class History extends React.Component {
 
                     <Col md={5} mdOffset={1}>
                         <MultiSelectField
-                        value={this.state.selectedCategories}
-                        onChange={this.handleSelectedCategoriesChange()}
-                        options={this.state.records.reduce(
-                            (options, next) =>options.filter(
-                                option =>option !== next.category
-                            ).concat({
-                                label:next.category,
-                                value: next.category
-                            }),
-                            []
-                        )}
+                            value={this.state.selectedCategories}
+                            onChange={this.handleSelectedCategoriesChange}
+                            options={categories}
+
                         />
                     </Col>
 
@@ -186,6 +222,9 @@ class History extends React.Component {
                                             this.state.selectedCategories.some(
                                                 category => category.value === record.category
                                             )
+                                ).filter(
+                                    record => this.state.isCyclic === false ? true :
+                                        record => record.isCyclic === true
                                 ).filter(
                                     record => record.spending.includes(this.state.currentSearchPhrase)
                                 ).filter(
