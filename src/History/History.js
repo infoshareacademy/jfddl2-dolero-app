@@ -42,7 +42,6 @@ class History extends React.Component {
         this.setState({
             records: historyRecords
         })
-console.log('konewka')
     }
 
     handleSearchPhraseChange = event => {
@@ -224,11 +223,3 @@ console.log('konewka')
 export default History
 
 
-this.state.records.filter(
-    record =>
-        this.state.selectedCategories.length === 0 ?
-            true :
-            this.state.selectedCategories.some(
-                category => category.value === record.category
-            )
-)
