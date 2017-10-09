@@ -7,26 +7,40 @@ import {
     Form,
     ButtonGroup,
     ControlLabel,
-     Radio,
-DropdownButton,
-    MenuItem,
+    Radio,
+    DropdownButton,
+    MenuItem
 } from 'react-bootstrap'
 import './Sidebar.css'
 import moment from 'moment'
 
 class Sidebar extends React.Component {
 
+    componentDidMount() {
+        this.setState({
+            userBalance: this.getUserBalance()
+        })
+    }
+
     state = {
         userName: 'Piotr',
         newSpendingCategory: 'Wybierz wydatek',
-        isOneTimeUse: true,
+        userBalance: 0,
         isCyclic: false,
         spendings: JSON.parse(localStorage.getItem('spendings')) || []
 
     }
 
+    getUserBalance = () => {
+        const userBalance = JSON.parse(localStorage.getItem('spendings')) || []
+        console.log(userBalance)
+        return userBalance.reduce((result, nextValue) => (
+            result -= parseInt(nextValue.value || 0, 10)
+        ), 0)
+    }
+
     addSpendings = event => {
-        const {spendings, isOneTimeUse, isCyclic, newSpendingName, newSpendingValue, newSpendingCategory} = this.state;
+        const {spendings, isCyclic, newSpendingName, newSpendingValue, newSpendingCategory} = this.state;
 
         event.preventDefault();
 
@@ -35,7 +49,6 @@ class Sidebar extends React.Component {
             spending: newSpendingName,
             spendingCategory: newSpendingCategory,
             value: newSpendingValue,
-            isOneTimeUse,
             isCyclic,
             spendingDate: moment().format('L')
         }
@@ -44,10 +57,10 @@ class Sidebar extends React.Component {
                 newSpendingName: '',
                 newSpendingValue: '',
                 newSpendingCategory: 'Wybierz wydatek',
+                userBalance: this.state.userBalance - newSpendingValue,
                 spendings: spendings.concat(sendingObject)
             }, () => {
                 localStorage.setItem('spendings', JSON.stringify(this.state.spendings));
-                console.log(this.state.spendings);
             }
         )
         console.log(sendingObject)
@@ -71,11 +84,16 @@ class Sidebar extends React.Component {
         newSpendingCategory: eventKey
     })
 
-    handleRadiusButtonValueChange = (event) => {
-        console.log(this.event) //for tests aint logging
+    handleRadiusButtonValueTrueChange = () => {
         this.setState({
-            isCyclic: !this.state.isCyclic,
-            isOneTimeUse: !this.state.isOneTimeUse
+            isCyclic: true
+
+        })
+    }
+
+    handleRadiusButtonValueFalseChange = () => {
+        this.setState({
+            isCyclic: false
 
         })
     }
@@ -90,7 +108,7 @@ class Sidebar extends React.Component {
                     <h3
                         style={{height: "40px"}}
                     >
-                        {this.state.newSpendingValue}
+                        {this.state.userBalance}
                     </h3>
                 </div>
                 <Form
@@ -145,24 +163,27 @@ class Sidebar extends React.Component {
                                 }
                             }
                         >
-                            <Radio
-                                checked
-                                name="gender"
-                                className="radio-btn"
-                                readOnly
-                                onChange={this.handleRadiusButtonValueChange}
-                            >
-                                Wydatek jednorazowy
-                            </Radio>
+                            <FormGroup>
+                                <Radio
+                                    checked={!this.state.isCyclic}
+                                    name="gender"
+                                    className="radio-btn"
+                                    readOnly
+                                    onClick={this.handleRadiusButtonValueFalseChange}
+                                >
+                                    Wydatek jednorazowy
+                                </Radio>
 
-                            <Radio
-                                name="gender"
-                                className="radio-btn"
-                                readOnly
-                                onChange={this.handleRadiusButtonValueChange}
-                            >
-                                Wydatek cykliczny
-                            </Radio>
+                                <Radio
+                                    checked={this.state.isCyclic}
+                                    name="gender"
+                                    className="radio-btn"
+                                    readOnly
+                                    onClick={this.handleRadiusButtonValueTrueChange}
+                                >
+                                    Wydatek cykliczny
+                                </Radio>
+                            </FormGroup>
                         </Col>
 
                     </ButtonGroup>
@@ -188,4 +209,6 @@ class Sidebar extends React.Component {
 }
 
 export default Sidebar
+
+
 
