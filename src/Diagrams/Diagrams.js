@@ -1,18 +1,66 @@
 import React from 'react';
 import {Panel} from 'react-bootstrap'
+import {Grid, Row, Col} from 'react-bootstrap'
 import {DateRangePicker} from 'react-dates';
 import 'react-dates/lib/css/_datepicker.css';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts'
+import {LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend} from 'recharts'
+
 const data = [
-    {name: 'Page A', uv: 4000, pv: 2400, amt: 2400 },
-    { name: 'Page B', uv: 3000, pv: 1398, amt: 2210 },
-    { name: 'Page C', uv: 2000, pv: 9800, amt: 2290 },
-    { name: 'Page D', uv: 2780, pv: 3908, amt: 2000 },
-    { name: 'Page E', uv: 1890, pv: 4800, amt: 2181 },
-    { name: 'Page F', uv: 2390, pv: 3800, amt: 2500 },
-    { name: 'Page G', uv: 3490, pv: 4300, amt: 2100 },
+    {name: 'Page A', uv: 4000, pv: 2400, amt: 2400},
+    {name: 'Page B', uv: 3000, pv: 1398, amt: 2210},
+    {name: 'Page C', uv: 2000, pv: 9800, amt: 2290},
+    {name: 'Page D', uv: 2780, pv: 3908, amt: 2000},
+    {name: 'Page E', uv: 1890, pv: 4800, amt: 2181},
+    {name: 'Page F', uv: 2390, pv: 3800, amt: 2500},
+    {name: 'Page G', uv: 3490, pv: 4300, amt: 2100},
 ]
 
+const transactions = [
+    {amount: 300, category: "food", date: new Date(2017, 9, 9)},
+    {amount: -400, category: "food", date: new Date(2017, 9, 9)},
+    {amount: 3500, category: "food", date: new Date(2017, 9, 9)},
+    {amount: 200, category: "food", date: new Date(2017, 9, 10)},
+    {amount: -500, category: "food", date: new Date(2017, 9, 10)},
+    {amount: 3500, category: "food", date: new Date(2017, 9, 11)},
+    {amount: 700, category: "food", date: new Date(2017, 9, 11)}
+];
+
+function getBalance(date, transactions) {
+    return transactions.filter(function (transaction) {
+        return transaction.date.getDate() <= date.getDate()
+    }).map(function (transaction) {
+        return transaction.amount
+    }).reduce((p1, p2) => {
+        return p1 + p2
+    }, 0)
+}
+
+function getIncome(date, transactions) {
+    return transactions.filter(function (transaction) {
+        return transaction.date.getDate() === date.getDate() && transaction.amount>0
+    }).map(function (transaction) {
+        return transaction.amount
+    }).reduce((p1, p2) => {
+        return p1 + p2
+    }, 0)
+}
+
+
+function getExpenses(date, transactions) {
+    return transactions.filter(function (transaction) {
+        return transaction.date.getDate() === date.getDate() && transaction.amount<0
+    }).map(function (transaction) {
+        return transaction.amount
+    }).reduce((p1, p2) => {
+        return p1 + p2
+    }, 0)
+}
+
+function getTransactions(date, transactions) {
+    return transactions.filter(function (transaction) {
+        return transaction.date.getDate() === date.getDate()
+    }).length
+}
 
 class Diagrams extends React.Component {
     state = {
@@ -20,81 +68,74 @@ class Diagrams extends React.Component {
         endDate: this.props.endDate,
         currentBalance: 0,
         totalTransactions: 0,
-        totalExpences: 0,
+        totalExpenses: 0,
         totalIncome: 0,
-        bankHistory: [
-            {currentBalance: 2100, totalIncome:2100, totalTransactions: 1, data: 1},
-            {currentBalance: 2200, totalIncome:100, data: 2},
-            {currentBalance: 2300, totalIncome:100, data: 3},
-            {currentBalance: 2400, totalIncome:100, data: 4}
-        ],
     };
 
     render() {
         return (
-            <div>
+            <div style={{marginLeft: 15 + "px"}}>
                 <h1>Overview/charts</h1>
-                <DateRangePicker
-                    startDate={this.state.startDate}
-                    endDate={this.state.endDate}
-                    onDatesChange={({startDate, endDate}) => {
-                        const element = this.state.bankHistory.filter(function (element) {
-                            return element.data === 1
-                        })[0];
-                        console.log(element);
-                        this.setState({
-                            startDate,
-                            endDate,
-                            currentBalance: element.currentBalance,
-                            totalIncome: element.totalIncome
-                        })
-                    }}
-                    focusedInput={this.state.focusedInput}
-                    onFocusChange={focusedInput => this.setState({focusedInput})}/>
-                <div>
-                    <Panel header="Panel heading without title">
-                        <div>
-                            Current balance: {this.state.currentBalance}
-                        </div>
-                    </Panel>
-                </div>
-                <div>
-                    <Panel header="Panel heading without title">
-                        <div>
-                            Total transations: {this.state.totalTransations}
-                        </div>
-                    </Panel>
-                </div>
-                <div>
-                    <Panel header="Panel heading without title">
-                        <div>
-                            Total expences: {this.state.totalExpences}
-                        </div>
-                    </Panel>
-                </div>
-                <div>
-                    <Panel header="Panel heading without title">
-                        <div>
-                            Total income: {this.state.totalIncome}
-                        </div>
-                    </Panel>
-                </div>
-                <div>
-                    const SimpleLineChart = () => (
-                    <LineChart width={600} height={300} data={data}
-                               margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
-                        <XAxis dataKey="name"/>
-                        <YAxis/>
-                        <CartesianGrid strokeDasharray="3 3"/>
-                        <Tooltip/>
-                        <Legend/>
-                        <Line type="monotone" dataKey="pv" stroke="#8884d8" activeDot={{ r: 8 }}/>
-                        <Line type="monotone" dataKey="uv" stroke="#82ca9d"/>
-                      </LineChart>
-                )
+                <Grid>
+                    <Row className="show-grid">
+                        <Col md={2} mdOffset={6}>
+                            <DateRangePicker
+                                startDate={this.state.startDate}
+                                endDate={this.state.endDate}
+                                onDatesChange={({startDate, endDate}) => {
+                                    this.setState({
+                                        startDate: startDate,
+                                        endDate: endDate,
+                                        currentBalance: getBalance(startDate._d, transactions),
+                                        totalIncome: getIncome(startDate._d, transactions),
+                                        totalTransactions: getTransactions(startDate._d, transactions),
+                                        totalExpenses: getExpenses(startDate._d, transactions)
+                                    })
+                                }}
+                                focusedInput={this.state.focusedInput}
+                                onFocusChange={focusedInput => this.setState({focusedInput})}/>
+                        </Col>
+                    </Row>
 
-                </div>
-
+                    <Row className="show-grid">
+                        <Col md={2}>
+                            <Panel header="Current balance">
+                                {this.state.currentBalance}
+                            </Panel>
+                        </Col>
+                        <Col md={2}>
+                            <Panel header="Total transactions">
+                                <div>
+                                    {this.state.totalTransactions}
+                                </div>
+                            </Panel>
+                        </Col>
+                        <Col md={2}>
+                            <Panel header="Total expenses">
+                                <div>
+                                    {this.state.totalExpenses}
+                                </div>
+                            </Panel>
+                        </Col>
+                        <Col md={2}>
+                            <Panel header="Total income">
+                                <div>
+                                    {this.state.totalIncome}
+                                </div>
+                            </Panel>
+                        </Col>
+                    </Row>
+                </Grid>
+                <LineChart width={600} height={300} data={data}
+                           margin={{top: 5, right: 30, left: 20, bottom: 5}}>
+                    <XAxis dataKey="name"/>
+                    <YAxis/>
+                    <CartesianGrid strokeDasharray="3 3"/>
+                    <Tooltip/>
+                    <Legend/>
+                    <Line type="monotone" dataKey="pv" stroke="#8884d8" activeDot={{r: 8}}/>
+                    <Line type="monotone" dataKey="uv" stroke="#82ca9d"/>
+                </LineChart>
             </div>
         )
     }
