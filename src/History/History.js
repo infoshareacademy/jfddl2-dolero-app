@@ -66,7 +66,7 @@ class History extends React.Component {
         currentSearchPhrase: '',
         currentMinPrice: 0,
         currentMaxPrice: 999999,
-        isCyclic: true,
+        isCyclic: false,
     }
 
     handleSelectedCategoriesChange = value => {
