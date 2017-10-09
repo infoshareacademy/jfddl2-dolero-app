@@ -7,8 +7,12 @@ import {
     Grid,
     Col,
     Form,
-    Row
-} from 'react-bootstrap'
+    Row,
+    ControlLabel,
+    HelpBlock,
+    } from 'react-bootstrap'
+import DatePicker from 'react-bootstrap-date-picker'
+import propTypes from 'prop-types'
 import {DateRangePicker} from 'react-dates';
 import MultiSelectField from './Multiselect'
 import 'react-select/dist/react-select.css';
@@ -113,6 +117,19 @@ class History extends React.Component {
     //
     //     })
     // }
+    handleChange = (value, formattedValue) => {
+        this.setState({
+            value: value, // ISO String, ex: "2016-11-19T12:00:00.000Z"
+            formattedValue: formattedValue // Formatted String, ex: "11/19/2016"
+        });
+    }
+
+    componentDidUpdate() {
+        // Access ISO String and formatted values from the DOM.
+        var hiddenInputElement = document.getElementById("example-datepicker");
+        console.log(hiddenInputElement.value); // ISO String, ex: "2016-11-19T12:00:00.000Z"
+        console.log(hiddenInputElement.getAttribute('data-formattedvalue')) // Formatted String, ex: "11/19/2016"
+    }
 
     render() {
         return (
@@ -138,7 +155,14 @@ class History extends React.Component {
                                                  type="text"/>
 
                                 </FormGroup>
+
                             </Form>
+                            <FormGroup>
+                                <ControlLabel>Label</ControlLabel>
+                                <DatePicker id="example-datepicker" value={this.state.value}
+                                            onChange={this.handleChange}/>
+                                <HelpBlock>Help</HelpBlock>
+                            </FormGroup>
                         </Row>
                     </Col>
 
