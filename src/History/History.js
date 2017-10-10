@@ -24,6 +24,7 @@ let historyRecordss =
             describe: 'dinner food',
             isFavorite: false,
             id: 1
+
         },
         {
             category: 'car',
@@ -31,6 +32,7 @@ let historyRecordss =
             describe: 'tanking',
             isFavorite: false,
             id: 2
+
         },
         {
             category: 'culture',
