@@ -70,8 +70,8 @@ class History extends React.Component {
         ))
 
     state = {
-        startDate: this.props.startDate,
-        endDate: this.props.endDate,
+        startDate: moment().startOf('month'),
+        endDate: moment(),
         selectedCategories: [],
         records: [],
         currentSearchPhrase: '',
