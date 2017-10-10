@@ -6,15 +6,20 @@ import {
     Col,
     Form,
     ButtonGroup,
+    InputGroup,
     ControlLabel,
     Radio,
     DropdownButton,
-    MenuItem
+    MenuItem,
+    Popover,
+    ButtonToolbar,
+    OverlayTrigger
 } from 'react-bootstrap'
 import './Sidebar.css'
 import moment from 'moment'
 
 class Sidebar extends React.Component {
+
 
     componentDidMount() {
         this.setState({
@@ -26,14 +31,13 @@ class Sidebar extends React.Component {
         userName: 'Piotr',
         newSpendingCategory: 'Wybierz wydatek',
         userBalance: 0,
+        IncommingValue: 0,
         isCyclic: false,
         spendings: JSON.parse(localStorage.getItem('spendings')) || []
-
     }
 
     getUserBalance = () => {
         const userBalance = JSON.parse(localStorage.getItem('spendings')) || []
-        console.log(userBalance)
         return userBalance.reduce((result, nextValue) => (
             result -= parseInt(nextValue.value || 0, 10)
         ), 0)
@@ -49,6 +53,7 @@ class Sidebar extends React.Component {
             spending: newSpendingName,
             spendingCategory: newSpendingCategory,
             value: newSpendingValue,
+            // incommingValue: newIncommingValue,
             isCyclic,
             spendingDate: moment().format('L')
         }
@@ -57,6 +62,7 @@ class Sidebar extends React.Component {
                 newSpendingName: '',
                 newSpendingValue: '',
                 newSpendingCategory: 'Wybierz wydatek',
+                // newIncommingValue: '',
                 userBalance: this.state.userBalance - newSpendingValue,
                 spendings: spendings.concat(sendingObject)
             }, () => {
@@ -76,7 +82,7 @@ class Sidebar extends React.Component {
     handleInputValueChange = event => {
         // ustawia mi newSpendingValue na wartość z inputa value
         this.setState({
-            newSpendingValue: event.target.value
+            newSpendingValue: Math.abs(event.target.value)
         })
     }
 
@@ -98,7 +104,24 @@ class Sidebar extends React.Component {
         })
     }
 
+    handlePopoverValue = event => {
+        this.setState({
+            newIncommingValue : event.target.value
+        })
+    }
+
     render() {
+
+        const popoverRight = (
+            <Popover id="popover-positioned-right" title="Dodaj kwotę przychodu">
+                <input
+                    type="number"
+                    step="0.01"
+                />
+            </Popover>
+        )
+
+
         return (
             <div className="sidebar-bg">
                 <div>
@@ -110,26 +133,82 @@ class Sidebar extends React.Component {
                     >
                         {this.state.userBalance}
                     </h3>
+                    <ButtonToolbar
+                        style={{
+                            position: 'absolute',
+                            top: '23%',
+                            left: '80%'
+                        }}
+                    >
+                        <OverlayTrigger
+                            trigger="click"
+                            placement="right"
+                            overlay={popoverRight}
+                        >
+                            <Button
+                                bsStyle="warning"
+                                style={{
+                                    borderRadius: '20%'
+                                }}
+                                value={this.state.newIncommingValue}
+                                onChange={this.handlePopoverValue}
+                            >
+                                +
+                            </Button>
+                        </OverlayTrigger>
+                    </ButtonToolbar>
                 </div>
                 <Form
                     horizontal
                     onSubmit={this.addSpendings}
                 >
-                    <FormGroup
-                        controlId="formHorizontalText"
-                    >
-                        <Col smOffset={1} sm={10}>
-                            <FormControl onChange={this.handleInputValueChange} type="number" step="0.01"
-                                         placeholder="Wprowadź kwotę" value={this.state.newSpendingValue}/>
-                        </Col>
-                    </FormGroup>
 
-                    <FormGroup controlId="formHorizontalNumber">
-                        <Col smOffset={1} sm={10}>
-                            <FormControl type="text" onChange={this.handleInputSpendingChange}
-                                         placeholder="Opisz wprowadzaną kwotę" value={this.state.newSpendingName}/>
-                        </Col>
-                    </FormGroup>
+
+                    <Col smOffset={1} sm={10}>
+                        <FormGroup
+                            controlId="formHorizontalText"
+                        >
+                            <InputGroup>
+                                <InputGroup.Addon
+                                    style={{
+                                        backgroundColor: 'orange'
+                                    }}
+
+                                >
+                                    $
+                                </InputGroup.Addon>
+                                <FormControl
+                                    onChange={this.handleInputValueChange}
+                                    type="number" step="0.01"
+                                    placeholder="Wprowadź kwotę"
+                                    value={this.state.newSpendingValue}
+                                />
+
+                            </InputGroup>
+                        </FormGroup>
+                    </Col>
+
+
+                    <Col smOffset={1} sm={10}>
+                        <FormGroup
+                            controlId="formHorizontalNumber"
+                        >
+                            <InputGroup>
+                                <InputGroup.Addon
+                                    style={{backgroundColor: 'orange'}}
+                                >
+                                    A
+                                </InputGroup.Addon>
+                                <FormControl
+                                    type="text"
+                                    onChange={this.handleInputSpendingChange}
+                                    placeholder="Opisz wprowadzaną kwotę"
+                                    value={this.state.newSpendingName}
+                                />
+                            </InputGroup>
+                        </FormGroup>
+                    </Col>
+
 
                     <ButtonGroup sm={12}>
                         <Col smOffset={1} sm={4}>
