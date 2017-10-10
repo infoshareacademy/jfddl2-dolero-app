@@ -1,12 +1,26 @@
-input {
-    margin-right: 5%;
+#history {
+    overflow-Y: scroll;
+    overflow-x: hidden;
+    padding: 0 3%;
+    min-height: 100%;
 }
 
-.recordsList {
-    text-align: center;
+#row {
+
+    margin-left: 0;
+    margin-bottom: 3%
 }
 
-.category {
-    width: 20%;
 
+
+#history h3 {
+text-align: center;
+}
+
+#history h4 {
+    text-align: left;
+}
+
+#history .recordsList {
+    margin-top: 50px;
 }
