@@ -16,40 +16,6 @@ import 'react-select/dist/react-select.css';
 import './History.css';
 
 
-let historyRecordss =
-    [
-        {
-            category: 'food',
-            price: 3.2,
-            describe: 'dinner food',
-            isFavorite: false,
-            id: 1
-
-        },
-        {
-            category: 'car',
-            price: 100,
-            describe: 'tanking',
-            isFavorite: false,
-            id: 2
-
-        },
-        {
-            category: 'culture',
-            price: 15,
-            describe: 'cinema',
-            isFavorite: false,
-            id: 3
-        },
-        {
-            category: 'alcohol',
-            price: 4.5,
-            describe: 'evening time',
-            isFavorite: false,
-            id: 4
-
-        }
-    ]
 
 let historyRecords = JSON.parse(localStorage.getItem('spendings') || '[]')
 console.log(historyRecords)
