@@ -4,7 +4,7 @@ import {Grid, Row, Col} from 'react-bootstrap'
 import {DateRangePicker} from 'react-dates';
 import 'react-dates/lib/css/_datepicker.css';
 import {LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend} from 'recharts';
-import {PieChart, Pie } from 'recharts'
+import {PieChart, Pie} from 'recharts'
 
 const data = [
     {name: 'Page A', uv: 4000, pv: 2400, amt: 2400},
@@ -16,8 +16,7 @@ const data = [
     {name: 'Page G', uv: 3490, pv: 4300, amt: 2100},
 ]
 
-const data01 = [{name: 'Group A', value: 400}, {name: 'Group B', value: 300},
-    {name: 'Group C', value: 300}, {name: 'Group D', value: 200}]
+const data01 = [{name: "abc", value: 3}];
 
 const data02 = [{name: 'A1', value: 100},
     {name: 'A2', value: 300},
@@ -41,6 +40,15 @@ const transactions = [
     {amount: 700, category: "food", date: new Date(2017, 9, 11)}
 ];
 
+
+let spendings = JSON.parse(localStorage.getItem('spendings') || '[]')
+
+function getPieChart(spendings) {
+    return spendings.map(function (spending) {
+        return {name: spending.spendingCategory, value: spending.value}
+    })
+}
+
 function getBalance(date, transactions) {
     return transactions.filter(function (transaction) {
         return transaction.date.getDate() <= date.getDate()
@@ -53,7 +61,7 @@ function getBalance(date, transactions) {
 
 function getIncome(date, transactions) {
     return transactions.filter(function (transaction) {
-        return transaction.date.getDate() === date.getDate() && transaction.amount>0
+        return transaction.date.getDate() === date.getDate() && transaction.amount > 0
     }).map(function (transaction) {
         return transaction.amount
     }).reduce((p1, p2) => {
@@ -64,7 +72,7 @@ function getIncome(date, transactions) {
 
 function getExpenses(date, transactions) {
     return transactions.filter(function (transaction) {
-        return transaction.date.getDate() === date.getDate() && transaction.amount<0
+        return transaction.date.getDate() === date.getDate() && transaction.amount < 0
     }).map(function (transaction) {
         return transaction.amount
     }).reduce((p1, p2) => {
@@ -94,7 +102,7 @@ class Diagrams extends React.Component {
             <div style={{marginLeft: 15 + "px"}}>
                 <h1>Overview/charts</h1>
                 <Grid>
-                    <Row className="show-grid" style={{marginRight: -90 + "px"}} >
+                    <Row className="show-grid" style={{marginRight: -90 + "px"}}>
                         <Col md={2} mdOffset={6}>
                             <DateRangePicker
                                 startDate={this.state.startDate}
@@ -114,7 +122,7 @@ class Diagrams extends React.Component {
                         </Col>
                     </Row>
 
-                    <Row className="show-grid"style={{marginRight: -90 + "px"}}>
+                    <Row className="show-grid" style={{marginRight: -90 + "px"}}>
                         <Col md={2}>
                             <Panel header="Current balance">
                                 {this.state.currentBalance}
@@ -154,8 +162,8 @@ class Diagrams extends React.Component {
                     <Line type="monotone" dataKey="uv" stroke="#82ca9d"/>
                 </LineChart>
                 <PieChart width={800} height={400}>
-                    <Pie data={data01} cx={200} cy={200} outerRadius={60} fill="#8884d8"/>
-                    <Pie data={data02} cx={200} cy={200} innerRadius={70} outerRadius={90} fill="#82ca9d" label/>
+                    <Pie data={getPieChart(spendings)} cx={200} cy={200} innerRadius={70} outerRadius={90} fill="#82ca9d" label/>
+                    <Tooltip/>
                 </PieChart>
 
             </div>
