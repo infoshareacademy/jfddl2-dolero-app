@@ -1,4 +1,5 @@
 import React from 'react'
+
 import {
     Checkbox,
     FormGroup,
@@ -7,56 +8,111 @@ import {
     Grid,
     Col,
     Form,
-    Row
+    Row,
 } from 'react-bootstrap'
+import {DateRangePicker, SingleDatePicker, DayPickerRangeController} from 'react-dates';
 import MultiSelectField from './Multiselect'
 import 'react-select/dist/react-select.css';
-import {DateRangePicker} from 'react-dates';
-import 'react-select/dist/react-select.css';
 import './History.css';
+import InputRange from 'react-input-range'
+import 'react-input-range/lib/css/index.css'
+
+var moment = require('moment');
 
 
+const categories = [
+    {
+        label: 'Jedzenie',
+        value: 'Jedzenie'
+    },
+    {
+        label: 'Mieszkanie',
+        value: 'Mieszkanie'
+    },
+    {
+        label: 'Inne opłaty i rachunki',
+        value: 'Inne opłaty i rachunki'
+    },
+    {
+        label: 'Zdrowie, higiena i chemia',
+        value: 'Zdrowie higiena i chemia'
+    },
+    {
+        label: 'Ubranie',
+        value: 'Ubranie'
+    },
+    {
+        label: 'Relaks',
+        value: 'Relaks'
+    },
+    {
+        label: 'Transport',
+        value: 'Transport'
+    },
+    {
+        label: 'Inne wydatki',
+        value: 'Inne wydatki'
+    },
+]
 
-let historyRecords = JSON.parse(localStorage.getItem('spendings') || '[]')
+
+const historyRecords = JSON.parse(localStorage.getItem('spendings') || '[]')
 console.log(historyRecords)
 
+
+
 class History extends React.Component {
+
+    getMaxValue = () =>(
+        historyRecords.reduce((max, next) =>
+            Math.max(max,next.value),0
+        ))
+
     state = {
         startDate: this.props.startDate,
         endDate: this.props.endDate,
-        categories: [],
+        selectedCategories: [],
+        records: [],
         currentSearchPhrase: '',
-        currentMinPrice: 0,
-        currentMaxPrice: 999999,
-        isCyclic: true,
+        isCyclic: false,
+        value: {min: 0, max: this.getMaxValue()},
     }
+
+    handleSelectedCategoriesChange = value => {
+        this.setState({
+            selectedCategories: value
+        })
+    }
+
+
 
     handleSearchPhraseChange = event => {
         this.setState({
             currentSearchPhrase: event.target.value
         })
     }
-    handleMinPriceChange = event => {
+
+
+    componentDidMount() {
         this.setState({
-            currentMinPrice: event.target.value,
-
+            records: historyRecords
         })
-        console.log(this.state.categories)
-
     }
-    handleMaxPriceChange = event => {
-        this.setState({
-            currentMaxPrice: event.target.value,
 
-        })
-        console.log(this.state.value)
+
+
+
+    handleIsCyclicChange = event => {
+        this.state.isCyclic === false ?
+            (this.setState({
+                isCyclic: true
+            })) : (this.setState({
+                isCyclic: false
+            }))
     }
-    // handleCategoryChoice = event => {
-    //     this.setState({
-    //         categories: event.target.value
-    //
-    //     })
-    // }
+
+
+
 
     render() {
         return (
@@ -68,27 +124,38 @@ class History extends React.Component {
                             <Col md={3}>
                                 <h4>Opis</h4>
                             </Col>
-                            <Col md={2} mdOffset={7}>
-                                <Checkbox>
+                            <Col md={2} mdOffset={6}>
+                                <Checkbox onChange={this.handleIsCyclicChange}>
                                     Cykliczne
                                 </Checkbox>
                             </Col>
                             <Form>
                                 <FormGroup controlId="formHorizontalText">
-                                    <h1>{this.state.currentSearchPhrase}</h1>
                                     <FormControl placeholder="Opisz czego szukasz"
                                                  onChange={this.handleSearchPhraseChange}
                                                  value={this.state.currentSearchPhrase}
                                                  type="text"/>
 
                                 </FormGroup>
+
                             </Form>
+
                         </Row>
                     </Col>
 
 
                     <Col md={5} mdOffset={1}>
-                        <MultiSelectField/>
+                        <h4>Zakres cen</h4>
+
+                        <FormGroup className='slider' controlId="formHorizontalText">
+                            <InputRange
+                                maxValue={this.getMaxValue()}
+                                minValue={0}
+                                value={this.state.value}
+                                onChange={value => this.setState({value})}/>
+
+                        </FormGroup>
+
                     </Col>
 
                 </Row>
@@ -98,94 +165,100 @@ class History extends React.Component {
                         <DateRangePicker
                             startDate={this.state.startDate}
                             endDate={this.state.endDate}
-                            onDatesChange={({startDate, endDate}) => {
 
-                                this.setState({
-                                    startDate,
-                                    endDate,
-                                })
-                            }}
-                            focusedInput={this.state.focusedInput}
-                            onFocusChange={focusedInput => this.setState({focusedInput})}/>
-                    </Col>
-                    <Col md={5} mdOffset={1}>
-                        <Form>
-                            <h4>Zakres cen</h4>
-                            <Row>
 
-                                <Col md={6}>
-                                    <FormGroup controlId="formHorizontalText">
+                         onDatesChange={({startDate, endDate}) => {
 
-                                        <FormControl placeholder="Cena minimalna"
-                                                     onChange={this.handleMinPriceChange}
-                                                     value={this.state.currentMinPrice}
-                                                     type="number"/>
+                             this.setState({
+                                 startDate,
+                                 endDate,
+                             })
+                         }}
+                         focusedInput={this.state.focusedInput}
+                         onFocusChange={focusedInput => this.setState({focusedInput})}/>
+                </Col>
+                <Col md={5} mdOffset={1}>
+                    <Form>
 
-                                    </FormGroup>
-                                </Col>
-                                <Col md={6}>
-                                    <FormGroup controlId="formHorizontalText">
+                        <Row>
 
-                                        <FormControl placeholder="Cena maksymalna"
-                                                     onChange={this.handleMaxPriceChange}
-                                                     value={this.state.currentMaxPrice}
-                                                     type="number"/>
+                            <Col md={12}>
 
-                                    </FormGroup>
-                                </Col>
-                            </Row>
 
-                        </Form>
-                    </Col>
-                </Row>
-                <Row>
+                                <MultiSelectField
+                                    value={this.state.selectedCategories}
+                                    onChange={this.handleSelectedCategoriesChange}
+                                    options={categories}
 
-                    <Col md={12}>
-                        <h3 className="recordsList">Historia</h3>
+                                />
 
-                        <Table striped bordered condensed hover>
-                            <thead>
-                            <tr>
-                                <th>Kategoria</th>
-                                <th>Kwota</th>
-                                <th>Data</th>
 
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {
-                                historyRecords && historyRecords.filter(
-                                    record => record.spending.includes(this.state.currentSearchPhrase)
-                                ).filter(
-                                    record => parseInt(record.value) <= this.state.currentMaxPrice && parseInt(record.value) >= this.state.currentMinPrice
-                                ).filter(
-                                    record => record.isCyclic !== true
+
+
+                            </Col>
+                        </Row>
+
+                    </Form>
+                </Col>
+            </Row>
+        <Row>
+
+            <Col md={12}>
+                <h3 className="recordsList">Historia</h3>
+
+                <Table striped bordered condensed hover>
+                    <thead>
+                    <tr>
+                        <th>Kategoria</th>
+                        <th>Kwota</th>
+                        <th>Data</th>
+
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {
+                        this.state.records.filter(
+                            record =>
+                                this.state.selectedCategories.length === 0 ?
+                                    true :
+                                    this.state.selectedCategories.some(
+                                        category => category.value === record.spendingCategory
+                                    )
+                        ).filter(
+                            record => this.state.isCyclic === false ? true : (record.isCyclic === true)
+                        ).filter(
+                            record => record.spending.includes(this.state.currentSearchPhrase)
+                        ).filter(
+                            record => parseInt(record.value) <= this.state.value.max && parseInt(record.value) >= this.state.value.min
+                        )
+
+                        //     .filter(
+                        //     record => record.spendingDate >= this.state.startDate && record.spendingDate <= this.state.endDate
+                        // )
+                            .map(
+                                record => (
+                                    <tr key={record.id} onClick={this.moreInfo}>
+                                        <td>{record.spendingCategory}</td>
+                                        <td>{record.value}</td>
+                                        <td>{record.spendingDate}</td>
+
+                                    </tr>
                                 )
-                                //     .filter(
-                                //     record => record.spendingDate >= this.state.startDate && record.spendingDate <= this.state.endDate
-                                // )
-                                    .map(
-                                        record => (
-                                            <tr key={record.id} onClick={this.moreInfo}>
-                                                <td>{record.spendingCategory}</td>
-                                                <td>{record.value}</td>
-                                                <td>{record.spendingDate}</td>
-
-                                            </tr>
-                                        )
-                                    )}
+                            )}
 
 
-                            </tbody>
-                        </Table>
-                    </Col>
+                    </tbody>
+                </Table>
+            </Col>
 
-                </Row>
-            </Grid>
+        </Row>
+    </Grid>
 
-        )
+    )
     }
 }
 
 
 export default History
+
+

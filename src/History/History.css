@@ -2,8 +2,14 @@
     overflow-Y: scroll;
     overflow-x: hidden;
     padding: 0 3%;
-    min-height: 100%;
+    height: 100%;
     width: 100%;
+    margin-bottom: 10%;
+}
+
+#history .slider{
+    width: 100%;
+
 }
 
 #row {
