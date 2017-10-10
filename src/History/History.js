@@ -75,7 +75,7 @@ class History extends React.Component {
         records: [],
         currentSearchPhrase: '',
         isCyclic: false,
-        priceValue: {min: 0, max: this.getMaxValue()},
+        value: {min: 0, max: this.getMaxValue()},
     }
 
     handleSelectedCategoriesChange = value => {
@@ -93,40 +93,26 @@ class History extends React.Component {
     }
 
 
-
-
-
-    handleMinPriceChange = event => {
+    componentDidMount() {
         this.setState({
-            currentMinPrice: event.target.value,
-
+            records: historyRecords
         })
-        console.log(this.state.categories)
-
     }
+
+
+
 
     handleIsCyclicChange = event => {
         this.state.isCyclic === false ?
             (this.setState({
                 isCyclic: true
             })) : (this.setState({
-                isCyclic: true
+                isCyclic: false
             }))
     }
 
-    handleMaxPriceChange = event => {
-        this.setState({
-            currentMaxPrice: event.target.value,
 
-        })
-        console.log(this.state.value)
-    }
-    handleCategoryChoice = event => {
-        this.setState({
-            categories: event.target.value
 
-        })
-    }
 
     render() {
         return (
@@ -145,7 +131,6 @@ class History extends React.Component {
                             </Col>
                             <Form>
                                 <FormGroup controlId="formHorizontalText">
-                                    <h1>{this.state.currentSearchPhrase}</h1>
                                     <FormControl placeholder="Opisz czego szukasz"
                                                  onChange={this.handleSearchPhraseChange}
                                                  value={this.state.currentSearchPhrase}
@@ -166,7 +151,7 @@ class History extends React.Component {
                             <InputRange
                                 maxValue={this.getMaxValue()}
                                 minValue={0}
-                                value={this.state.priceValue}
+                                value={this.state.value}
                                 onChange={value => this.setState({value})}/>
 
                         </FormGroup>
@@ -237,18 +222,16 @@ class History extends React.Component {
                                 this.state.selectedCategories.length === 0 ?
                                     true :
                                     this.state.selectedCategories.some(
-                                        category => category.value === record.category
+                                        category => category.value === record.spendingCategory
                                     )
                         ).filter(
-                            record => this.state.isCyclic === false ? true :
-                                record => record.isCyclic === true
+                            record => this.state.isCyclic === false ? true : (record.isCyclic === true)
                         ).filter(
                             record => record.spending.includes(this.state.currentSearchPhrase)
                         ).filter(
                             record => parseInt(record.value) <= this.state.value.max && parseInt(record.value) >= this.state.value.min
-                        ).filter(
-                            record => record.isCyclic !== true
                         )
+
                         //     .filter(
                         //     record => record.spendingDate >= this.state.startDate && record.spendingDate <= this.state.endDate
                         // )
