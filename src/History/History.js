@@ -9,72 +9,26 @@ import {
     Form,
     Row
 } from 'react-bootstrap'
-import {DateRangePicker} from 'react-dates';
 import MultiSelectField from './Multiselect'
+import 'react-select/dist/react-select.css';
+import {DateRangePicker} from 'react-dates';
 import 'react-select/dist/react-select.css';
 import './History.css';
 
-const categories = [
-    {
-        label: 'Jedzenie',
-        value: 'Jedzenie'
-    },
-    {
-        label: 'Mieszkanie',
-        value: 'Mieszkanie'
-    },
-    {
-        label: 'Inne opłaty i rachunki',
-        value: 'Inne opłaty i rachunki'
-    },
-    {
-        label: 'Zdrowie, higiena i chemia',
-        value: 'Zdrowie higiena i chemia'
-    },
-    {
-        label: 'Ubranie',
-        value: 'Ubranie'
-    },
-    {
-        label: 'Relaks',
-        value: 'Relaks'
-    },
-    {
-        label: 'Transport',
-        value: 'Transport'
-    },
-    {
-        label: 'Inne wydatki',
-        value: 'Inne wydatki'
-    },
-]
 
 
-const historyRecords = JSON.parse(localStorage.getItem('spendings') || '[]')
+let historyRecords = JSON.parse(localStorage.getItem('spendings') || '[]')
 console.log(historyRecords)
 
 class History extends React.Component {
     state = {
         startDate: this.props.startDate,
         endDate: this.props.endDate,
-        selectedCategories: [],
-        records: [],
+        categories: [],
         currentSearchPhrase: '',
         currentMinPrice: 0,
         currentMaxPrice: 999999,
         isCyclic: true,
-    }
-
-    handleSelectedCategoriesChange = value => {
-        this.setState({
-            selectedCategories: value
-        })
-    }
-
-    componentDidMount() {
-        this.setState({
-            records: historyRecords
-        })
     }
 
     handleSearchPhraseChange = event => {
@@ -90,16 +44,6 @@ class History extends React.Component {
         console.log(this.state.categories)
 
     }
-
-    handleIsCyclicChange = event => {
-        this.state.isCyclic === false ?
-            (this.setState({
-                isCyclic: true
-            })) : (this.setState({
-                isCyclic: false
-            }))
-    }
-
     handleMaxPriceChange = event => {
         this.setState({
             currentMaxPrice: event.target.value,
@@ -125,7 +69,7 @@ class History extends React.Component {
                                 <h4>Opis</h4>
                             </Col>
                             <Col md={2} mdOffset={7}>
-                                <Checkbox onChange={this.handleIsCyclicChange}>
+                                <Checkbox>
                                     Cykliczne
                                 </Checkbox>
                             </Col>
@@ -144,12 +88,7 @@ class History extends React.Component {
 
 
                     <Col md={5} mdOffset={1}>
-                        <MultiSelectField
-                            value={this.state.selectedCategories}
-                            onChange={this.handleSelectedCategoriesChange}
-                            options={categories}
-
-                        />
+                        <MultiSelectField/>
                     </Col>
 
                 </Row>
@@ -215,17 +154,7 @@ class History extends React.Component {
                             </thead>
                             <tbody>
                             {
-                                this.state.records.filter(
-                                    record =>
-                                        this.state.selectedCategories.length === 0 ?
-                                            true :
-                                            this.state.selectedCategories.some(
-                                                category => category.value === record.category
-                                            )
-                                ).filter(
-                                    record => this.state.isCyclic === false ? true :
-                                        record => record.isCyclic === true
-                                ).filter(
+                                historyRecords && historyRecords.filter(
                                     record => record.spending.includes(this.state.currentSearchPhrase)
                                 ).filter(
                                     record => parseInt(record.value) <= this.state.currentMaxPrice && parseInt(record.value) >= this.state.currentMinPrice
@@ -260,5 +189,3 @@ class History extends React.Component {
 
 
 export default History
-
-
