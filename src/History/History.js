@@ -9,6 +9,7 @@ import {
     Col,
     Form,
     Row,
+    // Button
 } from 'react-bootstrap'
 import {DateRangePicker, SingleDatePicker, DayPickerRangeController} from 'react-dates';
 import MultiSelectField from './Multiselect'
@@ -69,8 +70,8 @@ class History extends React.Component {
         ))
 
     state = {
-        startDate: this.props.startDate,
-        endDate: this.props.endDate,
+        startDate: moment().startOf('month'),
+        endDate: moment(),
         selectedCategories: [],
         records: [],
         currentSearchPhrase: '',
@@ -166,7 +167,7 @@ class History extends React.Component {
                             startDate={this.state.startDate}
                             endDate={this.state.endDate}
 
-
+                            isOutsideRange={() => false}
                          onDatesChange={({startDate, endDate}) => {
 
                              this.setState({
@@ -230,17 +231,17 @@ class History extends React.Component {
                             record => record.spending.includes(this.state.currentSearchPhrase)
                         ).filter(
                             record => parseInt(record.value) <= this.state.value.max && parseInt(record.value) >= this.state.value.min
+                        ).filter(
+                            record => Date.parse(record.spendingDate) >= (Date.parse(this.state.startDate)-43200000)
+                                && Date.parse(record.spendingDate) <= (Date.parse(this.state.endDate)-43200000)
                         )
-
-                        //     .filter(
-                        //     record => record.spendingDate >= this.state.startDate && record.spendingDate <= this.state.endDate
-                        // )
                             .map(
                                 record => (
                                     <tr key={record.id} onClick={this.moreInfo}>
                                         <td>{record.spendingCategory}</td>
                                         <td>{record.value}</td>
                                         <td>{record.spendingDate}</td>
+                                        {/*<td><Button  bsStyle="danger" bsSize="xsmall">Usuń</Button></td>*/}
 
                                     </tr>
                                 )
