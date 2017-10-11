@@ -1,7 +1,7 @@
 import React from 'react'
 import './ShortHistory.css';
-import { BootstrapTable, TableHeaderColumn, priceFormatter} from 'react-bootstrap-table';
-// import 'node_modules/react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
+import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
+import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import {
 Table
 } from 'react-bootstrap'
@@ -58,12 +58,23 @@ class ShortHistory extends React.Component {
         clearInterval(this.intervalId)
     }
 
+    createCustomClearButton = (onClick) => {
+        return (
+            <button className='btn btn-warning' onClick={ onClick }>Wyczyść</button>
+        );
+    }
     render() {
+        const options = {
+            clearSearch: true,
+            clearSearchBtn: this.createCustomClearButton
+        };
+
+
         return(
-            <div className="style">
+            <div>
 
                 <h2>Ostatnie Wydatki</h2>
-                <BootstrapTable data={this.state.products} striped={true} hover={true} search={ true } multiColumnSearch={ true }>
+                <BootstrapTable data={this.state.products.slice(-10).reverse()} hover={true} options={ options } search={ true } multiColumnSearch={ true }>
                     <TableHeaderColumn dataField="spendingDate" isKey={true} dataSort={true} text-align="center" searchable={ false }>Data</TableHeaderColumn>
                     <TableHeaderColumn dataField="value" dataAlign="center" dataSort={true}>Kwota wydatku</TableHeaderColumn>
                     <TableHeaderColumn dataField="spendingCategory" dataSort={true} dataAlign="center">Kategoria wydatku</TableHeaderColumn>
@@ -71,10 +82,10 @@ class ShortHistory extends React.Component {
                 </BootstrapTable>
 
                 <h2>Ostatnie  Przychody</h2>
-                <BootstrapTable data={products} striped={true} hover={true}>
-                    <TableHeaderColumn dataField="id" isKey={true}  dataSort={true}>Data</TableHeaderColumn>
-                    <TableHeaderColumn dataField="name" dataSort={true} dataAlign="center">Nazwa produktu</TableHeaderColumn>
-                    <TableHeaderColumn dataField="price" dataFormat={priceFormatter} dataAlign="center">Cena</TableHeaderColumn>
+                <BootstrapTable data={ products }>
+                    <TableHeaderColumn dataField='id' isKey>Product ID</TableHeaderColumn>
+                    <TableHeaderColumn dataField='name'>Product Name</TableHeaderColumn>
+                    <TableHeaderColumn dataField='price' dataSort>Product Price</TableHeaderColumn>
                 </BootstrapTable>
             </div>
         )
