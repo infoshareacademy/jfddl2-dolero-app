@@ -79,6 +79,7 @@ class ShortHistory extends React.Component {
                     <TableHeaderColumn dataField="value" dataAlign="center" dataSort={true}>Kwota wydatku</TableHeaderColumn>
                     <TableHeaderColumn dataField="spendingCategory" dataSort={true} dataAlign="center">Kategoria wydatku</TableHeaderColumn>
                     <TableHeaderColumn dataField="spending" dataSort={true} dataAlign="center">Opis wydatku</TableHeaderColumn>
+
                 </BootstrapTable>
 
                 <h2>Ostatnie  Przychody</h2>
