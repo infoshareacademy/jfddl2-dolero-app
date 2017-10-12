@@ -1,5 +1,5 @@
 import React from 'react'
-
+import HistoryMore from './HistoryMore'
 import {
     Checkbox,
     FormGroup,
@@ -9,14 +9,19 @@ import {
     Col,
     Form,
     Row,
-    // Button
+    Button
+
+
 } from 'react-bootstrap'
-import {DateRangePicker, SingleDatePicker, DayPickerRangeController} from 'react-dates';
+import {DateRangePicker} from 'react-dates';
 import MultiSelectField from './Multiselect'
 import 'react-select/dist/react-select.css';
 import './History.css';
 import InputRange from 'react-input-range'
 import 'react-input-range/lib/css/index.css'
+import {
+    Route,
+} from 'react-router-dom'
 
 var moment = require('moment');
 
@@ -61,12 +66,11 @@ const historyRecords = JSON.parse(localStorage.getItem('spendings') || '[]')
 console.log(historyRecords)
 
 
-
 class History extends React.Component {
 
-    getMaxValue = () =>(
+    getMaxValue = () => (
         historyRecords.reduce((max, next) =>
-            Math.max(max,next.value),0
+            Math.max(max, next.value), 0
         ))
 
     state = {
@@ -77,14 +81,22 @@ class History extends React.Component {
         currentSearchPhrase: '',
         isCyclic: false,
         value: {min: 0, max: this.getMaxValue()},
+        link: 0
     }
 
+    urlChangeByRow = (record) => {
+
+        window.history.pushState('page2', 'Title', '/history/'+record)
+        this.setState({
+            link: record
+        })
+
+    }
     handleSelectedCategoriesChange = value => {
         this.setState({
             selectedCategories: value
         })
     }
-
 
 
     handleSearchPhraseChange = event => {
@@ -100,7 +112,18 @@ class History extends React.Component {
         })
     }
 
+    handleRemoveRecord = event => {
+        const recordId = event.target.dataset.recordId
 
+        this.setState({
+            records: this.state.records.filter(
+                record =>record.id != recordId
+            )
+        })
+        //     () => {
+        //     localStorage.setItem('spendings', JSON.stringify(this.state.records))
+        // })
+    }
 
 
     handleIsCyclicChange = event => {
@@ -111,8 +134,6 @@ class History extends React.Component {
                 isCyclic: false
             }))
     }
-
-
 
 
     render() {
@@ -168,94 +189,107 @@ class History extends React.Component {
                             endDate={this.state.endDate}
 
                             isOutsideRange={() => false}
-                         onDatesChange={({startDate, endDate}) => {
+                            onDatesChange={({startDate, endDate}) => {
 
-                             this.setState({
-                                 startDate,
-                                 endDate,
-                             })
-                         }}
-                         focusedInput={this.state.focusedInput}
-                         onFocusChange={focusedInput => this.setState({focusedInput})}/>
-                </Col>
-                <Col md={5} mdOffset={1}>
-                    <Form>
+                                this.setState({
+                                    startDate,
+                                    endDate,
+                                })
+                            }}
+                            focusedInput={this.state.focusedInput}
+                            onFocusChange={focusedInput => this.setState({focusedInput})}/>
+                    </Col>
+                    <Col md={5} mdOffset={1}>
+                        <Form>
 
-                        <Row>
+                            <Row>
 
-                            <Col md={12}>
-
-
-                                <MultiSelectField
-                                    value={this.state.selectedCategories}
-                                    onChange={this.handleSelectedCategoriesChange}
-                                    options={categories}
-
-                                />
+                                <Col md={12}>
 
 
+                                    <MultiSelectField
+                                        value={this.state.selectedCategories}
+                                        onChange={this.handleSelectedCategoriesChange}
+                                        options={categories}
+
+                                    />
 
 
-                            </Col>
-                        </Row>
+                                </Col>
+                            </Row>
 
-                    </Form>
-                </Col>
-            </Row>
-        <Row>
+                        </Form>
+                    </Col>
+                </Row>
+                <Row>
 
-            <Col md={12}>
-                <h3 className="recordsList">Historia</h3>
+                    <Col md={12}>
+                        <h3 className="recordsList">Historia</h3>
 
-                <Table striped bordered condensed hover>
-                    <thead>
-                    <tr>
-                        <th>Kategoria</th>
-                        <th>Kwota</th>
-                        <th>Data</th>
+                        <Table striped bordered condensed hover>
+                            <thead>
+                            <tr>
+                                <th>Kategoria</th>
+                                <th>Kwota</th>
+                                <th>Data</th>
 
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {
-                        this.state.records.filter(
-                            record =>
-                                this.state.selectedCategories.length === 0 ?
-                                    true :
-                                    this.state.selectedCategories.some(
-                                        category => category.value === record.spendingCategory
-                                    )
-                        ).filter(
-                            record => this.state.isCyclic === false ? true : (record.isCyclic === true)
-                        ).filter(
-                            record => record.spending.includes(this.state.currentSearchPhrase)
-                        ).filter(
-                            record => parseInt(record.value) <= this.state.value.max && parseInt(record.value) >= this.state.value.min
-                        ).filter(
-                            record => Date.parse(record.spendingDate) >= (Date.parse(this.state.startDate)-43200000)
-                                && Date.parse(record.spendingDate) <= (Date.parse(this.state.endDate)-43200000)
-                        )
-                            .map(
-                                record => (
-                                    <tr key={record.id} onClick={this.moreInfo}>
-                                        <td>{record.spendingCategory}</td>
-                                        <td>{record.value}</td>
-                                        <td>{record.spendingDate}</td>
-                                        {/*<td><Button  bsStyle="danger" bsSize="xsmall">Usuń</Button></td>*/}
+                            </tr>
+                            </thead>
 
-                                    </tr>
+                            {
+                                this.state.records.filter(
+                                    record =>
+                                        this.state.selectedCategories.length === 0 ?
+                                            true :
+                                            this.state.selectedCategories.some(
+                                                category => category.value === record.spendingCategory
+                                            )
+                                ).filter(
+                                    record => this.state.isCyclic === false ? true : (record.isCyclic === true)
+                                ).filter(
+                                    record => record.spending.includes(this.state.currentSearchPhrase)
+                                ).filter(
+                                    record => parseInt(record.value, 10) <= this.state.value.max && parseInt(record.value, 10) >= this.state.value.min
+                                ).filter(
+                                    record => Date.parse(record.spendingDate) >= (Date.parse(this.state.startDate) - 43200000)
+                                        && Date.parse(record.spendingDate) <= (Date.parse(this.state.endDate) - 43200000)
                                 )
-                            )}
+                                    .map(
+                                        (record, index) => (
+                                            <tbody>
+
+                                            <tr key={record.id} data-href='/asd'
+                                                onClick={() =>{this.urlChangeByRow(record.id)}}>
+                                                <td>{record.spendingCategory}</td>
+                                                <td>{record.value}</td>
+                                                <td>{record.spendingDate}</td>
+                                                <td style={{width:'3vw'}}
+                                                ><Button onClick={this.handleRemoveRecord}
+                                                            data-record-id={record.id} bsStyle="danger"
+                                                            bsSize="xsmall"
+
+                                                >Usuń</Button></td>
+
+                                            </tr>
+                                            { this.state.link===record.id &&
+                                            <Route path="/history/:recordId" render={() => {
+                                                return <HistoryMore record={record}/>
+                                            }}/>
+                                            }
+
+                                            </tbody>
+
+                                )
+                                )}
 
 
-                    </tbody>
-                </Table>
-            </Col>
+                        </Table>
+                    </Col>
 
-        </Row>
-    </Grid>
+                </Row>
+            </Grid>
 
-    )
+        )
     }
 }
 
