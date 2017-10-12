@@ -6,30 +6,6 @@ import 'react-dates/lib/css/_datepicker.css';
 import {PieChart, Pie, Tooltip} from 'recharts'
 
 
-/*function getPieChart(spendings) {
-    let byCategories = new Map();
-    // 'jedzenie': 300
-    // 'wszystkie wydatki': 89
-    // 'jedzenie': 600
-    spendings.forEach(function (spending) {
-        if (byCategories.has(spending.spendingCategory)) {
-            let newVal = byCategories.get(spending.spendingCategory) + spending.value;
-            byCategories.set(spending.spendingCategory, newVal);
-        } else {
-            byCategories.set(spending.spendingCategory, spending.value)
-        }
-    });
-    return Array.from(byCategories).map(array => {
-        return {name: array[0], value: Number(array[1])};
-    });
-}*/
-
-
-
-
-
-
-
 class Diagrams extends React.Component {
     state = {
         startDate: this.props.startDate,
@@ -77,22 +53,20 @@ class Diagrams extends React.Component {
         }, 0)
     }
 
-
-
-   /*getPieChart(spendings) {
-    let byCategories = new Map();
-    spendings.forEach(function (spending) {
-        if (byCategories.has(spending.spendingCategory)) {
-            let newVal = byCategories.get(spending.spendingCategory) + spending.value;
-            byCategories.set(spending.spendingCategory, newVal);
-        } else {
-            byCategories.set(spending.spendingCategory, spending.value)
-        }
-    });
-    return Array.from(byCategories).map(array => {
-        return {name: array[0], value: Number(array[1])};
-    });
-}*/
+    getPieChart(spendings) {
+        let byCategories = new Map();
+        spendings.forEach(function (spending) {
+            if (byCategories.has(spending.spendingCategory)) {
+                let newVal = byCategories.get(spending.spendingCategory) + parseInt(spending.value);
+                byCategories.set(spending.spendingCategory, newVal);
+            } else {
+                byCategories.set(spending.spendingCategory, parseInt(spending.value))
+            }
+        });
+        return Array.from(byCategories).map(array => {
+            return {name: array[0], value: Number(array[1])};
+        });
+    }
 
     render() {
         return (
@@ -150,11 +124,11 @@ class Diagrams extends React.Component {
                         </Col>
                     </Row>
                 </Grid>
-                {/*<PieChart width={800} height={400}>
-                    <Pie data={getPieChart()} startAngle={360} endAngle={0} cx={200} cy={200} fill="#8884d8"
+                <PieChart width={800} height={400}>
+                    <Pie data={this.getPieChart(this.state.spendings)} startAngle={360} endAngle={0} cx={200} cy={200} fill="#8884d8"
                          label/>
                     <Tooltip/>
-                </PieChart>*/}
+                </PieChart>
 
             </div>
         )
