@@ -45,7 +45,7 @@ class Sidebar extends React.Component {
         event.preventDefault();
 
         let sendingObject = {
-            id: 'Dodac numer id',
+            id: Date.now(),
             spending: newSpendingName,
             spendingCategory: newSpendingCategory,
             value: newSpendingValue,
