@@ -21,7 +21,7 @@ class App extends Component {
                     <Col xs={6} md={4}><Sidebar/></Col>
                     <Col xs={6} md={8} className='components'>
                     <MainMenu/>
-                    <Route exact path='/history' component={History}/>
+                    <Route path='/history' component={History}/>
                     <Route path='/diagrams' component={Diagrams}/>
                     <Route path='/shorthistory' component={ShortHistory}/>
                         {/*<Route path='/Helpdesk' component={Helpdesk}/>*/}

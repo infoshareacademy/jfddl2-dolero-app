@@ -1,191 +1,299 @@
-// import React from 'react'
-// import {
-//     Checkbox,
-//     FormGroup,
-//     FormControl,
-//     Table,
-//     Grid,
-//     Col,
-//     Form,
-//     Row
-// } from 'react-bootstrap'
-// import MultiSelectField from './Multiselect'
-// import 'react-select/dist/react-select.css';
-// import {DateRangePicker} from 'react-dates';
-// import 'react-select/dist/react-select.css';
-// import './History.css';
-//
-//
-//
-// let historyRecords = JSON.parse(localStorage.getItem('spendings') || '[]')
-// console.log(historyRecords)
-//
-// class History extends React.Component {
-//     state = {
-//         startDate: this.props.startDate,
-//         endDate: this.props.endDate,
-//         categories: [],
-//         currentSearchPhrase: '',
-//         currentMinPrice: 0,
-//         currentMaxPrice: 999999,
-//         isCyclic: true,
-//     }
-//
-//     handleSearchPhraseChange = event => {
-//         this.setState({
-//             currentSearchPhrase: event.target.value
-//         })
-//     }
-//     handleMinPriceChange = event => {
-//         this.setState({
-//             currentMinPrice: event.target.value,
-//
-//         })
-//         console.log(this.state.categories)
-//
-//     }
-//     handleMaxPriceChange = event => {
-//         this.setState({
-//             currentMaxPrice: event.target.value,
-//
-//         })
-//         console.log(this.state.value)
-//     }
-//     // handleCategoryChoice = event => {
-//     //     this.setState({
-//     //         categories: event.target.value
-//     //
-//     //     })
-//     // }
-//
-//     render() {
-//         return (
-//             <Grid id='history' className='history'>
-//                 <Row>
-//
-//                     <Col md={5}>
-//                         <Row id='row'>
-//                             <Col md={3}>
-//                                 <h4>Opis</h4>
-//                             </Col>
-//                             <Col md={2} mdOffset={7}>
-//                                 <Checkbox>
-//                                     Cykliczne
-//                                 </Checkbox>
-//                             </Col>
-//                             <Form>
-//                                 <FormGroup controlId="formHorizontalText">
-//                                     <h1>{this.state.currentSearchPhrase}</h1>
-//                                     <FormControl placeholder="Opisz czego szukasz"
-//                                                  onChange={this.handleSearchPhraseChange}
-//                                                  value={this.state.currentSearchPhrase}
-//                                                  type="text"/>
-//
-//                                 </FormGroup>
-//                             </Form>
-//                         </Row>
-//                     </Col>
-//
-//
-//                     <Col md={5} mdOffset={1}>
-//                         <MultiSelectField/>
-//                     </Col>
-//
-//                 </Row>
-//                 <Row>
-//                     <Col md={5}>
-//                         <h4>Zakres dat</h4>
-//                         <DateRangePicker
-//                             startDate={this.state.startDate}
-//                             endDate={this.state.endDate}
-//                             onDatesChange={({startDate, endDate}) => {
-//
-//                                 this.setState({
-//                                     startDate,
-//                                     endDate,
-//                                 })
-//                             }}
-//                             focusedInput={this.state.focusedInput}
-//                             onFocusChange={focusedInput => this.setState({focusedInput})}/>
-//                     </Col>
-//                     <Col md={5} mdOffset={1}>
-//                         <Form>
-//                             <h4>Zakres cen</h4>
-//                             <Row>
-//
-//                                 <Col md={6}>
-//                                     <FormGroup controlId="formHorizontalText">
-//
-//                                         <FormControl placeholder="Cena minimalna"
-//                                                      onChange={this.handleMinPriceChange}
-//                                                      value={this.state.currentMinPrice}
-//                                                      type="number"/>
-//
-//                                     </FormGroup>
-//                                 </Col>
-//                                 <Col md={6}>
-//                                     <FormGroup controlId="formHorizontalText">
-//
-//                                         <FormControl placeholder="Cena maksymalna"
-//                                                      onChange={this.handleMaxPriceChange}
-//                                                      value={this.state.currentMaxPrice}
-//                                                      type="number"/>
-//
-//                                     </FormGroup>
-//                                 </Col>
-//                             </Row>
-//
-//                         </Form>
-//                     </Col>
-//                 </Row>
-//                 <Row>
-//
-//                     <Col md={12}>
-//                         <h3 className="recordsList">Historia</h3>
-//
-//                         <Table striped bordered condensed hover>
-//                             <thead>
-//                             <tr>
-//                                 <th>Kategoria</th>
-//                                 <th>Kwota</th>
-//                                 <th>Data</th>
-//
-//                             </tr>
-//                             </thead>
-//                             <tbody>
-//                             {
-//                                 historyRecords && historyRecords.filter(
-//                                     record => record.spending.includes(this.state.currentSearchPhrase)
-//                                 ).filter(
-//                                     record => parseInt(record.value) <= this.state.currentMaxPrice && parseInt(record.value) >= this.state.currentMinPrice
-//                                 ).filter(
-//                                     record => record.isCyclic !== true
-//                                 )
-//                                 //     .filter(
-//                                 //     record => record.spendingDate >= this.state.startDate && record.spendingDate <= this.state.endDate
-//                                 // )
-//                                     .map(
-//                                         record => (
-//                                             <tr key={record.id} onClick={this.moreInfo}>
-//                                                 <td>{record.spendingCategory}</td>
-//                                                 <td>{record.value}</td>
-//                                                 <td>{record.spendingDate}</td>
-//
-//                                             </tr>
-//                                         )
-//                                     )}
-//
-//
-//                             </tbody>
-//                         </Table>
-//                     </Col>
-//
-//                 </Row>
-//             </Grid>
-//
-//         )
-//     }
-// }
-//
-//
-// export default History
+import React from 'react'
+import HistoryMore from './HistoryMore'
+import {
+    Checkbox,
+    FormGroup,
+    FormControl,
+    Table,
+    Grid,
+    Col,
+    Form,
+    Row,
+    Button
+
+
+} from 'react-bootstrap'
+import {DateRangePicker} from 'react-dates';
+import MultiSelectField from './Multiselect'
+import 'react-select/dist/react-select.css';
+import './History.css';
+import InputRange from 'react-input-range'
+import 'react-input-range/lib/css/index.css'
+import {
+    Route,
+} from 'react-router-dom'
+
+var moment = require('moment');
+
+
+const categories = [
+    {
+        label: 'Jedzenie',
+        value: 'Jedzenie'
+    },
+    {
+        label: 'Mieszkanie',
+        value: 'Mieszkanie'
+    },
+    {
+        label: 'Inne opłaty i rachunki',
+        value: 'Inne opłaty i rachunki'
+    },
+    {
+        label: 'Zdrowie, higiena i chemia',
+        value: 'Zdrowie higiena i chemia'
+    },
+    {
+        label: 'Ubranie',
+        value: 'Ubranie'
+    },
+    {
+        label: 'Relaks',
+        value: 'Relaks'
+    },
+    {
+        label: 'Transport',
+        value: 'Transport'
+    },
+    {
+        label: 'Inne wydatki',
+        value: 'Inne wydatki'
+    },
+]
+
+
+const historyRecords = JSON.parse(localStorage.getItem('spendings') || '[]')
+console.log(historyRecords)
+
+
+class History extends React.Component {
+
+    getMaxValue = () => (
+        historyRecords.reduce((max, next) =>
+            Math.max(max, next.value), 0
+        ))
+
+    state = {
+        startDate: moment().startOf('month'),
+        endDate: moment(),
+        selectedCategories: [],
+        records: [],
+        currentSearchPhrase: '',
+        isCyclic: false,
+        value: {min: 0, max: this.getMaxValue()},
+        link: 0
+    }
+
+    urlChangeByRow = (record) => {
+
+        window.history.pushState('page2', 'Title', '/history/'+record)
+        this.setState({
+            link: record
+        })
+
+    }
+    handleSelectedCategoriesChange = value => {
+        this.setState({
+            selectedCategories: value
+        })
+    }
+
+
+    handleSearchPhraseChange = event => {
+        this.setState({
+            currentSearchPhrase: event.target.value
+        })
+    }
+
+
+    componentDidMount() {
+        this.setState({
+            records: historyRecords
+        })
+    }
+
+    handleRemoveRecord = event => {
+        const recordId = event.target.dataset.recordId
+
+        this.setState({
+            records: this.state.records.filter(
+                record =>record.id != recordId
+            )
+        })
+        //     () => {
+        //     localStorage.setItem('spendings', JSON.stringify(this.state.records))
+        // })
+    }
+
+
+    handleIsCyclicChange = event => {
+        this.state.isCyclic === false ?
+            (this.setState({
+                isCyclic: true
+            })) : (this.setState({
+                isCyclic: false
+            }))
+    }
+
+
+    render() {
+        return (
+            <Grid id='history' className='history'>
+                <Row>
+
+                    <Col md={5}>
+                        <Row id='row'>
+                            <Col md={3}>
+                                <h4>Opis</h4>
+                            </Col>
+                            <Col md={2} mdOffset={6}>
+                                <Checkbox onChange={this.handleIsCyclicChange}>
+                                    Cykliczne
+                                </Checkbox>
+                            </Col>
+                            <Form>
+                                <FormGroup controlId="formHorizontalText">
+                                    <FormControl placeholder="Opisz czego szukasz"
+                                                 onChange={this.handleSearchPhraseChange}
+                                                 value={this.state.currentSearchPhrase}
+                                                 type="text"/>
+
+                                </FormGroup>
+
+                            </Form>
+
+                        </Row>
+                    </Col>
+
+
+                    <Col md={5} mdOffset={1}>
+                        <h4>Zakres cen</h4>
+
+                        <FormGroup className='slider' controlId="formHorizontalText">
+                            <InputRange
+                                maxValue={this.getMaxValue()}
+                                minValue={0}
+                                value={this.state.value}
+                                onChange={value => this.setState({value})}/>
+
+                        </FormGroup>
+
+                    </Col>
+
+                </Row>
+                <Row>
+                    <Col md={5}>
+                        <h4>Zakres dat</h4>
+                        <DateRangePicker
+                            startDate={this.state.startDate}
+                            endDate={this.state.endDate}
+
+                            isOutsideRange={() => false}
+                            onDatesChange={({startDate, endDate}) => {
+
+                                this.setState({
+                                    startDate,
+                                    endDate,
+                                })
+                            }}
+                            focusedInput={this.state.focusedInput}
+                            onFocusChange={focusedInput => this.setState({focusedInput})}/>
+                    </Col>
+                    <Col md={5} mdOffset={1}>
+                        <Form>
+
+                            <Row>
+
+                                <Col md={12}>
+
+
+                                    <MultiSelectField
+                                        value={this.state.selectedCategories}
+                                        onChange={this.handleSelectedCategoriesChange}
+                                        options={categories}
+
+                                    />
+
+
+                                </Col>
+                            </Row>
+
+                        </Form>
+                    </Col>
+                </Row>
+                <Row>
+
+                    <Col md={12}>
+                        <h3 className="recordsList">Historia</h3>
+
+                        <Table striped bordered condensed hover>
+                            <thead>
+                            <tr>
+                                <th>Kategoria</th>
+                                <th>Kwota</th>
+                                <th>Data</th>
+
+                            </tr>
+                            </thead>
+
+                            {
+                                this.state.records.filter(
+                                    record =>
+                                        this.state.selectedCategories.length === 0 ?
+                                            true :
+                                            this.state.selectedCategories.some(
+                                                category => category.value === record.spendingCategory
+                                            )
+                                ).filter(
+                                    record => this.state.isCyclic === false ? true : (record.isCyclic === true)
+                                ).filter(
+                                    record => record.spending.includes(this.state.currentSearchPhrase)
+                                ).filter(
+                                    record => parseInt(record.value, 10) <= this.state.value.max && parseInt(record.value, 10) >= this.state.value.min
+                                ).filter(
+                                    record => Date.parse(record.spendingDate) >= (Date.parse(this.state.startDate) - 43200000)
+                                        && Date.parse(record.spendingDate) <= (Date.parse(this.state.endDate) - 43200000)
+                                )
+                                    .map(
+                                        (record, index) => (
+                                            <tbody>
+
+                                            <tr key={record.id} data-href='/asd'
+                                                onClick={() =>{this.urlChangeByRow(record.id)}}>
+                                                <td>{record.spendingCategory}</td>
+                                                <td>{record.value}</td>
+                                                <td>{record.spendingDate}</td>
+                                                <td style={{width:'3vw'}}
+                                                ><Button onClick={this.handleRemoveRecord}
+                                                            data-record-id={record.id} bsStyle="danger"
+                                                            bsSize="xsmall"
+
+                                                >Usuń</Button></td>
+
+                                            </tr>
+                                            { this.state.link===record.id &&
+                                            <Route path="/history/:recordId" render={() => {
+                                                return <HistoryMore record={record}/>
+                                            }}/>
+                                            }
+
+                                            </tbody>
+
+                                )
+                                )}
+
+
+                        </Table>
+                    </Col>
+
+                </Row>
+            </Grid>
+
+        )
+    }
+}
+
+
+export default History
+
+
