@@ -66,7 +66,7 @@ class ShortHistory extends React.Component {
 
     createCustomClearButton = (onClick) => {
         return (
-            <button className='btn btn-warning' width='100' onClick={ onClick }>Wyczyść</button>
+            <button className='btn btn-warning' onClick={ onClick }>Wyczyść</button>
         );
     }
     render() {
@@ -77,7 +77,7 @@ class ShortHistory extends React.Component {
 
 
         return(
-            <div className='style'>
+            <div>
 
                 <h2>Ostatnie Wydatki</h2>
                 <BootstrapTable data={this.state.products.slice(-10).reverse()} hover={true} options={ options } search={ true } multiColumnSearch={ true }>
