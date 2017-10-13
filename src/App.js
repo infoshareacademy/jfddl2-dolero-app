@@ -23,7 +23,7 @@ class App extends Component {
                     <MainMenu/>
                     <Route path='/history' component={History}/>
                     <Route path='/diagrams' component={Diagrams}/>
-                    <Route path='/shorthistory' component={ShortHistory}/>
+                    <Route exact path='/' component={ShortHistory}/>
                         {/*<Route path='/Helpdesk' component={Helpdesk}/>*/}
                     </Col>
                 </Grid>
