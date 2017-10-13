@@ -152,13 +152,22 @@ class Sidebar extends React.Component {
         )
     }
 
+    CorrentInputValue = event => {
+        event.preventDefault()
+        alert('Nie świruj proszę, podaj poprawną wartość')
+        this.setState({
+            newSpendingValue: '',
+            newIncomeValue: ''
+        })
+    }
+
     render() {
 
 
         const spendingForm = (
             <Form
                 horizontal
-                onSubmit={this.addSpendings}
+                onSubmit={this.state.newSpendingValue < 0 ? this.CorrentInputValue : this.addSpendings}
             >
 
 
@@ -266,16 +275,16 @@ class Sidebar extends React.Component {
                 </ButtonGroup>
 
                 <FormGroup>
-                <Col smOffset={6} sm={5}>
-                <Button
-                type="submit"
-                bsSize="large"
-                bsStyle="warning"
-                className="sidebar-submit-btn"
-                >
-                Dodaj
-                </Button>
-                </Col>
+                    <Col smOffset={6} sm={5}>
+                        <Button
+                            type="submit"
+                            bsSize="large"
+                            bsStyle="warning"
+                            className="sidebar-submit-btn"
+                        >
+                            Dodaj
+                        </Button>
+                    </Col>
                 </FormGroup>
 
 
@@ -285,7 +294,7 @@ class Sidebar extends React.Component {
         const incomeForm = (
             <Form
                 horizontal
-                onSubmit={this.addIncomings}
+                onSubmit={this.state.newIncomeValue < 0 ? this.CorrentInputValue : this.addIncomings}
             >
                 <Col smOffset={1} sm={10}>
                     <FormGroup
@@ -406,3 +415,5 @@ class Sidebar extends React.Component {
 }
 
 export default Sidebar
+
+
