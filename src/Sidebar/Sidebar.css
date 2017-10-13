@@ -1,5 +1,6 @@
 .sidebar-bg {
     height: 100vh;
+
     /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#1e5799+0,131666+0,207cca+100,0047c4+100 */
     background: rgb(30,87,153); /* Old browsers */
     background: -moz-linear-gradient(top, rgba(30,87,153,1) 0%, rgba(19,22,102,1) 0%, rgba(32,124,202,1) 100%, rgba(0,71,196,1) 100%); /* FF3.6-15 */
