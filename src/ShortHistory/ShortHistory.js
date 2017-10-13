@@ -8,39 +8,42 @@ Table
 
 const sHistory = JSON.parse(localStorage.getItem('spendings') || '[]')
 console.log(sHistory)
+const Data = JSON.parse(localStorage.getItem('incomings') || '[]')
+console.log(Data)
 
-var products = [{
-    id: 1,
-    name: "Item name 1",
-    price: 120
-}, {
-    id: 2,
-    name: "Item name 2",
-    price: 100
-}, {
-    id: 3,
-    name: "Item name 3",
-    price: 100
-}, {
-    id: 4,
-    name: "Item name 4",
-    price: 100
-}, {
-    id: 5,
-    name: "Item name 5",
-    price: 100
-}, {
-    id: 6,
-    name: "Item name 5",
-    price: 100
-
-}];
+// var products = [{
+//     id: 1,
+//     name: "Item name 1",
+//     price: 120
+// }, {
+//     id: 2,
+//     name: "Item name 2",
+//     price: 100
+// }, {
+//     id: 3,
+//     name: "Item name 3",
+//     price: 100
+// }, {
+//     id: 4,
+//     name: "Item name 4",
+//     price: 100
+// }, {
+//     id: 5,
+//     name: "Item name 5",
+//     price: 100
+// }, {
+//     id: 6,
+//     name: "Item name 5",
+//     price: 100
+//
+// }];
 
 
 class ShortHistory extends React.Component {
 
     state = {
-        products: []
+        products: [],
+        incomings: []
     }
 
     componentDidMount() {
@@ -48,11 +51,14 @@ class ShortHistory extends React.Component {
         this.intervalId = setInterval(
             () => {
                 this.setState({
-                    products: JSON.parse(localStorage.getItem('spendings') || '[]')
+                    products: JSON.parse(localStorage.getItem('spendings') || '[]'),
+                    incomings: JSON.parse(localStorage.getItem('incomings') || '[]')
                 })
             }, 100
         )
     }
+
+
 
     componentWillUnmount() {
         clearInterval(this.intervalId)
@@ -82,11 +88,14 @@ class ShortHistory extends React.Component {
 
                 </BootstrapTable>
 
+
                 <h2>Ostatnie  Przychody</h2>
-                <BootstrapTable data={ products }>
-                    <TableHeaderColumn dataField='id' isKey>Product ID</TableHeaderColumn>
-                    <TableHeaderColumn dataField='name'>Product Name</TableHeaderColumn>
-                    <TableHeaderColumn dataField='price' dataSort>Product Price</TableHeaderColumn>
+                <BootstrapTable data={this.state.incomings.slice(-10).reverse()} options={ options }>
+                    <TableHeaderColumn dataField="incomingDate" isKey={true} dataSort={true} text-align="center" searchable={ false }>Data</TableHeaderColumn>
+                    <TableHeaderColumn dataField="value" dataAlign="center" dataSort={true}>Kwota przychodu</TableHeaderColumn>
+                    <TableHeaderColumn dataField="incomingCategory" dataSort={true} dataAlign="center">Kategoria wydatku</TableHeaderColumn>
+                    <TableHeaderColumn dataField="name" dataSort={true} dataAlign="center">Opis wydatku</TableHeaderColumn>
+
                 </BootstrapTable>
             </div>
         )
