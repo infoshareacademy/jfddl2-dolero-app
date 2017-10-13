@@ -50,14 +50,7 @@ class Sidebar extends React.Component {
         event.preventDefault();
 
         let sendingObject = {
-<<<<<<< HEAD
-            id: this.state.spendings.reduce(
-                (maxId, next) => Math.max(maxId, next.id),
-                0
-            ) + 1,
-=======
             id: Date.now(),
->>>>>>> develop
             spending: newSpendingName,
             spendingCategory: newSpendingCategory,
             value: newSpendingValue,
