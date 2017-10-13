@@ -3,17 +3,10 @@ import {Panel} from 'react-bootstrap'
 import {Grid, Row, Col} from 'react-bootstrap'
 import {DateRangePicker} from 'react-dates';
 import 'react-dates/lib/css/_datepicker.css';
-import {LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend} from 'recharts'
+import {PieChart, Pie, Tooltip} from 'recharts'
 
-const data = [
-    {name: 'Page A', uv: 4000, pv: 2400, amt: 2400},
-    {name: 'Page B', uv: 3000, pv: 1398, amt: 2210},
-    {name: 'Page C', uv: 2000, pv: 9800, amt: 2290},
-    {name: 'Page D', uv: 2780, pv: 3908, amt: 2000},
-    {name: 'Page E', uv: 1890, pv: 4800, amt: 2181},
-    {name: 'Page F', uv: 2390, pv: 3800, amt: 2500},
-    {name: 'Page G', uv: 3490, pv: 4300, amt: 2100},
-]
+// todo przerobić pozostałe funkcje aby działały ze spendings
+// todo spięcie logiki działania ze state
 
 const transactions = [
     {amount: 300, category: "food", date: new Date(2017, 9, 9)},
@@ -25,19 +18,45 @@ const transactions = [
     {amount: 700, category: "food", date: new Date(2017, 9, 11)}
 ];
 
-function getBalance(date, transactions) {
-    return transactions.filter(function (transaction) {
-        return transaction.date.getDate() <= date.getDate()
-    }).map(function (transaction) {
-        return transaction.amount
+let spendings = JSON.parse(localStorage.getItem('spendings') || '[]');
+
+function getPieChart(spendings) {
+    // 'jedzenie': 300
+    // 'wszystkie wydatki': 89
+    // 'jedzenie': 600
+    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map
+    let byCategoriesMap = new Map();
+    spendings.forEach(function (spending) {
+        if(byCategoriesMap.has(spending.spendingCategory)) { //jezeli by categoriesMap zawiera kategorie z obiektu spending
+            //to byCategoriesMap.get zwraca przechowywaną wartość dla kategorii z obiektu spending
+            //nastepnie dodaje do wyżej wymienionej wartosci spending.value
+            let newValue = byCategoriesMap.get(spending.spendingCategory) + spending.value;
+            //w byCategoriesMap jest podmieniana wartość dla kategorii z obiektu spending
+            byCategoriesMap.set(spending.spendingCategory, newValue);
+        } else {//jezeli by categoriesMap nie zawiera kategorie z obiektu spending
+            //to w byCategoriesMap ustawiana jest wartość dla spending category
+            byCategoriesMap.set(spending.spendingCategory, spending.value)
+        }
+    });
+    return Array.from(byCategoriesMap).map(array => {
+        return {name: array[0], value: Number(array[1])};
+    });
+}
+
+
+function getBalance(date, spendings) {
+    return spendings.filter(function (spending) {
+        return getDateFromSpending(spending).getDate() <= date.getDate()
+    }).map(function (spending) {
+        return spending.value
     }).reduce((p1, p2) => {
-        return p1 + p2
+        return Number(p1) + Number(p2)
     }, 0)
 }
 
 function getIncome(date, transactions) {
     return transactions.filter(function (transaction) {
-        return transaction.date.getDate() === date.getDate() && transaction.amount>0
+        return transaction.date.getDate() === date.getDate() && transaction.amount > 0
     }).map(function (transaction) {
         return transaction.amount
     }).reduce((p1, p2) => {
@@ -45,10 +64,9 @@ function getIncome(date, transactions) {
     }, 0)
 }
 
-
 function getExpenses(date, transactions) {
     return transactions.filter(function (transaction) {
-        return transaction.date.getDate() === date.getDate() && transaction.amount<0
+        return transaction.date.getDate() === date.getDate() && transaction.amount < 0
     }).map(function (transaction) {
         return transaction.amount
     }).reduce((p1, p2) => {
@@ -62,6 +80,11 @@ function getTransactions(date, transactions) {
     }).length
 }
 
+function getDateFromSpending(spending) {
+    let splittedDate = spending.spendingDate.split('/');
+    return new Date(splittedDate[2], splittedDate[0] - 1, splittedDate[1]);
+}
+
 class Diagrams extends React.Component {
     state = {
         startDate: this.props.startDate,
@@ -72,21 +95,23 @@ class Diagrams extends React.Component {
         totalIncome: 0,
     };
 
+
     render() {
         return (
             <div style={{marginLeft: 15 + "px"}}>
                 <h1>Overview/charts</h1>
                 <Grid>
-                    <Row className="show-grid">
+                    <Row className="show-grid" style={{marginRight: -90 + "px"}}>
                         <Col md={2} mdOffset={6}>
                             <DateRangePicker
                                 startDate={this.state.startDate}
                                 endDate={this.state.endDate}
+                                isOutsideRange={() => false}
                                 onDatesChange={({startDate, endDate}) => {
                                     this.setState({
                                         startDate: startDate,
                                         endDate: endDate,
-                                        currentBalance: getBalance(startDate._d, transactions),
+                                        currentBalance: getBalance(startDate._d, spendings),
                                         totalIncome: getIncome(startDate._d, transactions),
                                         totalTransactions: getTransactions(startDate._d, transactions),
                                         totalExpenses: getExpenses(startDate._d, transactions)
@@ -97,7 +122,7 @@ class Diagrams extends React.Component {
                         </Col>
                     </Row>
 
-                    <Row className="show-grid">
+                    <Row className="show-grid" style={{marginRight: -90 + "px"}}>
                         <Col md={2}>
                             <Panel header="Current balance">
                                 {this.state.currentBalance}
@@ -126,16 +151,11 @@ class Diagrams extends React.Component {
                         </Col>
                     </Row>
                 </Grid>
-                <LineChart width={600} height={300} data={data}
-                           margin={{top: 5, right: 30, left: 20, bottom: 5}}>
-                    <XAxis dataKey="name"/>
-                    <YAxis/>
-                    <CartesianGrid strokeDasharray="3 3"/>
+                <PieChart width={800} height={400}>
+                    <Pie data={getPieChart(spendings)} startAngle={360} endAngle={0} cx={200} cy={200} fill="#8884d8" label/>
                     <Tooltip/>
-                    <Legend/>
-                    <Line type="monotone" dataKey="pv" stroke="#8884d8" activeDot={{r: 8}}/>
-                    <Line type="monotone" dataKey="uv" stroke="#82ca9d"/>
-                </LineChart>
+                </PieChart>
+
             </div>
         )
     }

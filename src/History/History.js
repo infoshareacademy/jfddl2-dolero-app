@@ -1,4 +1,5 @@
 import React from 'react'
+import HistoryMore from './HistoryMore'
 import {
     Checkbox,
     FormGroup,
@@ -7,90 +8,133 @@ import {
     Grid,
     Col,
     Form,
-    Row
+    Row,
+    Button
+
+
 } from 'react-bootstrap'
+import {DateRangePicker} from 'react-dates';
 import MultiSelectField from './Multiselect'
 import 'react-select/dist/react-select.css';
-import {DateRangePicker} from 'react-dates';
-import 'react-select/dist/react-select.css';
 import './History.css';
+import InputRange from 'react-input-range'
+import 'react-input-range/lib/css/index.css'
+import {
+    Route,
+} from 'react-router-dom'
+
+var moment = require('moment');
 
 
-let historyRecordss =
-    [
-        {
-            category: 'food',
-            price: 3.2,
-            describe: 'dinner food',
-            isFavorite: false,
-            id: 1
+const categories = [
+    {
+        label: 'Jedzenie',
+        value: 'Jedzenie'
+    },
+    {
+        label: 'Mieszkanie',
+        value: 'Mieszkanie'
+    },
+    {
+        label: 'Inne opłaty i rachunki',
+        value: 'Inne opłaty i rachunki'
+    },
+    {
+        label: 'Zdrowie, higiena i chemia',
+        value: 'Zdrowie higiena i chemia'
+    },
+    {
+        label: 'Ubranie',
+        value: 'Ubranie'
+    },
+    {
+        label: 'Relaks',
+        value: 'Relaks'
+    },
+    {
+        label: 'Transport',
+        value: 'Transport'
+    },
+    {
+        label: 'Inne wydatki',
+        value: 'Inne wydatki'
+    },
+]
 
-        },
-        {
-            category: 'car',
-            price: 100,
-            describe: 'tanking',
-            isFavorite: false,
-            id: 2
 
-        },
-        {
-            category: 'culture',
-            price: 15,
-            describe: 'cinema',
-            isFavorite: false,
-            id: 3
-        },
-        {
-            category: 'alcohol',
-            price: 4.5,
-            describe: 'evening time',
-            isFavorite: false,
-            id: 4
-
-        }
-    ]
-
-let historyRecords = JSON.parse(localStorage.getItem('spendings') || '[]')
+const historyRecords = JSON.parse(localStorage.getItem('spendings') || '[]')
 console.log(historyRecords)
 
+
 class History extends React.Component {
+
+    getMaxValue = () => (
+        historyRecords.reduce((max, next) =>
+            Math.max(max, next.value), 0
+        ))
+
     state = {
-        startDate: this.props.startDate,
-        endDate: this.props.endDate,
-        categories: [],
+        startDate: moment().startOf('month'),
+        endDate: moment(),
+        selectedCategories: [],
+        records: [],
         currentSearchPhrase: '',
-        currentMinPrice: 0,
-        currentMaxPrice: 999999,
-        isCyclic: true,
+        isCyclic: false,
+        value: {min: 0, max: this.getMaxValue()},
+        link: 0
     }
+
+    urlChangeByRow = (record) => {
+
+        window.history.pushState('page2', 'Title', '/history/'+record)
+        this.setState({
+            link: record
+        })
+
+    }
+    handleSelectedCategoriesChange = value => {
+        this.setState({
+            selectedCategories: value
+        })
+    }
+
 
     handleSearchPhraseChange = event => {
         this.setState({
             currentSearchPhrase: event.target.value
         })
     }
-    handleMinPriceChange = event => {
+
+
+    componentDidMount() {
         this.setState({
-            currentMinPrice: event.target.value,
-
+            records: historyRecords
         })
-        console.log(this.state.categories)
-
     }
-    handleMaxPriceChange = event => {
+
+    handleRemoveRecord = event => {
+        const recordId = event.target.dataset.recordId
+
         this.setState({
-            currentMaxPrice: event.target.value,
-
+            records: this.state.records.filter(
+                record =>record.id != recordId
+            )
         })
-        console.log(this.state.value)
+        //     () => {
+        //     localStorage.setItem('spendings', JSON.stringify(this.state.records))
+        // })
     }
-    // handleCategoryChoice = event => {
-    //     this.setState({
-    //         categories: event.target.value
-    //
-    //     })
-    // }
+
+
+    handleIsCyclicChange = event => {
+        this.state.isCyclic === false ?
+            (this.setState({
+                isCyclic: true
+            })) : (this.setState({
+                isCyclic: false
+            }))
+    }
+
 
     render() {
         return (
@@ -102,27 +146,38 @@ class History extends React.Component {
                             <Col md={3}>
                                 <h4>Opis</h4>
                             </Col>
-                            <Col md={2} mdOffset={7}>
-                                <Checkbox>
+                            <Col md={2} mdOffset={6}>
+                                <Checkbox onChange={this.handleIsCyclicChange}>
                                     Cykliczne
                                 </Checkbox>
                             </Col>
                             <Form>
                                 <FormGroup controlId="formHorizontalText">
-                                    <h1>{this.state.currentSearchPhrase}</h1>
                                     <FormControl placeholder="Opisz czego szukasz"
                                                  onChange={this.handleSearchPhraseChange}
                                                  value={this.state.currentSearchPhrase}
                                                  type="text"/>
 
                                 </FormGroup>
+
                             </Form>
+
                         </Row>
                     </Col>
 
 
                     <Col md={5} mdOffset={1}>
-                        <MultiSelectField/>
+                        <h4>Zakres cen</h4>
+
+                        <FormGroup className='slider' controlId="formHorizontalText">
+                            <InputRange
+                                maxValue={this.getMaxValue()}
+                                minValue={0}
+                                value={this.state.value}
+                                onChange={value => this.setState({value})}/>
+
+                        </FormGroup>
+
                     </Col>
 
                 </Row>
@@ -132,6 +187,8 @@ class History extends React.Component {
                         <DateRangePicker
                             startDate={this.state.startDate}
                             endDate={this.state.endDate}
+
+                            isOutsideRange={() => false}
                             onDatesChange={({startDate, endDate}) => {
 
                                 this.setState({
@@ -144,28 +201,20 @@ class History extends React.Component {
                     </Col>
                     <Col md={5} mdOffset={1}>
                         <Form>
-                            <h4>Zakres cen</h4>
+
                             <Row>
 
-                                <Col md={6}>
-                                    <FormGroup controlId="formHorizontalText">
+                                <Col md={12}>
 
-                                        <FormControl placeholder="Cena minimalna"
-                                                     onChange={this.handleMinPriceChange}
-                                                     value={this.state.currentMinPrice}
-                                                     type="number"/>
 
-                                    </FormGroup>
-                                </Col>
-                                <Col md={6}>
-                                    <FormGroup controlId="formHorizontalText">
+                                    <MultiSelectField
+                                        value={this.state.selectedCategories}
+                                        onChange={this.handleSelectedCategoriesChange}
+                                        options={categories}
 
-                                        <FormControl placeholder="Cena maksymalna"
-                                                     onChange={this.handleMaxPriceChange}
-                                                     value={this.state.currentMaxPrice}
-                                                     type="number"/>
+                                    />
 
-                                    </FormGroup>
+
                                 </Col>
                             </Row>
 
@@ -186,31 +235,54 @@ class History extends React.Component {
 
                             </tr>
                             </thead>
-                            <tbody>
+
                             {
-                                historyRecords && historyRecords.filter(
+                                this.state.records.filter(
+                                    record =>
+                                        this.state.selectedCategories.length === 0 ?
+                                            true :
+                                            this.state.selectedCategories.some(
+                                                category => category.value === record.spendingCategory
+                                            )
+                                ).filter(
+                                    record => this.state.isCyclic === false ? true : (record.isCyclic === true)
+                                ).filter(
                                     record => record.spending.includes(this.state.currentSearchPhrase)
                                 ).filter(
-                                    record => parseInt(record.value) <= this.state.currentMaxPrice && parseInt(record.value) >= this.state.currentMinPrice
+                                    record => parseInt(record.value, 10) <= this.state.value.max && parseInt(record.value, 10) >= this.state.value.min
                                 ).filter(
-                                    record => record.isCyclic !== true
+                                    record => Date.parse(record.spendingDate) >= (Date.parse(this.state.startDate) - 43200000)
+                                        && Date.parse(record.spendingDate) <= (Date.parse(this.state.endDate) - 43200000)
                                 )
-                                //     .filter(
-                                //     record => record.spendingDate >= this.state.startDate && record.spendingDate <= this.state.endDate
-                                // )
                                     .map(
-                                        record => (
-                                            <tr key={record.id} onClick={this.moreInfo}>
+                                        (record, index) => (
+                                            <tbody>
+
+                                            <tr key={record.id} data-href='/asd'
+                                                onClick={() =>{this.urlChangeByRow(record.id)}}>
                                                 <td>{record.spendingCategory}</td>
                                                 <td>{record.value}</td>
                                                 <td>{record.spendingDate}</td>
+                                                <td style={{width:'3vw'}}
+                                                ><Button onClick={this.handleRemoveRecord}
+                                                            data-record-id={record.id} bsStyle="danger"
+                                                            bsSize="xsmall"
+
+                                                >Usuń</Button></td>
 
                                             </tr>
-                                        )
-                                    )}
+                                            { this.state.link===record.id &&
+                                            <Route path="/history/:recordId" render={() => {
+                                                return <HistoryMore record={record}/>
+                                            }}/>
+                                            }
+
+                                            </tbody>
+
+                                )
+                                )}
 
 
-                            </tbody>
                         </Table>
                     </Col>
 
@@ -223,3 +295,5 @@ class History extends React.Component {
 
 
 export default History
+
+
