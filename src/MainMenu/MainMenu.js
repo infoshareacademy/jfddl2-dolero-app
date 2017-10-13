@@ -13,7 +13,7 @@ import {
 const MainMenu = () => (
     <Navbar>
         <Nav>
-            <LinkContainer to="/shorthistory">
+            <LinkContainer exact to="/">
                 <NavItem>
                     Short History
                 </NavItem>
