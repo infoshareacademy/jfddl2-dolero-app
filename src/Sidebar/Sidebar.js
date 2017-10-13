@@ -11,9 +11,7 @@ import {
     Radio,
     DropdownButton,
     MenuItem,
-    Popover,
-    ButtonToolbar,
-    OverlayTrigger
+    ButtonToolbar
 } from 'react-bootstrap'
 import './Sidebar.css'
 import moment from 'moment'
@@ -51,7 +49,7 @@ class Sidebar extends React.Component {
 
         let sendingObject = {
             id: Date.now(),
-            spending: newSpendingName,
+            spending: newSpendingName || ' ',
             spendingCategory: newSpendingCategory,
             value: newSpendingValue,
             isCyclic,
@@ -134,7 +132,7 @@ class Sidebar extends React.Component {
 
         let sendingIncomingObject = {
             id: Date.now(),
-            name: newIncomeName,
+            name: newIncomeName || ' ',
             value: newIncomeValue,
             incomingDate: moment().format('L'),
             incomingCategory: newIncomingCategory
