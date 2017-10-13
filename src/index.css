@@ -6,4 +6,9 @@ body {
 }
 
 
-
+.facebookBtn {
+  position: absolute;
+  top: 90%;
+  left: 10%;
+  z-index: 4;
+}
