@@ -9,6 +9,7 @@ body {
 .facebookBtn {
   position: absolute;
   top: 90%;
-  left: 10%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   z-index: 4;
 }
