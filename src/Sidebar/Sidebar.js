@@ -152,11 +152,21 @@ class Sidebar extends React.Component {
 
     CorrentInputValue = event => {
         event.preventDefault()
-        alert('Nie świruj proszę, podaj poprawną wartość')
+        alert('Poważnie chcesz wpisać ujemną wartość? CALL 911')
         this.setState({
             newSpendingValue: '',
             newIncomeValue: ''
         })
+    }
+
+    categorySelectAlert = event => {
+        event.preventDefault()
+        alert('Hej, chyba ktoś zapomniał o wybraniu kategorii?')
+    }
+
+    valueAlert = event => {
+        event.preventDefault()
+        alert('Hej, nie wysyłaj formularza bez wpisania kwoty!')
     }
 
     render() {
@@ -165,9 +175,12 @@ class Sidebar extends React.Component {
         const spendingForm = (
             <Form
                 horizontal
-                onSubmit={this.state.newSpendingValue < 0 ? this.CorrentInputValue : this.addSpendings}
+                onSubmit={
+                    this.state.newSpendingValue < 0 ? this.CorrentInputValue : this.addSpendings
+                    && this.state.newSpendingCategory === 'Wybierz wydatek' ? this.categorySelectAlert : this.addSpendings
+                    && this.state.newSpendingValue == null || this.state.newSpendingValue == "" ? this.valueAlert : this.addSpendings
+                }
             >
-
 
                 <Col smOffset={1} sm={10}>
                     <FormGroup
@@ -292,7 +305,11 @@ class Sidebar extends React.Component {
         const incomeForm = (
             <Form
                 horizontal
-                onSubmit={this.state.newIncomeValue < 0 ? this.CorrentInputValue : this.addIncomings}
+                onSubmit={
+                    this.state.newIncomeValue < 0 ? this.CorrentInputValue : this.addIncomings
+                    && this.state.newIncomingCategory === 'Wybierz przychód' ? this.categorySelectAlert : this.addIncomings
+                    && this.state.newIncomeValue == null || this.state.newIncomeValue == "" ? this.valueAlert : this.addIncomings
+                }
             >
                 <Col smOffset={1} sm={10}>
                     <FormGroup
@@ -413,5 +430,4 @@ class Sidebar extends React.Component {
 }
 
 export default Sidebar
-
 
