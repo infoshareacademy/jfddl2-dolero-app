@@ -403,7 +403,7 @@ class Sidebar extends React.Component {
         return (
             <div className="sidebar-bg">
                 <div>
-                    <h2>Witaj {this.state.userName}!</h2>
+                    <h2>Witaj!</h2>
                     <p>Twój aktualny stan konta wynosi</p>
                     <h3
                         style={{height: "40px"}}
