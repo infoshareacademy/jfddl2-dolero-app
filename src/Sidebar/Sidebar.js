@@ -38,12 +38,12 @@ class Sidebar extends React.Component {
     getUserBalance = () => {
         const userBalance = JSON.parse(localStorage.getItem('spendings')) || []
         const value1 = userBalance.reduce((result, nextValue) => (
-            result -= parseInt(nextValue.value || 0, 10)
+            result -= parseFloat(nextValue.value || 0, 10)
         ), 0)
 
         const userBalance2 = JSON.parse(localStorage.getItem('incomings')) || []
         const value2 = userBalance2.reduce((result, nextValue) => (
-            result -= parseInt(nextValue.value || 0, 10)
+            result -= parseFloat(nextValue.value || 0, 10)
         ), 0)
 
         return value1 - value2;
@@ -150,7 +150,7 @@ class Sidebar extends React.Component {
                 newIncomeName: '',
                 newIncomeValue: '',
                 newIncomingCategory: 'Wybierz przychód',
-                userBalance: userBalance + parseInt(newIncomeValue, 10),
+                userBalance: userBalance + parseFloat(newIncomeValue, 10),
                 incomings: incomings.concat(sendingIncomingObject)
             }, () => {
                 localStorage.setItem('incomings', JSON.stringify(this.state.incomings));
