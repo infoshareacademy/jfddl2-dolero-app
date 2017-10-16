@@ -124,7 +124,7 @@ class Diagrams extends React.Component {
     render() {
         return (
             <div style={{marginLeft: 15 + "px"}}>
-                <h1>Overview/charts</h1>
+                <h1>Diagramy</h1>
                 <Grid>
                     <Row className="show-grid" style={{marginRight: -90 + "px"}}>
                         <Col md={2} mdOffset={6}>
@@ -150,26 +150,26 @@ class Diagrams extends React.Component {
 
                     <Row className="show-grid" style={{marginRight: -90 + "px"}}>
                         <Col md={2}>
-                            <Panel header="Current balance">
+                            <Panel header="Balans">
                                 <span>{this.state.currentBalance}</span>
                             </Panel>
                         </Col>
                         <Col md={2}>
-                            <Panel header="Total transactions">
+                            <Panel header="Ilość transakcji">
                                 <div>
                                     <span>{this.state.totalTransactions}</span>
                                 </div>
                             </Panel>
                         </Col>
                         <Col md={2}>
-                            <Panel header="Total expenses">
+                            <Panel header="Suma wydatków">
                                 <div>
                                     <span>{this.state.totalExpenses}</span>
                                 </div>
                             </Panel>
                         </Col>
                         <Col md={2}>
-                            <Panel header="Total income">
+                            <Panel header="Suma przychodów">
                                 <div>
                                     <span>{this.state.totalIncome}</span>
                                 </div>
