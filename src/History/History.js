@@ -224,7 +224,7 @@ class History extends React.Component {
                 <Row>
 
                     <Col md={12}>
-                        <h3 className="recordsList">Historia</h3>
+                        <h3 className="recordsList">Historia wydatków</h3>
 
                         <Table striped bordered condensed hover>
                             <thead>
@@ -272,7 +272,7 @@ class History extends React.Component {
                                                 >Usuń</Button></td>
 
                                             </tr>
-                                            { this.state.link===record.id &&
+                                            { this.state.link==record.id &&
                                             <Route path="/history/:recordId" render={() => {
                                                 return <HistoryMore record={record}/>
                                             }}/>
