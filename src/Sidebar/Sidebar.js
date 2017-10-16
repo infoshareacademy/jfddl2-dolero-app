@@ -37,9 +37,17 @@ class Sidebar extends React.Component {
 
     getUserBalance = () => {
         const userBalance = JSON.parse(localStorage.getItem('spendings')) || []
-        return userBalance.reduce((result, nextValue) => (
+        const value1 = userBalance.reduce((result, nextValue) => (
             result -= parseInt(nextValue.value || 0, 10)
         ), 0)
+
+        const userBalance2 = JSON.parse(localStorage.getItem('incomings')) || []
+        const value2 = userBalance2.reduce((result, nextValue) => (
+            result -= parseInt(nextValue.value || 0, 10)
+        ), 0)
+
+        return value1 - value2;
+
     }
 
     addSpendings = event => {
@@ -435,9 +443,10 @@ class Sidebar extends React.Component {
                             fjs.parentNode.insertBefore(js, fjs)
                         }(document, 'script', 'facebook-jssdk'))}
                     </script>
-                    <div class="fb-share-button" data-href="https://developers.facebook.com/docs/plugins/"
+                    <div className="fb-share-button" data-href="https://developers.facebook.com/docs/plugins/"
                          data-layout="button_count"
-                         data-size="large" data-mobile-iframe="true"><a class="fb-xfbml-parse-ignore" target="_blank"
+                         data-size="large" data-mobile-iframe="true"><a className="fb-xfbml-parse-ignore"
+                                                                        target="_blank"
                                                                         href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdevelopers.facebook.com%2Fdocs%2Fplugins%2F&amp;src=sdkpreparse">Udostępnij</a>
                     </div>
 
