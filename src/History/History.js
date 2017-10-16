@@ -244,7 +244,8 @@ class History extends React.Component {
                                             this.state.selectedCategories.some(
                                                 category => category.value === record.spendingCategory
                                             )
-                                ).filter(
+                                )
+                                    .filter(
                                     record => this.state.isCyclic === false ? true : (record.isCyclic === true)
                                 ).filter(
                                     record => record.spending.includes(this.state.currentSearchPhrase)
@@ -252,7 +253,7 @@ class History extends React.Component {
                                     record => parseInt(record.value, 10) <= this.state.value.max && parseInt(record.value, 10) >= this.state.value.min
                                 ).filter(
                                     record => Date.parse(record.spendingDate) >= (Date.parse(this.state.startDate) - 43200000)
-                                        && Date.parse(record.spendingDate) <= (Date.parse(this.state.endDate) - 43200000)
+                                        && Date.parse(record.spendingDate) <= (Date.parse(this.state.endDate) + 43200000)
                                 )
                                     .map(
                                         (record, index) => (
