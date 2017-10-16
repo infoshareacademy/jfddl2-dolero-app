@@ -1,3 +1,12 @@
+#style {
+    overflow-Y: scroll;
+    overflow-x: hidden;
+    padding: 0 3%;
+    height: 100%;
+    width: 100%;
+}
+
+
 h2
 {
     margin-top: 3%;
@@ -10,7 +19,7 @@ h2
 
 
 .table{
-   font-size:  20px;
+   font-size:  15px;
     /*text-align: center;*/
 }
 /*.react-bs-container-body {*/
@@ -25,7 +34,5 @@ h2
     /*margin-left: 122px;*/
     /*padding-left: 100px;*/
 /*}*/
-.style {
 
 
-}
