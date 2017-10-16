@@ -15,17 +15,17 @@ const MainMenu = () => (
         <Nav>
             <LinkContainer exact to="/">
                 <NavItem>
-                    Short History
+                    Przegląd transakcji
                 </NavItem>
             </LinkContainer>
             <LinkContainer to="/history">
                 <NavItem>
-                    History
+                    Historia wydatków
                 </NavItem>
             </LinkContainer>
             <LinkContainer to="/diagrams">
                 <NavItem>
-                    Diagrams
+                    Wykresy
                 </NavItem>
             </LinkContainer>
 
