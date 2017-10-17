@@ -11,7 +11,9 @@ import {
     Radio,
     DropdownButton,
     MenuItem,
-    ButtonToolbar
+    ButtonToolbar,
+    OverlayTrigger,
+    Popover
 } from 'react-bootstrap'
 import './Sidebar.css'
 import moment from 'moment'
@@ -26,7 +28,9 @@ class Sidebar extends React.Component {
         isCyclic: false,
         spendings: JSON.parse(localStorage.getItem('spendings')) || [],
         incomings: JSON.parse(localStorage.getItem('incomings')) || [],
-        spendingFormVisible: true
+        spendingFormVisible: true,
+        spendingCategories: ["Jedzenie", "Mieszkanie", "Inne opłaty i rachunki", "Ubranie", "Relaks", "Transport", "Inne wydatki"],
+        incomeCategories: []
     }
 
     componentDidMount() {
@@ -177,8 +181,35 @@ class Sidebar extends React.Component {
         alert('Hej, nie wysyłaj formularza bez wpisania kwoty!')
     }
 
+    // ------ new Sprint -------
+
+    // ------ /new Sprint -------
+
     render() {
 
+        const popoverRightInSpendingForm = (
+            <Popover id="popover-positioned-right" title="Dodaj kategorię wydatku">
+                <input type="text"/>
+                <Button
+                    bsSize="xsmall"
+                    bsStyle="warning"
+                >
+                    Dodaj
+                </Button>
+            </Popover>
+        )
+
+        const popoverRightInIncomeForm = (
+            <Popover id="popover-positioned-right" title="Dodaj kategorię przychodu">
+                <input type="text"/>
+                <Button
+                    bsSize="xsmall"
+                    bsStyle="warning"
+                >
+                    Dodaj
+                </Button>
+            </Popover>
+        )
 
         const spendingForm = (
             <Form
@@ -246,15 +277,25 @@ class Sidebar extends React.Component {
                                 onSelect={this.handleCategorySelect}
                                 style={{width: '200px'}}
                             >
-                                <MenuItem eventKey="Jedzenie">Jedzenie</MenuItem>
-                                <MenuItem eventKey="Mieszkanie">Mieszkanie</MenuItem>
-                                <MenuItem eventKey="Inne opłaty i rachunki">Inne opłaty i rachunki</MenuItem>
-                                <MenuItem eventKey="Zdrowie, higiena i chemia">Zdrowie, higiena i chemia</MenuItem>
-                                <MenuItem eventKey="Ubranie">Ubranie</MenuItem>
-                                <MenuItem eventKey="Relaks">Relaks</MenuItem>
-                                <MenuItem eventKey="Transport">Transport</MenuItem>
-                                <MenuItem eventKey="Inne wydatki">Inne wydatki</MenuItem>
+                                {
+                                    this.state.spendingCategories.map(category => (
+                                        <MenuItem eventKey={category}>{category}</MenuItem>
+                                    ))
+                                }
                             </DropdownButton>
+                            <ButtonToolbar>
+                                <OverlayTrigger trigger="click" placement="right"
+                                                overlay={popoverRightInSpendingForm}>
+                                    <Button
+                                        bsSize="xsmall"
+                                        bsStyle="warning"
+                                        style={{width: '200px'}}
+                                    >
+                                        Dodaj swoją kategorię
+                                    </Button>
+                                </OverlayTrigger>
+                            </ButtonToolbar>
+
                         </FormGroup>
                     </Col>
 
@@ -268,6 +309,7 @@ class Sidebar extends React.Component {
                             }
                         }
                     >
+
                         <FormGroup>
                             <Radio
                                 checked={!this.state.isCyclic}
@@ -380,6 +422,18 @@ class Sidebar extends React.Component {
                                 <MenuItem eventKey="Zasiłek">Zasiłek</MenuItem>
                                 <MenuItem eventKey="Emerytura/Renta">Emerytura/Renta</MenuItem>
                             </DropdownButton>
+                            <ButtonToolbar>
+                                <OverlayTrigger trigger="click" placement="right"
+                                                overlay={popoverRightInIncomeForm}>
+                                    <Button
+                                        bsSize="xsmall"
+                                        bsStyle="warning"
+                                        style={{width: '200px'}}
+                                    >
+                                        Dodaj swoją kategorię
+                                    </Button>
+                                </OverlayTrigger>
+                            </ButtonToolbar>
                         </FormGroup>
                     </Col>
                 </ButtonGroup>
@@ -398,6 +452,8 @@ class Sidebar extends React.Component {
                 </FormGroup>
             </Form>
         )
+
+
 
 
         return (
