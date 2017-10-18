@@ -272,7 +272,7 @@ class History extends React.Component {
                                                 >Usuń</Button></td>
 
                                             </tr>
-                                            { this.state.link==record.id &&
+                                            { this.state.link===record.id &&
                                             <Route path="/history/:recordId" render={() => {
                                                 return <HistoryMore record={record}/>
                                             }}/>
