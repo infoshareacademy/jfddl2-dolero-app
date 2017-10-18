@@ -11,7 +11,9 @@ import {
     Radio,
     DropdownButton,
     MenuItem,
-    ButtonToolbar
+    ButtonToolbar,
+    OverlayTrigger,
+    Popover
 } from 'react-bootstrap'
 import './Sidebar.css'
 import moment from 'moment'
@@ -26,12 +28,18 @@ class Sidebar extends React.Component {
         isCyclic: false,
         spendings: JSON.parse(localStorage.getItem('spendings')) || [],
         incomings: JSON.parse(localStorage.getItem('incomings')) || [],
-        spendingFormVisible: true
+        spendingFormVisible: true,
+        addedSpendingCategory:'',
+        addedIncomeCategory:'',
+        spendingCategories: ["Jedzenie", "Mieszkanie", "Inne opłaty i rachunki", "Ubranie", "Relaks", "Transport", "Inne wydatki"],
+        incomeCategories: [ "Wypłata", "Premia", "Zasiłek", "Emerytura/Renta"]
     }
 
     componentDidMount() {
         this.setState({
-            userBalance: this.getUserBalance()
+            userBalance: this.getUserBalance(),
+            spendingCategories: JSON.parse(localStorage.getItem('spendingCategories')) || ["Jedzenie", "Mieszkanie", "Inne opłaty i rachunki", "Ubranie", "Relaks", "Transport", "Inne wydatki"],
+            incomeCategories: JSON.parse(localStorage.getItem('incomeCategories')) || ["Wypłata", "Premia", "Zasiłek", "Emerytura/Renta"]
         })
     }
 
@@ -177,8 +185,90 @@ class Sidebar extends React.Component {
         alert('Hej, nie wysyłaj formularza bez wpisania kwoty!')
     }
 
+    // ------ new Sprint -------
+
+    newSpendingCategoryValue = event => {
+        this.setState({
+            addedSpendingCategory : event.target.value
+        })
+}
+
+    categoryAlert = () => {
+        alert('Hola Hola, już masz taką kategorię!')
+        this.setState({
+            addedSpendingCategory: ''
+        })
+}
+
+    ifExistsSpendingCaregory = () => {
+        return this.state.spendingCategories.includes(this.state.addedSpendingCategory)
+        }
+
+
+    addNewSpendingCategory = () => {
+
+        this.setState({
+            spendingCategories : this.state.spendingCategories.concat(this.state.addedSpendingCategory),
+            addedSpendingCategory: ''
+        }, () => {
+            localStorage.setItem('spendingCategories', JSON.stringify(this.state.spendingCategories));
+        })
+    }
+
+    newIncomeCategoryValue = event => {
+        this.setState({
+            addedIncomeCategory : event.target.value
+        })
+    }
+
+    addNewIncomeCategory = () => {
+        this.setState({
+            incomeCategories : this.state.incomeCategories.concat(this.state.addedIncomeCategory),
+            addedIncomeCategory: ''
+        }, () => {
+            localStorage.setItem('incomeCategories', JSON.stringify(this.state.incomeCategories));
+        })
+    }
+
+    // ------ /new Sprint -------
+
     render() {
 
+        const popoverRightInSpendingForm = (
+            <Popover id="popover-positioned-right" title="Dodaj kategorię wydatku">
+
+                <input
+                    onChange={this.newSpendingCategoryValue}
+                    value={this.state.addedSpendingCategory}
+                    type="text"
+                />
+                <Button
+                    bsSize="xsmall"
+                    bsStyle="warning"
+                    onClick={this.ifExistsSpendingCaregory ? this.categoryAlert : this.addNewSpendingCategory}
+                >
+                    Dodaj
+                </Button>
+            </Popover>
+        )
+
+        const popoverRightInIncomeForm = (
+            <Popover id="popover-positioned-right" title="Dodaj kategorię przychodu">
+
+                <input
+                    onChange={this.newIncomeCategoryValue}
+                    value={this.state.addedIncomeCategory}
+                    type="text"
+                />
+                <Button
+                    bsSize="xsmall"
+                    bsStyle="warning"
+                    onClick={this.addNewIncomeCategory}
+                >
+                    Dodaj
+                </Button>
+            </Popover>
+        )
 
         const spendingForm = (
             <Form
@@ -246,15 +336,25 @@ class Sidebar extends React.Component {
                                 onSelect={this.handleCategorySelect}
                                 style={{width: '200px'}}
                             >
-                                <MenuItem eventKey="Jedzenie">Jedzenie</MenuItem>
-                                <MenuItem eventKey="Mieszkanie">Mieszkanie</MenuItem>
-                                <MenuItem eventKey="Inne opłaty i rachunki">Inne opłaty i rachunki</MenuItem>
-                                <MenuItem eventKey="Zdrowie, higiena i chemia">Zdrowie, higiena i chemia</MenuItem>
-                                <MenuItem eventKey="Ubranie">Ubranie</MenuItem>
-                                <MenuItem eventKey="Relaks">Relaks</MenuItem>
-                                <MenuItem eventKey="Transport">Transport</MenuItem>
-                                <MenuItem eventKey="Inne wydatki">Inne wydatki</MenuItem>
+                                {
+                                    this.state.spendingCategories.map(category => (
+                                        <MenuItem eventKey={category}>{category}</MenuItem>
+                                    ))
+                                }
                             </DropdownButton>
+                            <ButtonToolbar>
+                                <OverlayTrigger trigger="click" placement="right"
+                                                overlay={popoverRightInSpendingForm}>
+                                    <Button
+                                        bsSize="xsmall"
+                                        bsStyle="warning"
+                                        style={{width: '200px'}}
+                                    >
+                                        Dodaj swoją kategorię
+                                    </Button>
+                                </OverlayTrigger>
+                            </ButtonToolbar>
+
                         </FormGroup>
                     </Col>
 
@@ -268,6 +368,7 @@ class Sidebar extends React.Component {
                             }
                         }
                     >
+
                         <FormGroup>
                             <Radio
                                 checked={!this.state.isCyclic}
@@ -375,11 +476,24 @@ class Sidebar extends React.Component {
                                 onSelect={this.handleCategoryIncomingSelect}
                                 style={{width: '200px'}}
                             >
-                                <MenuItem eventKey="Wypłata">Wypłata</MenuItem>
-                                <MenuItem eventKey="Premia">Premia</MenuItem>
-                                <MenuItem eventKey="Zasiłek">Zasiłek</MenuItem>
-                                <MenuItem eventKey="Emerytura/Renta">Emerytura/Renta</MenuItem>
+                                {
+                                    this.state.incomeCategories.map(category =>(
+                                        <MenuItem eventKey={category}>{category.toUpperCase()}</MenuItem>
+                                    ))
+                                }
                             </DropdownButton>
+                            <ButtonToolbar>
+                                <OverlayTrigger trigger="click" placement="right"
+                                                overlay={popoverRightInIncomeForm}>
+                                    <Button
+                                        bsSize="xsmall"
+                                        bsStyle="warning"
+                                        style={{width: '200px'}}
+                                    >
+                                        Dodaj swoją kategorię
+                                    </Button>
+                                </OverlayTrigger>
+                            </ButtonToolbar>
                         </FormGroup>
                     </Col>
                 </ButtonGroup>
@@ -398,6 +512,8 @@ class Sidebar extends React.Component {
                 </FormGroup>
             </Form>
         )
+
+
 
 
         return (
@@ -431,26 +547,26 @@ class Sidebar extends React.Component {
 
                 {this.state.spendingFormVisible ? spendingForm : incomeForm}
 
-                <div className="facebookBtn">
+                {/*<div className="facebookBtn">*/}
 
-                    <script>
-                        {(function (d, s, id) {
-                            var js, fjs = d.getElementsByTagName(s)[0];
-                            if (d.getElementById(id)) return;
-                            js = d.createElement(s);
-                            js.id = id;
-                            js.src = "//connect.facebook.net/pl_PL/sdk.js#xfbml=1&version=v2.10"
-                            fjs.parentNode.insertBefore(js, fjs)
-                        }(document, 'script', 'facebook-jssdk'))}
-                    </script>
-                    <div className="fb-share-button" data-href="https://developers.facebook.com/docs/plugins/"
-                         data-layout="button_count"
-                         data-size="large" data-mobile-iframe="true"><a className="fb-xfbml-parse-ignore"
-                                                                        target="_blank"
-                                                                        href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdevelopers.facebook.com%2Fdocs%2Fplugins%2F&amp;src=sdkpreparse">Udostępnij</a>
-                    </div>
+                    {/*<script>*/}
+                        {/*{(function (d, s, id) {*/}
+                            {/*var js, fjs = d.getElementsByTagName(s)[0];*/}
+                            {/*if (d.getElementById(id)) return;*/}
+                            {/*js = d.createElement(s);*/}
+                            {/*js.id = id;*/}
+                            {/*js.src = "//connect.facebook.net/pl_PL/sdk.js#xfbml=1&version=v2.10"*/}
+                            {/*fjs.parentNode.insertBefore(js, fjs)*/}
+                        {/*}(document, 'script', 'facebook-jssdk'))}*/}
+                    {/*</script>*/}
+                    {/*<div className="fb-share-button" data-href="https://developers.facebook.com/docs/plugins/"*/}
+                         {/*data-layout="button_count"*/}
+                         {/*data-size="large" data-mobile-iframe="true"><a className="fb-xfbml-parse-ignore"*/}
+                                                                        {/*target="_blank"*/}
+                                                                        {/*href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdevelopers.facebook.com%2Fdocs%2Fplugins%2F&amp;src=sdkpreparse">Udostępnij</a>*/}
+                    {/*</div>*/}
 
-                </div>
+                {/*</div>*/}
 
                 <p className="copyRights">Made by Dolero</p>
             </div>
