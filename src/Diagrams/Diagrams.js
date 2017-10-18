@@ -4,105 +4,68 @@ import {Grid, Row, Col} from 'react-bootstrap'
 import {DateRangePicker} from 'react-dates';
 import 'react-dates/lib/css/_datepicker.css';
 import {PieChart, Pie, Tooltip} from 'recharts'
+import moment from 'moment'
 
+const spendings = JSON.parse(localStorage.getItem('spendings') || '[]');
+const incomings = JSON.parse(localStorage.getItem('incomings') || '[]');
 
 class Diagrams extends React.Component {
     state = {
-        startDate: this.props.startDate,
-        endDate: this.props.endDate,
-        currentBalance: -(this.getBalance(new Date(), JSON.parse(localStorage.getItem('spendings') || '[]'),
-        JSON.parse(localStorage.getItem('incomings') || '[]'))),
-        // wartość zwrócona z this.getBalance(new Date()) jest przypisana jako wartość inicjalna currentBalance
-        totalTransactions: JSON.parse(localStorage.getItem('spendings') || '[]').length,
-        totalExpenses: this.getExpenses(new Date(), JSON.parse(localStorage.getItem('spendings') || '[]')),
-        totalIncome: this.getIncome(JSON.parse(localStorage.getItem('spendings') || '[]')),
-        spendings: JSON.parse(localStorage.getItem('spendings') || '[]'),
-        incomings: JSON.parse(localStorage.getItem('incomings') || '[]')
+        startDate: moment().startOf('month'),
+        endDate: moment(),
+        currentBalance: this.getBalance(moment().startOf('month'), moment(), spendings, incomings),
+        totalTransactions: this.getTotalTransaction(moment().startOf('month'), moment(), spendings, incomings),
+        totalExpenses: this.getExpenses(moment().startOf('month'), moment(), spendings),
+        totalIncome: this.getIncome(moment().startOf('month'), moment(), incomings)
     };
 
-
-    componentDidMount() {
-        // interwał tutaj jest obejściem do momentu wprowadzenia reduksa
-        this.intervalId = setInterval(
-            () => {
-                this.setState({
-                    startDate: this.props.startDate,
-                    endDate: this.props.endDate,
-                    currentBalance: -(this.getBalance(new Date(), JSON.parse(localStorage.getItem('spendings') || '[]'),
-                        JSON.parse(localStorage.getItem('incomings') || '[]'))),
-                    // wartość zwrócona z this.getBalance(new Date()) jest przypisana jako wartość inicjalna currentBalance
-                    totalTransactions: JSON.parse(localStorage.getItem('spendings') || '[]').length,
-                    totalExpenses: this.getExpenses(new Date(), JSON.parse(localStorage.getItem('spendings') || '[]')),
-                    totalIncome: this.getIncome( JSON.parse(localStorage.getItem('incomings') || '[]')),
-                    spendings: JSON.parse(localStorage.getItem('spendings') || '[]'),
-                    incomings: JSON.parse(localStorage.getItem('incomings') || '[]')
-                })
-            }, 100
-        )
-    }
-
 //paramatetry w funkcji pełnią rolę elementów przekazanych z zewnątrz do funkcji i są wymagane przez funkcje//
-   getBalance(date, spendings, incomings) {
-       const income = incomings.reduce((result, income) =>{
-           return result + parseInt(income.value)
-       },0)
-        return spendings.filter(function (spending) {
-            let splittedDate = spending.spendingDate.split('/');
-            let dateFromTransaction = new Date(splittedDate[2], splittedDate[0] - 1, splittedDate[1]);
-            return dateFromTransaction.getDate() === date.getDate()
+    getBalance(startDate, endDate, spendings, incomings) {
+        const income = incomings.filter(function (incoming) {
+            let spendingDate = moment(incoming.incomingDate, "MM-DD-YYYY");
+            return spendingDate.isBetween(startDate, endDate)
+        }).reduce((result, income) => {
+            return result + parseInt(income.value)
+        }, 0);
+        const expenses = spendings.filter(function (spending) {
+            let spendingDate = moment(spending.spendingDate, "MM-DD-YYYY");
+            return spendingDate.isBetween(startDate, endDate)
         }).reduce((result, spending) => {
-            console.log(income)
-            console.log(result, spending.value)
-            return (result + parseInt(spending.value))
-        }, -income)
+            return (result - parseInt(spending.value))
+        }, 0);
+        return income + expenses
     }
 
-    getTotalTransaction() {
-        return JSON.parse(localStorage.getItem('spendings') || '[]').length
+    getTotalTransaction(startDate, endDate, spendings, incomings) {
+        const spendingsCount = spendings.filter(function (spending) {
+            const spendingDate = moment(spending.spendingDate, "MM-DD-YYYY");
+            return spendingDate.isBetween(startDate, endDate)
+        }).length;
+        const incomingsCount = incomings.filter(function (incoming) {
+            const spendingDate = moment(incoming.incomingDate, "MM-DD-YYYY");
+            return spendingDate.isBetween(startDate, endDate)
+        }).length;
+        return spendingsCount + incomingsCount
     }
 
-    getExpenses(date, spendings) {
-        return spendings.filter(function (spending) {
-            let splittedDate = spending.spendingDate.split('/');
-            let dateFromTransaction = new Date(splittedDate[2], splittedDate[0] - 1, splittedDate[1]);
-            console.log(dateFromTransaction.getDate(),date.getDate(),parseInt(spending.value) < 0)
-            return dateFromTransaction.getDate() === date.getDate() && parseInt(spending.value) > 0
+    getExpenses(startDate, endDate, spendings) {
+        const expenses = spendings.filter(function (spending) {
+            const spendingDate = moment(spending.spendingDate, "MM-DD-YYYY");
+            return spendingDate.isBetween(startDate, endDate)
         }).reduce((result, spending) => {
-            return result + parseInt(spending.value)
-        }, 0)
+            return (result - parseInt(spending.value))
+        }, 0);
+        return expenses
     }
 
-    totalExpenses = () => {
-       const userBalance2 = JSON.parse(localStorage.getItem('spendings')) || []
-       return userBalance2.reduce((result, nextValue) => (
-            result -= parseInt(nextValue.value || 0, 10)
-        ), 0)
-
-
-    }
-
-    getIncome(incomings) {
-        return incomings
-        //     .filter(function (spending) {
-        //     let splittedDate = spending.spendingDate.split('/');
-        //     let dateFromTransaction = new Date(splittedDate[2], splittedDate[0] - 1, splittedDate[1]);
-        //     return dateFromTransaction.getDate() === date.getDate() && parseInt(spending.value) < 0*/
-        // })
-            .reduce((result, incoming) => {
-            console.log (result)
-            return result + parseInt(incoming.value)
-        }, 0)
-    }
-   /* fthbyj*/
-    getUserBalance = () => {
-
-
-        const userBalance2 = JSON.parse(localStorage.getItem('incomings')) || []
-       return userBalance2.reduce((result, nextValue) => (
-            result -= parseInt(nextValue.value || 0, 10)
-        ), 0)
-
-
+    getIncome(startDate, endDate, incomings) {
+        const income = incomings.filter(function (incoming) {
+            const spendingDate = moment(incoming.incomingDate, "MM-DD-YYYY");
+            return spendingDate.isBetween(startDate, endDate)
+        }).reduce((result, income) => {
+            return result + parseInt(income.value)
+        }, 0);
+        return income
     }
 
 
@@ -136,11 +99,10 @@ class Diagrams extends React.Component {
                                     this.setState({
                                         startDate: startDate,
                                         endDate: endDate,
-                                        currentBalance: this.getBalance(startDate._d, this.state.spendings, this.state.incomings),
-                                        //wartość currentBalance zostaje zmieniona na date
-                                        totalIncome: this.getIncome(startDate._d, this.state.spendings),
-                                        // totalTransactions: getTotalTransaction(startDate._d, transactions),
-                                         totalExpenses: this.getExpenses(startDate._d, this.state.spendings)
+                                        currentBalance: this.getBalance(startDate, endDate, spendings, incomings),
+                                        totalTransactions: this.getTotalTransaction(startDate, endDate, spendings, incomings),
+                                        totalExpenses: this.getExpenses(startDate, endDate, spendings),
+                                        totalIncome: this.getIncome(startDate, endDate, incomings)
                                     })
                                 }}
                                 focusedInput={this.state.focusedInput}
@@ -178,7 +140,8 @@ class Diagrams extends React.Component {
                     </Row>
                 </Grid>
                 <PieChart width={800} height={400}>
-                    <Pie data={this.getPieChart(this.state.spendings)} startAngle={360} endAngle={0} cx={200} cy={200} fill="#8884d8"
+                    <Pie data={this.getPieChart(spendings)} startAngle={360} endAngle={0} cx={200} cy={200}
+                         fill="#8884d8"
                          label/>
                     <Tooltip/>
                 </PieChart>
