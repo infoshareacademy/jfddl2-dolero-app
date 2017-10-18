@@ -21,6 +21,7 @@ import 'react-input-range/lib/css/index.css'
 import {
     Route,
 } from 'react-router-dom'
+import {database} from "../firebase";
 
 var moment = require('moment');
 
@@ -61,16 +62,11 @@ const categories = [
 ]
 
 
-const historyRecords = JSON.parse(localStorage.getItem('spendings') || '[]')
-console.log(historyRecords)
 
 
 class History extends React.Component {
 
-    getMaxValue = () => (
-        historyRecords.reduce((max, next) =>
-            Math.max(max, next.value), 0
-        ))
+
 
     state = {
         startDate: moment().startOf('month'),
@@ -79,9 +75,30 @@ class History extends React.Component {
         records: [],
         currentSearchPhrase: '',
         isCyclic: false,
-        value: {min: 0, max: this.getMaxValue()},
+        value: {min: 0, max: 100},
         link: 0
     }
+
+    componentDidMount() {
+
+        database.ref('/Piotr/spendings').on('value', (snapshot) => {
+            this.setState({
+                records: Object.values(snapshot.val()) || []
+            }, () => this.setState({
+                value: {min:0, max: this.getMaxValue()}
+            }))
+            console.log('records', this.state.records)
+
+        })
+    }
+
+    getMaxValue = () => (
+        this.state.records.reduce((max, next) =>
+            Math.max(max, parseInt(next.value))
+
+            , 0
+
+        ))
 
     urlChangeByRow = (record) => {
 
@@ -105,11 +122,7 @@ class History extends React.Component {
     }
 
 
-    componentDidMount() {
-        this.setState({
-            records: historyRecords
-        })
-    }
+
 
     handleRemoveRecord = event => {
         const recordId = event.target.dataset.recordId
@@ -136,6 +149,7 @@ class History extends React.Component {
 
 
     render() {
+
         return (
             <Grid id='history' className='history'>
                 <Row>
@@ -172,7 +186,7 @@ class History extends React.Component {
                             <InputRange
                                 maxValue={this.getMaxValue()}
                                 minValue={0}
-                                value={this.state.value}
+                                value={this.state.value }
                                 onChange={value => this.setState({value})}/>
 
                         </FormGroup>
