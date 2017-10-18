@@ -17,7 +17,7 @@ import {
 } from 'react-bootstrap'
 import './Sidebar.css'
 import moment from 'moment'
-import { database } from '../firebase'
+import {database, auth} from '../firebase'
 
 class Sidebar extends React.Component {
     state = {
@@ -30,34 +30,46 @@ class Sidebar extends React.Component {
         spendings: JSON.parse(localStorage.getItem('spendings')) || [],
         incomings: JSON.parse(localStorage.getItem('incomings')) || [],
         spendingFormVisible: true,
-        addedSpendingCategory:'',
-        addedIncomeCategory:'',
+        addedSpendingCategory: '',
+        addedIncomeCategory: '',
         spendingCategories: ["Jedzenie", "Mieszkanie", "Inne opłaty i rachunki", "Ubranie", "Relaks", "Transport", "Inne wydatki"],
-        incomeCategories: [ "Wypłata", "Premia", "Zasiłek", "Emerytura/Renta"]
+        incomeCategories: ["Wypłata", "Premia", "Zasiłek", "Emerytura/Renta"]
     }
 
     componentDidMount() {
-        this.setState({
-            userBalance: this.getUserBalance(),
-            spendingCategories: JSON.parse(localStorage.getItem('spendingCategories')) || ["Jedzenie", "Mieszkanie", "Inne opłaty i rachunki", "Ubranie", "Relaks", "Transport", "Inne wydatki"],
-            incomeCategories: JSON.parse(localStorage.getItem('incomeCategories')) || ["Wypłata", "Premia", "Zasiłek", "Emerytura/Renta"]
+
+        // userBalance: this.getUserBalance(),
+
+        database.ref('/Piotr/spendingCategories').on('value', (snapshot) => {
+            this.setState({spendingCategories: snapshot.val() || ["Jedzenie", "Mieszkanie", "Inne opłaty i rachunki", "Ubranie", "Relaks", "Transport", "Inne wydatki"]})
         })
-    }
 
-    getUserBalance = () => {
-        const userBalance = JSON.parse(localStorage.getItem('spendings')) || []
-        const value1 = userBalance.reduce((result, nextValue) => (
-            result -= parseFloat(nextValue.value || 0, 10)
-        ), 0)
+        database.ref('/Piotr/incomeCategories').on('value', (snapshot) => {
+            this.setState({incomeCategories: snapshot.val() || ["Wypłata", "Premia", "Zasiłek", "Emerytura/Renta"]})
+        })
 
-        const userBalance2 = JSON.parse(localStorage.getItem('incomings')) || []
-        const value2 = userBalance2.reduce((result, nextValue) => (
-            result -= parseFloat(nextValue.value || 0, 10)
-        ), 0)
 
-        return value1 - value2;
+        // incomeCategories: database.ref('/Piotr/incomeCategories').on('value', (snapshot) => {
+        //     this.setState({ records: Object.values(snapshot.val()) || []})
+        //     console.log(this.state.records)
+        // }) || ["Wypłata", "Premia", "Zasiłek", "Emerytura/Renta"]
 
     }
+
+    // getUserBalance = () => {
+    //     const userBalance = JSON.parse(localStorage.getItem('spendings')) || []
+    //     const value1 = userBalance.reduce((result, nextValue) => (
+    //         result -= parseFloat(nextValue.value || 0, 10)
+    //     ), 0)
+    //
+    //     const userBalance2 = JSON.parse(localStorage.getItem('incomings')) || []
+    //     const value2 = userBalance2.reduce((result, nextValue) => (
+    //         result -= parseFloat(nextValue.value || 0, 10)
+    //     ), 0)
+    //
+    //     return value1 - value2;
+    //
+    // }
 
     addSpendings = event => {
         const {spendings, isCyclic, newSpendingName, newSpendingValue, newSpendingCategory} = this.state;
@@ -80,8 +92,8 @@ class Sidebar extends React.Component {
                 userBalance: this.state.userBalance - newSpendingValue,
                 spendings: sendingObject
             }, () => {
-                // localStorage.setItem('spendings', JSON.stringify(this.state.spendings));
-                    database.ref('/Piotr/Spendings').push(this.state.spendings)
+
+                database.ref(`/${auth.currentUser == null ? 'Piotr' : auth.currentUser.uid}/spendings`).push(this.state.spendings)
             }
         )
     }
@@ -162,8 +174,7 @@ class Sidebar extends React.Component {
                 userBalance: userBalance + parseFloat(newIncomeValue, 10),
                 incomings: sendingIncomingObject
             }, () => {
-                // localStorage.setItem('incomings', JSON.stringify(this.state.incomings));
-            database.ref('/Piotr/Incomings').push(sendingIncomingObject)
+                database.ref(`${auth.currentUser == null ? 'Piotr' : auth.currentUser.uid}/incomings`).push(sendingIncomingObject)
             }
         )
     }
@@ -191,46 +202,44 @@ class Sidebar extends React.Component {
 
     newSpendingCategoryValue = event => {
         this.setState({
-            addedSpendingCategory : event.target.value
+            addedSpendingCategory: event.target.value
         })
-}
+    }
 
     categoryAlert = () => {
         alert('Hola Hola, już masz taką kategorię!')
         this.setState({
             addedSpendingCategory: ''
         })
-}
+    }
 
     ifExistsSpendingCaregory = () => {
         return this.state.spendingCategories.includes(this.state.addedSpendingCategory)
-        }
+    }
 
 
     addNewSpendingCategory = () => {
 
         this.setState({
-            spendingCategories : this.state.spendingCategories.concat(this.state.addedSpendingCategory),
+            spendingCategories: this.state.spendingCategories.concat(this.state.addedSpendingCategory),
             addedSpendingCategory: ''
         }, () => {
-            // localStorage.setItem('spendingCategories', JSON.stringify(this.state.spendingCategories));
-            database.ref('/Piotr/Spending Categories').push(this.state.spendingCategories)
+            database.ref(`${auth.currentUser == null ? 'Piotr' : auth.currentUser.uid}/spendingCategories`).set(this.state.spendingCategories)
         })
     }
 
     newIncomeCategoryValue = event => {
         this.setState({
-            addedIncomeCategory : event.target.value
+            addedIncomeCategory: event.target.value
         })
     }
 
     addNewIncomeCategory = () => {
         this.setState({
-            incomeCategories : this.state.incomeCategories.concat(this.state.addedIncomeCategory),
+            incomeCategories: this.state.incomeCategories.concat(this.state.addedIncomeCategory),
             addedIncomeCategory: ''
         }, () => {
-            // localStorage.setItem('incomeCategories', JSON.stringify(this.state.incomeCategories));
-            database.ref('/Piotr/Income Categories').push(this.state.incomeCategories)
+            database.ref(`${auth.currentUser == null ? 'Piotr' : auth.currentUser.uid}/incomeCategories`).set(this.state.incomeCategories)
         })
     }
 
@@ -481,8 +490,8 @@ class Sidebar extends React.Component {
                                 style={{width: '200px'}}
                             >
                                 {
-                                    this.state.incomeCategories.map(category =>(
-                                        <MenuItem eventKey={category}>{category.toUpperCase()}</MenuItem>
+                                    this.state.incomeCategories.map(category => (
+                                        <MenuItem eventKey={category}>{category}</MenuItem>
                                     ))
                                 }
                             </DropdownButton>
@@ -518,8 +527,6 @@ class Sidebar extends React.Component {
         )
 
 
-
-
         return (
             <div className="sidebar-bg">
                 <div>
@@ -553,22 +560,22 @@ class Sidebar extends React.Component {
 
                 {/*<div className="facebookBtn">*/}
 
-                    {/*<script>*/}
-                        {/*{(function (d, s, id) {*/}
-                            {/*var js, fjs = d.getElementsByTagName(s)[0];*/}
-                            {/*if (d.getElementById(id)) return;*/}
-                            {/*js = d.createElement(s);*/}
-                            {/*js.id = id;*/}
-                            {/*js.src = "//connect.facebook.net/pl_PL/sdk.js#xfbml=1&version=v2.10"*/}
-                            {/*fjs.parentNode.insertBefore(js, fjs)*/}
-                        {/*}(document, 'script', 'facebook-jssdk'))}*/}
-                    {/*</script>*/}
-                    {/*<div className="fb-share-button" data-href="https://developers.facebook.com/docs/plugins/"*/}
-                         {/*data-layout="button_count"*/}
-                         {/*data-size="large" data-mobile-iframe="true"><a className="fb-xfbml-parse-ignore"*/}
-                                                                        {/*target="_blank"*/}
-                                                                        {/*href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdevelopers.facebook.com%2Fdocs%2Fplugins%2F&amp;src=sdkpreparse">Udostępnij</a>*/}
-                    {/*</div>*/}
+                {/*<script>*/}
+                {/*{(function (d, s, id) {*/}
+                {/*var js, fjs = d.getElementsByTagName(s)[0];*/}
+                {/*if (d.getElementById(id)) return;*/}
+                {/*js = d.createElement(s);*/}
+                {/*js.id = id;*/}
+                {/*js.src = "//connect.facebook.net/pl_PL/sdk.js#xfbml=1&version=v2.10"*/}
+                {/*fjs.parentNode.insertBefore(js, fjs)*/}
+                {/*}(document, 'script', 'facebook-jssdk'))}*/}
+                {/*</script>*/}
+                {/*<div className="fb-share-button" data-href="https://developers.facebook.com/docs/plugins/"*/}
+                {/*data-layout="button_count"*/}
+                {/*data-size="large" data-mobile-iframe="true"><a className="fb-xfbml-parse-ignore"*/}
+                {/*target="_blank"*/}
+                {/*href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdevelopers.facebook.com%2Fdocs%2Fplugins%2F&amp;src=sdkpreparse">Udostępnij</a>*/}
+                {/*</div>*/}
 
                 {/*</div>*/}
 

@@ -91,7 +91,7 @@ class Diagrams extends React.Component {
                 <Grid>
                     <Row className="show-grid" style={{marginRight: -90 + "px"}}>
                         <Col md={2} mdOffset={6}>
-                            <DateRangePicker
+                            {/*<DateRangePicker
                                 startDate={this.state.startDate}
                                 endDate={this.state.endDate}
                                 isOutsideRange={() => false}
@@ -106,7 +106,7 @@ class Diagrams extends React.Component {
                                     })
                                 }}
                                 focusedInput={this.state.focusedInput}
-                                onFocusChange={focusedInput => this.setState({focusedInput})}/>
+                                onFocusChange={focusedInput => this.setState({focusedInput})}/>*/}
                         </Col>
                     </Row>
 
