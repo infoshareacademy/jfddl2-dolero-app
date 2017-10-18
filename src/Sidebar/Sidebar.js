@@ -17,6 +17,7 @@ import {
 } from 'react-bootstrap'
 import './Sidebar.css'
 import moment from 'moment'
+import { database } from '../firebase'
 
 class Sidebar extends React.Component {
     state = {
@@ -77,12 +78,12 @@ class Sidebar extends React.Component {
                 newSpendingValue: '',
                 newSpendingCategory: 'Wybierz wydatek',
                 userBalance: this.state.userBalance - newSpendingValue,
-                spendings: spendings.concat(sendingObject)
+                spendings: sendingObject
             }, () => {
-                localStorage.setItem('spendings', JSON.stringify(this.state.spendings));
+                // localStorage.setItem('spendings', JSON.stringify(this.state.spendings));
+                    database.ref('/Piotr/Spendings').push(this.state.spendings)
             }
         )
-        console.log(sendingObject)
     }
 
     handleInputSpendingChange = event => {
@@ -159,9 +160,10 @@ class Sidebar extends React.Component {
                 newIncomeValue: '',
                 newIncomingCategory: 'Wybierz przychód',
                 userBalance: userBalance + parseFloat(newIncomeValue, 10),
-                incomings: incomings.concat(sendingIncomingObject)
+                incomings: sendingIncomingObject
             }, () => {
-                localStorage.setItem('incomings', JSON.stringify(this.state.incomings));
+                // localStorage.setItem('incomings', JSON.stringify(this.state.incomings));
+            database.ref('/Piotr/Incomings').push(sendingIncomingObject)
             }
         )
     }
@@ -211,7 +213,8 @@ class Sidebar extends React.Component {
             spendingCategories : this.state.spendingCategories.concat(this.state.addedSpendingCategory),
             addedSpendingCategory: ''
         }, () => {
-            localStorage.setItem('spendingCategories', JSON.stringify(this.state.spendingCategories));
+            // localStorage.setItem('spendingCategories', JSON.stringify(this.state.spendingCategories));
+            database.ref('/Piotr/Spending Categories').push(this.state.spendingCategories)
         })
     }
 
@@ -226,7 +229,8 @@ class Sidebar extends React.Component {
             incomeCategories : this.state.incomeCategories.concat(this.state.addedIncomeCategory),
             addedIncomeCategory: ''
         }, () => {
-            localStorage.setItem('incomeCategories', JSON.stringify(this.state.incomeCategories));
+            // localStorage.setItem('incomeCategories', JSON.stringify(this.state.incomeCategories));
+            database.ref('/Piotr/Income Categories').push(this.state.incomeCategories)
         })
     }
 
@@ -245,7 +249,7 @@ class Sidebar extends React.Component {
                 <Button
                     bsSize="xsmall"
                     bsStyle="warning"
-                    onClick={this.ifExistsSpendingCaregory ? this.categoryAlert : this.addNewSpendingCategory}
+                    onClick={this.addNewSpendingCategory}
                 >
                     Dodaj
                 </Button>
