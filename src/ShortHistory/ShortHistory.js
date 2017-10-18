@@ -2,10 +2,10 @@ import React from 'react'
 import './ShortHistory.css';
 import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
+import {database, auth} from "../firebase";
 import {
 Grid
 } from 'react-bootstrap'
-
 const sHistory = JSON.parse(localStorage.getItem('spendings') || '[]')
 console.log(sHistory)
 const Data = JSON.parse(localStorage.getItem('incomings') || '[]')
@@ -38,6 +38,8 @@ console.log(Data)
 //
 // }];
 
+
+
 class ShortHistory extends React.Component {
 
     state = {
@@ -46,22 +48,20 @@ class ShortHistory extends React.Component {
     }
 
     componentDidMount() {
-        // interwał tutaj jest obejściem do momentu wprowadzenia reduksa
-        this.intervalId = setInterval(
-            () => {
-                this.setState({
-                    products: JSON.parse(localStorage.getItem('spendings') || '[]'),
-                    incomings: JSON.parse(localStorage.getItem('incomings') || '[]')
-                })
-            }, 100
-        )
+
+        database.ref('/Piotr/Spendings').on('value', (snapshot) => {
+            this.setState({ products: Object.values(snapshot.val()) || []})
+            console.log(this.state.products)
+        })
+        database.ref('/Piotr/Incomings').on('value', (snapshot) => {
+            this.setState({ incomings: Object.values(snapshot.val()) || []})
+            console.log(this.state.incomings)
+    })
     }
 
-
-
-    componentWillUnmount() {
-        clearInterval(this.intervalId)
-    }
+    // componentWillUnmount() {
+    //     clearInterval(this.intervalId)
+    // }
 
     createCustomClearButton = (onClick) => {
         return (
@@ -76,7 +76,7 @@ class ShortHistory extends React.Component {
 
 
         return(
-            <Grid id='style'>
+            <Grid id='style' className='style'>
 
                 <h2>Ostatnie Wydatki</h2>
                 <BootstrapTable data={this.state.products.slice(-10).reverse()} hover={true} options={ options } search={ true } multiColumnSearch={ true }>
