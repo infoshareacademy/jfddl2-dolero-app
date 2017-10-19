@@ -9,14 +9,18 @@ const setUser = user => ({
 
 
 export const init = () => dispatch => {
-    auth().onAuthStateChanged(
+    auth.onAuthStateChanged(
         user => dispatch(setUser(user))
     )
 }
 
 export const signIn = (email, password) => dispatch => {
-     auth().signInWithEmailAndPassword(email, password)
+    auth.signInWithEmailAndPassword(email, password)
     }
+
+export const signUp = (email, password) => dispatch => {
+    auth.createUserWithEmailAndPassword(email, password)
+}
 
 const initialState = {
     user: null

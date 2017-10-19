@@ -5,7 +5,6 @@ import {
     compose
 } from 'redux'
 import thunk from 'redux-thunk'
-
 import auth, { init as initAuth } from './state/auth'
 
 const reducer = combineReducers({

@@ -2,6 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 
 import SignInForm from '../SignInForm'
+import SignUpForm from '../SignUpForm'
 
 const Auth = props => (
     <div>
@@ -10,11 +11,14 @@ const Auth = props => (
                 <div>
                     <p>LOGIN FORM</p>
                     <SignInForm/>
+                    <p>SIGN UP</p>
+                    <SignUpForm/>
                 </div>
                 :
                 props.children
         }
     </div>
+
 )
 
 const mapStateToProps = state => ({
