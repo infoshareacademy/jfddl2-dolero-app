@@ -26,46 +26,7 @@ import {database} from "../firebase";
 var moment = require('moment');
 
 
-const categories = [
-    {
-        label: 'Jedzenie',
-        value: 'Jedzenie'
-    },
-    {
-        label: 'Mieszkanie',
-        value: 'Mieszkanie'
-    },
-    {
-        label: 'Inne opłaty i rachunki',
-        value: 'Inne opłaty i rachunki'
-    },
-    {
-        label: 'Zdrowie, higiena i chemia',
-        value: 'Zdrowie higiena i chemia'
-    },
-    {
-        label: 'Ubranie',
-        value: 'Ubranie'
-    },
-    {
-        label: 'Relaks',
-        value: 'Relaks'
-    },
-    {
-        label: 'Transport',
-        value: 'Transport'
-    },
-    {
-        label: 'Inne wydatki',
-        value: 'Inne wydatki'
-    },
-]
-
-
-
-
 class History extends React.Component {
-
 
 
     state = {
@@ -76,7 +37,8 @@ class History extends React.Component {
         currentSearchPhrase: '',
         isCyclic: false,
         value: {min: 0, max: 100},
-        link: 0
+        link: 0,
+        categories: []
     }
 
     componentDidMount() {
@@ -85,24 +47,33 @@ class History extends React.Component {
             this.setState({
                 records: Object.values(snapshot.val()) || []
             }, () => this.setState({
-                value: {min:0, max: this.getMaxValue()}
+                value: {min: 0, max: this.getMaxValue()}
             }))
             console.log('records', this.state.records)
 
+        })
+
+        database.ref('/Piotr/spendingCategories').on('value', (snapshot) => {
+            this.setState({
+                    categories: snapshot.val().map(snapshot => ({
+                        value: snapshot,
+                        label: snapshot
+                    }))
+                }
+            )
         })
     }
 
     getMaxValue = () => (
         this.state.records.reduce((max, next) =>
-            Math.max(max, parseInt(next.value))
+                Math.max(max, parseInt(next.value))
 
             , 0
-
         ))
 
     urlChangeByRow = (record) => {
 
-        window.history.pushState('page2', 'Title', '/history/'+record)
+        window.history.pushState('page2', 'Title', '/history/' + record)
         this.setState({
             link: record
         })
@@ -122,14 +93,12 @@ class History extends React.Component {
     }
 
 
-
-
     handleRemoveRecord = event => {
         const recordId = event.target.dataset.recordId
 
         this.setState({
             records: this.state.records.filter(
-                record =>record.id != recordId
+                record => record.id != recordId
             )
         })
         //     () => {
@@ -186,7 +155,7 @@ class History extends React.Component {
                             <InputRange
                                 maxValue={this.getMaxValue()}
                                 minValue={0}
-                                value={this.state.value }
+                                value={this.state.value}
                                 onChange={value => this.setState({value})}/>
 
                         </FormGroup>
@@ -223,7 +192,7 @@ class History extends React.Component {
                                     <MultiSelectField
                                         value={this.state.selectedCategories}
                                         onChange={this.handleSelectedCategoriesChange}
-                                        options={categories}
+                                        options={this.state.categories}
 
                                     />
 
@@ -259,8 +228,8 @@ class History extends React.Component {
                                             )
                                 )
                                     .filter(
-                                    record => this.state.isCyclic === false ? true : (record.isCyclic === true)
-                                ).filter(
+                                        record => this.state.isCyclic === false ? true : (record.isCyclic === true)
+                                    ).filter(
                                     record => record.spending.includes(this.state.currentSearchPhrase)
                                 ).filter(
                                     record => parseInt(record.value, 10) <= this.state.value.max && parseInt(record.value, 10) >= this.state.value.min
@@ -273,19 +242,21 @@ class History extends React.Component {
                                             <tbody>
 
                                             <tr key={record.id} data-href='/asd'
-                                                onClick={() =>{this.urlChangeByRow(record.id)}}>
+                                                onClick={() => {
+                                                    this.urlChangeByRow(record.id)
+                                                }}>
                                                 <td>{record.spendingCategory}</td>
                                                 <td>{record.value}</td>
                                                 <td>{record.spendingDate}</td>
-                                                <td style={{width:'3vw'}}
+                                                <td style={{width: '3vw'}}
                                                 ><Button onClick={this.handleRemoveRecord}
-                                                            data-record-id={record.id} bsStyle="danger"
-                                                            bsSize="xsmall"
+                                                         data-record-id={record.id} bsStyle="danger"
+                                                         bsSize="xsmall"
 
                                                 >Usuń</Button></td>
 
                                             </tr>
-                                            { this.state.link===record.id &&
+                                            {this.state.link === record.id &&
                                             <Route path="/history/:recordId" render={() => {
                                                 return <HistoryMore record={record}/>
                                             }}/>
@@ -293,8 +264,8 @@ class History extends React.Component {
 
                                             </tbody>
 
-                                )
-                                )}
+                                        )
+                                    )}
 
 
                         </Table>
