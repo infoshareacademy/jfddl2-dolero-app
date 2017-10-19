@@ -38,38 +38,57 @@ class Sidebar extends React.Component {
 
     componentDidMount() {
 
-        // userBalance: this.getUserBalance(),
 
-        database.ref('/Piotr/spendingCategories').on('value', (snapshot) => {
+
+        this.setState({
+            userBalance: this.getUserBalance()
+        })
+
+        database.ref(`/${auth.currentUser == null ? 'Piotr' : auth.currentUser.uid}/spendingCategories`).on('value', (snapshot) => {
             this.setState({spendingCategories: snapshot.val() || ["Jedzenie", "Mieszkanie", "Inne opłaty i rachunki", "Ubranie", "Relaks", "Transport", "Inne wydatki"]})
         })
 
-        database.ref('/Piotr/incomeCategories').on('value', (snapshot) => {
+        database.ref(`/${auth.currentUser == null ? 'Piotr' : auth.currentUser.uid}/incomeCategories`).on('value', (snapshot) => {
             this.setState({incomeCategories: snapshot.val() || ["Wypłata", "Premia", "Zasiłek", "Emerytura/Renta"]})
         })
 
 
-        // incomeCategories: database.ref('/Piotr/incomeCategories').on('value', (snapshot) => {
-        //     this.setState({ records: Object.values(snapshot.val()) || []})
-        //     console.log(this.state.records)
-        // }) || ["Wypłata", "Premia", "Zasiłek", "Emerytura/Renta"]
+
 
     }
 
-    // getUserBalance = () => {
-    //     const userBalance = JSON.parse(localStorage.getItem('spendings')) || []
-    //     const value1 = userBalance.reduce((result, nextValue) => (
-    //         result -= parseFloat(nextValue.value || 0, 10)
-    //     ), 0)
-    //
-    //     const userBalance2 = JSON.parse(localStorage.getItem('incomings')) || []
-    //     const value2 = userBalance2.reduce((result, nextValue) => (
-    //         result -= parseFloat(nextValue.value || 0, 10)
-    //     ), 0)
-    //
-    //     return value1 - value2;
-    //
-    // }
+    getUserBalance = () => {
+        console.log('B')
+        const userBalance = database.ref('/Piotr/spendings').on('value', snapshot  => {
+            console.log('obj ', snapshot)
+            this.setState({
+                userBalance: Object.values(
+                    (snapshot && snapshot.val()) || {}
+                    ).map(
+                        spending => parseFloat(spending.value)
+                ).reduce(
+                    (result, next) => result + next,
+                    0
+                )
+            })
+        })
+
+        const userBalance2 = database.ref('/Piotr/incomings').on('value', snapshot  => {
+            console.log('obj ', snapshot)
+            this.setState({
+                userBalance: Object.values(
+                    (snapshot && snapshot.val()) || {}
+                ).map(
+                    spending => parseFloat(spending.value)
+                ).reduce(
+                    (result, next) => result + next,
+                    0
+                )
+            })
+        })
+        return (userBalance2 - userBalance) * -1
+
+    }
 
     addSpendings = event => {
         const {spendings, isCyclic, newSpendingName, newSpendingValue, newSpendingCategory} = this.state;
@@ -525,6 +544,7 @@ class Sidebar extends React.Component {
                 </FormGroup>
             </Form>
         )
+
 
 
         return (
