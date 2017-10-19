@@ -1,6 +1,5 @@
 import firebase from 'firebase'
 
-
 let config = {
     apiKey: "AIzaSyBMSumd73-xPohl05Fqb7J5pc8MAG6aO4I",
     authDomain: "dolero-e89e1.firebaseapp.com",
@@ -9,7 +8,6 @@ let config = {
     storageBucket: "dolero-e89e1.appspot.com",
     messagingSenderId: "1026760190547"
 };
-
 
 let firebaseApp = firebase.initializeApp(config);
 
