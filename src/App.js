@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Grid,Row,Col} from 'react-bootstrap';
+import {Grid, Row, Col} from 'react-bootstrap';
 import {
     BrowserRouter as Router,
     Route,
@@ -7,6 +7,7 @@ import {
 import './App.css';
 import Sidebar from "./Sidebar";
 import Diagrams from "./Diagrams";
+import SignOutForm from "./SignOutForm";
 // import Helpdesk from "./Helpdesk"
 import ShortHistory from "./ShortHistory/ShortHistory"
 import History from "./History/History";
@@ -20,10 +21,11 @@ class App extends Component {
 
                     <Col xs={6} md={4}><Sidebar/></Col>
                     <Col xs={6} md={8} className='components'>
-                    <MainMenu/>
-                    <Route path='/history' component={History}/>
-                    <Route path='/diagrams' component={Diagrams}/>
-                    <Route exact path='/' component={ShortHistory}/>
+                        <MainMenu/>
+                        <Route path='/history' component={History}/>
+                        <Route path='/diagrams' component={Diagrams}/>
+                        <Route exact path='/' component={ShortHistory}/>
+                        <Route path='/signOutForm' component={SignOutForm}/>
                         {/*<Route path='/Helpdesk' component={Helpdesk}/>*/}
                     </Col>
                 </Grid>
@@ -31,4 +33,5 @@ class App extends Component {
         );
     }
 }
+
 export default App;

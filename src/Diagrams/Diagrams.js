@@ -9,7 +9,7 @@ import moment from 'moment'
 const spendings = JSON.parse(localStorage.getItem('spendings') || '[]');
 const incomings = JSON.parse(localStorage.getItem('incomings') || '[]');
 
-class Diagrams extends React.Component {
+class   Diagrams extends React.Component {
     state = {
         startDate: moment().startOf('month'),
         endDate: moment(),
@@ -68,7 +68,9 @@ class Diagrams extends React.Component {
         return income
     }
 
-
+    /**
+     * @param spenging is required
+     */
     getPieChart(spendings) {
         let byCategories = new Map();
         spendings.forEach(function (spending) {
