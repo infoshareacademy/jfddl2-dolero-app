@@ -39,7 +39,7 @@ const MainMenu = () => (
                 firebase.auth().sendPasswordResetEmail(email).then(
                     () => alert("Sprawdz swoją pocztę i kliknij w link")
                 )
-            }}>Reset hsała</NavItem>
+            }}>Reset hasła</NavItem>
         </Nav>
 
 
