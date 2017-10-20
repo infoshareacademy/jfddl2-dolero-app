@@ -15,5 +15,9 @@ export const googleProvider= new firebase.auth.GoogleAuthProvider();
 export const database = firebaseApp.database();
 export const auth = firebaseApp.auth();
 
+console.log('A')
+database.ref('/Piotr/spendings').on('value', snapshot => console.log('x1: ', snapshot))
+database.ref('/Piotr/spendings').on('value', snapshot => console.log('x2: ', snapshot))
+
 export default firebaseApp;
 
