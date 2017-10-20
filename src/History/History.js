@@ -21,7 +21,7 @@ import 'react-input-range/lib/css/index.css'
 import {
     Route,
 } from 'react-router-dom'
-import {database} from "../firebase";
+import {database, auth} from "../firebase";
 
 var moment = require('moment');
 
@@ -42,10 +42,11 @@ class History extends React.Component {
     }
 
     componentDidMount() {
-
-        database.ref('/Piotr/spendings').on('value', (snapshot) => {
+        const uid = auth.currentUser.uid
+        console.log(`/${uid}/spendings`)
+        database.ref(`/${uid}/spendings`).on('value', (snapshot) => {
             this.setState({
-                records: Object.values(snapshot.val()) || []
+                records: Object.values(snapshot.val() || []) || []
             }, () => this.setState({
                 value: {min: 0, max: this.getMaxValue()}
             }))
@@ -53,9 +54,22 @@ class History extends React.Component {
 
         })
 
-        database.ref('/Piotr/spendingCategories').on('value', (snapshot) => {
+        database.ref(`/${uid}/spendingCategories`).on('value', (snapshot) => {
+            console.log(snapshot.val())
             this.setState({
-                    categories: snapshot.val().map(snapshot => ({
+                    categories: snapshot.val() === null ? [
+                        "Jedzenie",
+                        "Mieszkanie",
+                        "Inne opłaty i rachunki",
+                        "Ubranie",
+                        "Relaks" ,
+                        "Transport",
+                        "Inne wydatki"
+                    ]
+                        .map(snapshot => ({
+                            value: snapshot,
+                            label: snapshot
+                        })) : snapshot.val().map(snapshot => ({
                         value: snapshot,
                         label: snapshot
                     }))

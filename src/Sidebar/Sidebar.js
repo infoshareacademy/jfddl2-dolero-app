@@ -39,13 +39,12 @@ class Sidebar extends React.Component {
     componentDidMount() {
 
         // userBalance: this.getUserBalance(),
-
-        database.ref('/Piotr/spendingCategories').on('value', (snapshot) => {
-            this.setState({spendingCategories: snapshot.val() || ["Jedzenie", "Mieszkanie", "Inne opłaty i rachunki", "Ubranie", "Relaks", "Transport", "Inne wydatki"]})
+        database.ref(`/${auth.currentUser == null ? 'Piotr' : auth.currentUser.uid}/spendingCategories`).on('value', (snapshot) => {
+            this.setState({spendingCategories: snapshot.val() === null ? ["Jedzenie", "Mieszkanie", "Inne opłaty i rachunki", "Ubranie", "Relaks", "Transport", "Inne wydatki"] : snapshot.val()})
         })
 
-        database.ref('/Piotr/incomeCategories').on('value', (snapshot) => {
-            this.setState({incomeCategories: snapshot.val() || ["Wypłata", "Premia", "Zasiłek", "Emerytura/Renta"]})
+        database.ref(`/${auth.currentUser == null ? 'Piotr' : auth.currentUser.uid}/incomeCategories`).on('value', (snapshot) => {
+            this.setState({incomeCategories: snapshot.val() === null ? ["Wypłata", "Premia", "Zasiłek", "Emerytura/Renta"] : snapshot.val()})
         })
 
 
