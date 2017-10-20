@@ -1,4 +1,5 @@
 import React from 'react'
+import firebase from 'firebase'
 import {
     Navbar,
     Nav,
@@ -28,8 +29,20 @@ const MainMenu = () => (
                     Wykresy
                 </NavItem>
             </LinkContainer>
+            <LinkContainer to="/signOutForm">
+                <NavItem>
+                    Wyloguj się
+                </NavItem>
+            </LinkContainer>
+            <LinkContainer to="/settings">
+                <NavItem>
+                    Ustawienia
+                </NavItem>
+            </LinkContainer>
 
         </Nav>
+
+
     </Navbar>
 )
 

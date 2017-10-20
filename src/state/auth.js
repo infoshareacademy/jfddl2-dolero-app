@@ -22,6 +22,9 @@ export const signUp = (email, password) => dispatch => {
     auth.createUserWithEmailAndPassword(email, password)
 }
 
+export const signOut = () => dispatch => {
+    auth.signOut()
+}
 const initialState = {
     user: null
 }
