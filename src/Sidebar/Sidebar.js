@@ -52,7 +52,7 @@ class Sidebar extends React.Component {
     getUserBalance = () => {
         console.log('B')
 
-        const userBalance1 = database.ref('/Piotr/spendings').once('value', snapshot => {
+        const userBalance1 = database.ref(`/${auth.currentUser == null ? 'Piotr' : auth.currentUser.uid}/spendings`).once('value', snapshot => {
             console.log('obj ', snapshot)
             Object.values(
                 (snapshot && snapshot.val()) || {}
@@ -65,7 +65,7 @@ class Sidebar extends React.Component {
         })
 
 
-        const userBalance2 = database.ref('/Piotr/incomings').once('value')
+        const userBalance2 = database.ref(`/${auth.currentUser == null ? 'Piotr' : auth.currentUser.uid}/incomings`).once('value')
 
         Promise.all([
             userBalance1,
