@@ -8,9 +8,9 @@ import './App.css';
 import Sidebar from "./Sidebar";
 import Diagrams from "./Diagrams";
 import SignOutForm from "./SignOutForm";
-// import Helpdesk from "./Helpdesk"
 import ShortHistory from "./ShortHistory/ShortHistory"
 import History from "./History/History";
+import Settings from "./Settings"
 import MainMenu from './MainMenu'
 
 class App extends Component {
@@ -26,7 +26,8 @@ class App extends Component {
                         <Route path='/diagrams' component={Diagrams}/>
                         <Route exact path='/' component={ShortHistory}/>
                         <Route path='/signOutForm' component={SignOutForm}/>
-                        {/*<Route path='/Helpdesk' component={Helpdesk}/>*/}
+                        <Route path='/settings' component={Settings}/>
+
                     </Col>
                 </Grid>
             </Router>

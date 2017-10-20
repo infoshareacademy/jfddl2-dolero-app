@@ -34,12 +34,12 @@ const MainMenu = () => (
                     Wyloguj się
                 </NavItem>
             </LinkContainer>
-            <NavItem onClick={() => {
-                const email = firebase.auth().currentUser.email
-                firebase.auth().sendPasswordResetEmail(email).then(
-                    () => alert("Sprawdz swoją pocztę i kliknij w link")
-                )
-            }}>Reset hasła</NavItem>
+            <LinkContainer to="/settings">
+                <NavItem>
+                    Ustawienia
+                </NavItem>
+            </LinkContainer>
+
         </Nav>
 
 
