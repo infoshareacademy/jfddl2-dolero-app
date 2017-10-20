@@ -1,4 +1,5 @@
 import React from 'react'
+import firebase from 'firebase'
 import {
     Navbar,
     Nav,
@@ -33,8 +34,15 @@ const MainMenu = () => (
                     Wyloguj się
                 </NavItem>
             </LinkContainer>
-
+            <NavItem onClick={() => {
+                const email = firebase.auth().currentUser.email
+                firebase.auth().sendPasswordResetEmail(email).then(
+                    () => alert("Sprawdz swoją pocztę i kliknij w link")
+                )
+            }}>Reset hasła</NavItem>
         </Nav>
+
+
     </Navbar>
 )
 
