@@ -37,32 +37,24 @@ class Sidebar extends React.Component {
     }
 
     componentDidMount() {
-
-
-
-        this.setState({
-            userBalance: this.getUserBalance()
-        })
+        this.getUserBalance()
 
         database.ref(`/${auth.currentUser == null ? 'Piotr' : auth.currentUser.uid}/spendingCategories`).on('value', (snapshot) => {
-            this.setState({spendingCategories: snapshot.val() || ["Jedzenie", "Mieszkanie", "Inne opłaty i rachunki", "Ubranie", "Relaks", "Transport", "Inne wydatki"]})
+            this.setState({spendingCategories: snapshot.val() === null ? ["Jedzenie", "Mieszkanie", "Inne opłaty i rachunki", "Ubranie", "Relaks", "Transport", "Inne wydatki"]: snapshot.val()})
         })
 
         database.ref(`/${auth.currentUser == null ? 'Piotr' : auth.currentUser.uid}/incomeCategories`).on('value', (snapshot) => {
-            this.setState({incomeCategories: snapshot.val() || ["Wypłata", "Premia", "Zasiłek", "Emerytura/Renta"]})
+            this.setState({incomeCategories: snapshot.val() === null ? ["Wypłata", "Premia", "Zasiłek", "Emerytura/Renta"] : snapshot.val()})
         })
-
-
-
 
     }
 
     getUserBalance = () => {
         console.log('B')
-        const userBalance = database.ref('/Piotr/spendings').on('value', snapshot  => {
+
+        const userBalance1 = database.ref('/Piotr/spendings').once('value', snapshot  => {
             console.log('obj ', snapshot)
-            this.setState({
-                userBalance: Object.values(
+                Object.values(
                     (snapshot && snapshot.val()) || {}
                     ).map(
                         spending => parseFloat(spending.value)
@@ -70,24 +62,43 @@ class Sidebar extends React.Component {
                     (result, next) => result + next,
                     0
                 )
-            })
         })
 
-        const userBalance2 = database.ref('/Piotr/incomings').on('value', snapshot  => {
-            console.log('obj ', snapshot)
+
+        const userBalance2 = database.ref('/Piotr/incomings').once('value')
+
+        Promise.all([
+            userBalance1,
+            userBalance2
+        ]).then((dataSnapshots)=>{
+            let userBalanceSnapshot1 = dataSnapshots[0]
+            let userBalanceSnapshot2 = dataSnapshots[1]
+
+            let userBalanceSnapshotReduced1 = Object.values(
+                (userBalanceSnapshot1 && userBalanceSnapshot1.val()) || {}
+            ).map(
+                spending => parseFloat(spending.value)
+            ).reduce(
+                (result, next) => result + next,
+                0
+            )
+
+
+            let userBalanceSnapshotReduced2 =  Object.values(
+                (userBalanceSnapshot2 && userBalanceSnapshot2.val()) || {}
+            ).map(
+                income => parseFloat(income.value)
+            ).reduce(
+                (result, next) => result + next,
+                0
+            )
+
+            console.log('2 fulfilled', userBalanceSnapshotReduced1, userBalanceSnapshotReduced2)
+
             this.setState({
-                userBalance: Object.values(
-                    (snapshot && snapshot.val()) || {}
-                ).map(
-                    spending => parseFloat(spending.value)
-                ).reduce(
-                    (result, next) => result + next,
-                    0
-                )
+                userBalance: userBalanceSnapshotReduced1 - userBalanceSnapshotReduced2
             })
         })
-        return (userBalance2 - userBalance) * -1
-
     }
 
     addSpendings = event => {
@@ -108,11 +119,11 @@ class Sidebar extends React.Component {
                 newSpendingName: '',
                 newSpendingValue: '',
                 newSpendingCategory: 'Wybierz wydatek',
-                userBalance: this.state.userBalance - newSpendingValue,
+                userBalance: this.getUserBalance(),
                 spendings: sendingObject
             }, () => {
 
-                database.ref(`/${auth.currentUser == null ? 'Piotr' : auth.currentUser.uid}/spendings`).push(this.state.spendings)
+                database.ref(`/${auth.currentUser == null ? 'Piotr' : auth.currentUser.uid}/spendings`).push(this.state.spendings).then(()=>{this.getUserBalance()})
             }
         )
     }
@@ -190,7 +201,7 @@ class Sidebar extends React.Component {
                 newIncomeName: '',
                 newIncomeValue: '',
                 newIncomingCategory: 'Wybierz przychód',
-                userBalance: userBalance + parseFloat(newIncomeValue, 10),
+                userBalance: this.getUserBalance,
                 incomings: sendingIncomingObject
             }, () => {
                 database.ref(`${auth.currentUser == null ? 'Piotr' : auth.currentUser.uid}/incomings`).push(sendingIncomingObject)
