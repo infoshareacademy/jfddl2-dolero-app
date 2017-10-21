@@ -16,8 +16,25 @@ class Settings extends React.Component {
 
 render(){
     return(
-        // resret hasła
-        <Button onClick={this.HunddleResetPass}>Nadaj nowe hasło</Button>
+        <div>
+            {/*reset hasła*/}
+            <Button onClick={this.HunddleResetPass}>Nadaj nowe hasło</Button>
+            <form>
+                <input
+                    type="file"
+                />
+
+                <Button
+                    type="submit"
+                    bsSize="large"
+                    bsStyle="warning"
+                >
+                    Dodaj zdjęcie profilowe
+                </Button>
+            </form>
+        </div>
+
+
     )
 
 }
