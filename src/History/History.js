@@ -43,8 +43,8 @@ class History extends React.Component {
 
     componentDidMount() {
         const uid = auth.currentUser.uid
-        console.log(`/${uid}/spendings`)
-        database.ref(`/${uid}/spendings`).on('value', (snapshot) => {
+        console.log(`/users/${uid}/spendings`)
+        database.ref(`/users/${uid}/spendings`).on('value', (snapshot) => {
             this.setState({
                 records: Object.values(snapshot.val() || []) || []
             }, () => this.setState({
@@ -54,7 +54,7 @@ class History extends React.Component {
 
         })
 
-        database.ref(`/${uid}/spendingCategories`).on('value', (snapshot) => {
+        database.ref(`users/${uid}/spendingCategories`).on('value', (snapshot) => {
             console.log(snapshot.val())
             this.setState({
                     categories: snapshot.val() === null ? [
