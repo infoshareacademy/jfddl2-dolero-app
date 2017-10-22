@@ -59,7 +59,7 @@ class History extends React.Component {
                         "Mieszkanie",
                         "Inne opłaty i rachunki",
                         "Ubranie",
-                        "Relaks" ,
+                        "Relaks",
                         "Transport",
                         "Inne wydatki"
                     ]
@@ -77,14 +77,14 @@ class History extends React.Component {
 
     getMaxValue = () => (
         this.state.records.reduce((max, next) =>
-                Math.max(max, parseInt(next.value,10))
+                Math.max(max, parseInt(next.value, 10))
 
             , 0
         ))
 
     urlChangeByRow = (record) => {
 
-        window.history.pushState('page2', 'Title', '/history/' + record)
+        this.props.history.push('/history/' + record)
         this.setState({
             link: record
         })
@@ -256,20 +256,20 @@ class History extends React.Component {
                                                 onClick={() => {
                                                     this.urlChangeByRow(record.id)
                                                 }}>
-                                                <td key={record.id+1}>{record.spendingCategory}</td>
-                                                <td key={record.id+2}>{record.value}</td>
-                                                <td key={record.id+3}>{record.spendingDate}</td>
-                                                <td key={record.id+4} style={{width: '3vw'}}
+                                                <td key={record.id + 1}>{record.spendingCategory}</td>
+                                                <td key={record.id + 2}>{record.value}</td>
+                                                <td key={record.id + 3}>{record.spendingDate}</td>
+                                                <td key={record.id + 4} style={{width: '3vw'}}
                                                 ><Button onClick={this.handleRemoveRecord}
                                                          data-record-id={record.id} bsStyle="danger"
                                                          bsSize="xsmall"
-                                                         key={record.id+6}
+                                                         key={record.id + 6}
 
                                                 >Usuń</Button></td>
 
                                             </tr>
                                             {this.state.link === record.id &&
-                                            <Route path="/history/:recordId" render={() => {
+                                                <Route path={"/history/" + record.id} render={() => {
                                                 return <HistoryMore
                                                     record={record}
                                                     changeBackUrl={this.urlChangeBackByRow}
