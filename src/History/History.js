@@ -43,26 +43,23 @@ class History extends React.Component {
 
     componentDidMount() {
         const uid = auth.currentUser.uid
-        console.log(`/users/${uid}/spendings`)
         database.ref(`/users/${uid}/spendings`).on('value', (snapshot) => {
             this.setState({
                 records: Object.values(snapshot.val() || []) || []
             }, () => this.setState({
                 value: {min: 0, max: this.getMaxValue()}
             }))
-            console.log('records', this.state.records)
 
         })
 
         database.ref(`users/${uid}/spendingCategories`).on('value', (snapshot) => {
-            console.log(snapshot.val())
             this.setState({
                     categories: snapshot.val() === null ? [
                         "Jedzenie",
                         "Mieszkanie",
                         "Inne opłaty i rachunki",
                         "Ubranie",
-                        "Relaks" ,
+                        "Relaks",
                         "Transport",
                         "Inne wydatki"
                     ]
@@ -80,16 +77,22 @@ class History extends React.Component {
 
     getMaxValue = () => (
         this.state.records.reduce((max, next) =>
-                Math.max(max, parseInt(next.value))
+                Math.max(max, parseInt(next.value, 10))
 
             , 0
         ))
 
     urlChangeByRow = (record) => {
 
-        window.history.pushState('page2', 'Title', '/history/' + record)
+        this.props.history.push('/history/' + record)
         this.setState({
             link: record
+        })
+
+    }
+    urlChangeBackByRow = (record) => {
+        this.setState({
+            link: ''
         })
 
     }
@@ -108,16 +111,10 @@ class History extends React.Component {
 
 
     handleRemoveRecord = event => {
-        const recordId = event.target.dataset.recordId
-
-        this.setState({
-            records: this.state.records.filter(
-                record => record.id != recordId
-            )
-        })
-        //     () => {
-        //     localStorage.setItem('spendings', JSON.stringify(this.state.records))
-        // })
+        // const recordId = event.target.dataset.recordId
+        // const uid = auth.currentUser.uid
+        // let ref = database.ref('users')
+        // console.log('tutaj: ', ref)
     }
 
 
@@ -255,24 +252,28 @@ class History extends React.Component {
                                         (record, index) => (
                                             <tbody>
 
-                                            <tr key={record.id} data-href='/asd'
+                                            <tr key={record.id}
                                                 onClick={() => {
                                                     this.urlChangeByRow(record.id)
                                                 }}>
-                                                <td>{record.spendingCategory}</td>
-                                                <td>{record.value}</td>
-                                                <td>{record.spendingDate}</td>
-                                                <td style={{width: '3vw'}}
+                                                <td key={record.id + 1}>{record.spendingCategory}</td>
+                                                <td key={record.id + 2}>{record.value}</td>
+                                                <td key={record.id + 3}>{record.spendingDate}</td>
+                                                <td key={record.id + 4} style={{width: '3vw'}}
                                                 ><Button onClick={this.handleRemoveRecord}
                                                          data-record-id={record.id} bsStyle="danger"
                                                          bsSize="xsmall"
+                                                         key={record.id + 6}
 
                                                 >Usuń</Button></td>
 
                                             </tr>
                                             {this.state.link === record.id &&
-                                            <Route path="/history/:recordId" render={() => {
-                                                return <HistoryMore record={record}/>
+                                                <Route path={"/history/" + record.id} render={() => {
+                                                return <HistoryMore
+                                                    record={record}
+                                                    changeBackUrl={this.urlChangeBackByRow}
+                                                />
                                             }}/>
                                             }
 
