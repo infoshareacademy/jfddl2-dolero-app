@@ -18,7 +18,7 @@ render(){
     return(
         <div>
             {/*reset hasła*/}
-            <Button onClick={this.HunddleResetPass}>Nadaj nowe hasło</Button>
+
             <form>
                 <input
                     type="file"
@@ -32,6 +32,7 @@ render(){
                     Dodaj zdjęcie profilowe
                 </Button>
             </form>
+            <Button bsSize="large" bsStyle="danger" onClick={this.HunddleResetPass}>Nadaj nowe hasło</Button>
         </div>
 
 
