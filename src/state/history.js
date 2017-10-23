@@ -8,6 +8,11 @@ const setSpendings = spendings => ({
     spendings: spendings
 })
 
+const setIncomings = incomings => ({
+    type: SET_INCOMINGS,
+    incomings: incomings
+})
+
 export const initSpendingsSync = () => (dispatch, getState) => {
     let currentUserUID = getState().auth.user.uid
     database.ref(`users/${currentUserUID}/spendings`).on('value', snapshot => {
@@ -18,6 +23,14 @@ export const initSpendingsSync = () => (dispatch, getState) => {
         (error)=>{
             console.log('error' ,error)
         })
+}
+
+export const initIncomingsSync = () => (dispatch, getState) => {
+    let currentUserUID = getState().auth.user.uid
+    database.ref(`users/${currentUserUID}/incomings`).on('value', snapshot => {
+        let incomings = snapshot.val()
+        dispatch(setIncomings(incomings))
+    })
 }
 
 const initialState = {
