@@ -1,4 +1,5 @@
-import { auth } from '../firebase'
+import {auth} from '../firebase'
+import {initSpendingsSync} from "./history";
 
 const SET_USER = 'auth/SET_USER'
 
@@ -10,13 +11,17 @@ const setUser = user => ({
 
 export const init = () => dispatch => {
     auth.onAuthStateChanged(
-        user => dispatch(setUser(user))
+        user => {
+            dispatch(setUser(user))
+            if (user)
+                dispatch(initSpendingsSync())
+        }
     )
 }
 
 export const signIn = (email, password) => dispatch => {
     auth.signInWithEmailAndPassword(email, password)
-    }
+}
 
 export const signUp = (email, password) => dispatch => {
     auth.createUserWithEmailAndPassword(email, password)
@@ -30,7 +35,7 @@ const initialState = {
 }
 
 export default (state = initialState, action) => {
-    switch(action.type) {
+    switch (action.type) {
         case SET_USER:
             return {
                 ...state,
