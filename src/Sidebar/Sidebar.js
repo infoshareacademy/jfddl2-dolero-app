@@ -96,7 +96,7 @@ class Sidebar extends React.Component {
             console.log('2 fulfilled', userBalanceSnapshotReduced1, userBalanceSnapshotReduced2)
 
             this.setState({
-                userBalance: userBalanceSnapshotReduced2 - userBalanceSnapshotReduced1
+                userBalance: (userBalanceSnapshotReduced2 - userBalanceSnapshotReduced1).toFixed(2)
             })
         })
     }
