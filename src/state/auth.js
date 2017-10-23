@@ -1,5 +1,6 @@
 import {auth} from '../firebase'
 import {initSpendingsSync} from "./history";
+import {initIncomingsSync} from "./history";
 
 const SET_USER = 'auth/SET_USER'
 
@@ -13,8 +14,10 @@ export const init = () => dispatch => {
     auth.onAuthStateChanged(
         user => {
             dispatch(setUser(user))
-            if (user)
+            if (user) {
                 dispatch(initSpendingsSync())
+                dispatch(initIncomingsSync())
+            }
         }
     )
 }
