@@ -1,6 +1,6 @@
 import React from 'react'
+import {connect} from 'react-redux'
 import firebase from "firebase"
-import UploadProfilePhoto from "../UploadProfilePhoto";
 import {
     Button,
     FormGroup,
@@ -25,7 +25,42 @@ function FieldGroup({id, label, help, ...props}) {
 
 class Settings extends React.Component {
 
-    print_current_page = () => window.print()
+    state = {
+        nip: '',
+        address: '',
+        kwota: '',
+        company: '',
+        lastName: '',
+        name: '',
+        adress: ''
+    }
+
+    componentWillMount() {
+        firebase.database().ref(`users/${firebase.auth().currentUser.uid}/invoiceData`).once('value')
+            .then((snapshot) => {
+                this.setState({
+                    ...snapshot.val()
+                })
+            })
+    }
+
+    handleInputChange = (event, whatIsChanging) => {
+        let newState = {}
+        newState[whatIsChanging] = event.target.value
+        this.setState(newState, () => {
+            console.log('newState', this.state)
+        })
+    }
+
+    saveInvoice = (event) => {
+        event.preventDefault()
+        firebase.database().ref(`users/${firebase.auth().currentUser.uid}/invoiceData`).set(this.state)
+            .then(() => {
+                console.log('Invoice Data Saved')
+            })
+        console.log(event.target)
+    }
+
     // reset hasła
     HunddleResetPass = () => {
         const email = firebase.auth().currentUser.email
@@ -39,11 +74,23 @@ class Settings extends React.Component {
         return (
             <div>
 
+                <form>
+                    <input
+                        type="file"
+                    />
 
-                <UploadProfilePhoto/>
+                    <Button
+                        type="submit"
+                        bsSize="large"
+                        bsStyle="warning"
+                    >
+                        Dodaj zdjęcie profilowe
+                    </Button>
+                </form>
+
                 <Button bsSize="large" bsStyle="danger" onClick={this.HunddleResetPass}>Nadaj nowe hasło</Button>
 
-                <Form>
+                <Form onSubmit={this.saveInvoice}>
                     <h2>Dane do faktury</h2>
                     <Col sm={6}>
                         <FormGroup>
@@ -52,6 +99,10 @@ class Settings extends React.Component {
                                 <FieldGroup
                                     id="formControlsText"
                                     type="text"
+                                    onChange={(event) => {
+                                        this.handleInputChange(event, 'name')
+                                    }}
+                                    value={this.state.name}
                                     label=""
                                     placeholder="Wprowadz dane"
                                 />
@@ -66,6 +117,10 @@ class Settings extends React.Component {
                                 <FieldGroup
                                     id="formControlsText"
                                     type="text"
+                                    onChange={(event) => {
+                                        this.handleInputChange(event, 'lastName')
+                                    }}
+                                    value={this.state.lastName}
                                     label=""
                                     placeholder="Wprowadź dane"
                                 />
@@ -80,6 +135,10 @@ class Settings extends React.Component {
                                 <FieldGroup
                                     id="formControlsText"
                                     type="text"
+                                    onChange={(event) => {
+                                        this.handleInputChange(event, 'company')
+                                    }}
+                                    value={this.state.company}
                                     label=""
                                     placeholder="Wprowadź dane"
                                 />
@@ -94,6 +153,10 @@ class Settings extends React.Component {
                                 <FieldGroup
                                     id="formControlsText"
                                     type="text"
+                                    onChange={(event) => {
+                                        this.handleInputChange(event, 'nip')
+                                    }}
+                                    value={this.state.nip}
                                     label=""
                                     placeholder="Wprowadź dane"
                                 />
@@ -108,6 +171,10 @@ class Settings extends React.Component {
                                 <FieldGroup
                                     id="formControlsText"
                                     type="number"
+                                    onChange={(event) => {
+                                        this.handleInputChange(event, 'kwota')
+                                    }}
+                                    value={this.state.kwota}
                                     label=""
                                     placeholder="Podaj wartość"
                                 />
@@ -120,15 +187,17 @@ class Settings extends React.Component {
                             <InputGroup>
                                 <InputGroup.Addon>Adres</InputGroup.Addon>
                                 <FormControl componentClass="textarea" placeholder="podaj dane adresowe"
-                                             controlId="formControlsTextarea"/>
+                                             controlId="formControlsTextarea"
+                                             onChange={(event) => {
+                                                 this.handleInputChange(event, 'adress')
+                                             }}
+                                             value={this.state.adress}
+                                />
                             </InputGroup>
                         </FormGroup>
                     </Col>
 
-                    <Button onClick={this.print_current_page}
-                            type="submit"
-                            bsStyle="warning"
-                    >
+                    <Button type="submit" bsStyle="warning">
                         Zatwierdź
                     </Button>
                 </Form>
