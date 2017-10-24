@@ -37,9 +37,12 @@ console.log(Data)
 //     price: 100
 //
 // }];
-
-
-
+const selectRowProp = {
+    mode: 'checkbox',
+    bgColor: 'pink', // you should give a bgcolor, otherwise, you can't regonize which row has been selected
+    hideSelectColumn: true,  // enable hide selection column.
+    clickToSelect: true  // you should enable clickToSelect, otherwise, you can't select column.
+};
 class ShortHistory extends React.Component {
 
     state = {
@@ -60,15 +63,12 @@ class ShortHistory extends React.Component {
     })
     }
 
-    // componentWillUnmount() {
-    //     clearInterval(this.intervalId)
-    // }
-
     createCustomClearButton = (onClick) => {
         return (
             <button className='btn btn-warning' onClick={ onClick }>Wyczyść</button>
         );
     }
+
     render() {
         const options = {
             clearSearch: true,
@@ -80,7 +80,7 @@ class ShortHistory extends React.Component {
             <Grid id='style' className='style'>
 
                 <h2>Ostatnie Wydatki</h2>
-                <BootstrapTable data={this.state.products.slice(-10).reverse()} hover={true} options={ options } search={ true } multiColumnSearch={ true }>
+                <BootstrapTable data={this.state.products.slice(-10).reverse()} hover={true} options={ options } search={ true } multiColumnSearch={ true } selectRow={ selectRowProp }>
                     <TableHeaderColumn dataField="spendingDate" isKey={true} dataSort={true} text-align="center" searchable={ false } width='150'>Data</TableHeaderColumn>
                     <TableHeaderColumn dataField="value" dataAlign="center" dataSort={true} width='200' zero={true}>Kwota wydatku</TableHeaderColumn>
                     <TableHeaderColumn dataField="spendingCategory" dataSort={true} dataAlign="center">Kategoria wydatku</TableHeaderColumn>
@@ -90,8 +90,8 @@ class ShortHistory extends React.Component {
 
 
                 <h2>Ostatnie  Przychody</h2>
-                <BootstrapTable data={this.state.incomings.slice(-7).reverse()} options={ options }>
-                    <TableHeaderColumn dataField="incomingDate" isKey={true} dataSort={true} text-align="center" searchable={ false }width='150'>Data</TableHeaderColumn>
+                <BootstrapTable data={this.state.incomings.slice(-7).reverse()} options={ options } search={ true } multiColumnSearch={ true } selectRow={ selectRowProp }>
+                    <TableHeaderColumn dataField="incomingDate" isKey={true} dataSort={true} text-align="center" searchable={ false } width='150'>Data</TableHeaderColumn>
                     <TableHeaderColumn dataField="value" dataAlign="center" dataSort={true} width='200' zero>Kwota przychodu</TableHeaderColumn>
                     <TableHeaderColumn dataField="incomingCategory" dataSort={true} dataAlign="center">Kategoria przychodu</TableHeaderColumn>
                     <TableHeaderColumn dataField="name" dataSort={true} dataAlign="center">Opis przychodu</TableHeaderColumn>

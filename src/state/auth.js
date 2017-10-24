@@ -1,6 +1,5 @@
 import {auth} from '../firebase'
-import {initSpendingsSync} from "./history";
-import {initIncomingsSync} from "./history";
+import {initSpendingsSync, initIncomingsSync} from "./history";
 
 const SET_USER = 'auth/SET_USER'
 
