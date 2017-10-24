@@ -42,13 +42,13 @@ class   Diagrams extends React.Component {
             let spendingDate = moment(incoming.incomingDate, "MM-DD-YYYY");
             return spendingDate.isBetween(startDate, endDate)
         }).reduce((result, income) => {
-            return result + parseInt(income.value)
+            return result + parseInt(income.value,10)
         }, 0);
         const expenses = spendings.filter(function (spending) {
             let spendingDate = moment(spending.spendingDate, "MM-DD-YYYY");
             return spendingDate.isBetween(startDate, endDate)
         }).reduce((result, spending) => {
-            return (result - parseInt(spending.value))
+            return (result - parseInt(spending.value,10))
         }, 0);
         this.setState({currentBalance: income + expenses})
     }
@@ -84,7 +84,7 @@ class   Diagrams extends React.Component {
             const spendingDate = moment(spending.spendingDate, "MM-DD-YYYY");
             return spendingDate.isBetween(startDate, endDate)
         }).reduce((result, spending) => {
-            return (result - parseInt(spending.value))
+            return (result - parseInt(spending.value, 10))
         }, 0);
         this.setState({totalExpenses: expenses})
     }
@@ -100,7 +100,7 @@ class   Diagrams extends React.Component {
             const spendingDate = moment(incoming.incomingDate, "MM-DD-YYYY");
             return spendingDate.isBetween(startDate, endDate)
         }).reduce((result, income) => {
-            return result + parseInt(income.value)
+            return result + parseInt(income.value,10)
         }, 0);
         this.setState({totalIncome: income})
     }
@@ -110,10 +110,10 @@ class   Diagrams extends React.Component {
             let byCategories = new Map();
             Object.values(spendingsSnapshot.val() || []).forEach(function (spending) {
                 if (byCategories.has(spending.spendingCategory)) {
-                    let newVal = byCategories.get(spending.spendingCategory) + parseInt(spending.value);
+                    let newVal = byCategories.get(spending.spendingCategory) + parseInt(spending.value,10);
                     byCategories.set(spending.spendingCategory, newVal);
                 } else {
-                    byCategories.set(spending.spendingCategory, parseInt(spending.value))
+                    byCategories.set(spending.spendingCategory, parseInt(spending.value,10))
                 }
             });
             this.setState({chartData: Array.from(byCategories).map(array => {

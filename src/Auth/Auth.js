@@ -3,15 +3,17 @@ import { connect } from 'react-redux'
 
 import SignInForm from '../SignInForm'
 import SignUpForm from '../SignUpForm'
+import './Auth.css';
 
 const Auth = props => (
     <div>
         {
             props.user === null ?
-                <div>
-                    <p>LOGIN FORM</p>
+                <div className='loginForm'>
+
                     <SignInForm/>
-                    <p>SIGN UP</p>
+
+
                     <SignUpForm/>
                 </div>
                 :
