@@ -25,17 +25,23 @@ export const initSpendingsSync = () => (dispatch, getState) => {
         })
 }
 
+
 export const initIncomingsSync = () => (dispatch, getState) => {
     let currentUserUID = getState().auth.user.uid
     database.ref(`users/${currentUserUID}/incomings`).on('value', snapshot => {
-        let incomings = snapshot.val()
-        dispatch(setIncomings(incomings))
+        // if (this.state.zmienna)
+
+            let incomings = snapshot.val()
+            dispatch(setIncomings(incomings))
+
+
     })
 }
 
 const initialState = {
     spendings: [],
-    incomings: []
+    incomings: [],
+    // zmienna: false
 }
 
 export default (state = initialState, action) => {
@@ -54,3 +60,4 @@ export default (state = initialState, action) => {
             return state
     }
 }
+

@@ -1,6 +1,8 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { signUp } from "../state/auth";
+import {Button, Col, ControlLabel, Form, FormControl, FormGroup} from "react-bootstrap";
+import './SignUp.css';
 
 class SignUpForm extends React.Component {
 
@@ -19,28 +21,46 @@ class SignUpForm extends React.Component {
 
     render() {
         return (
-            <form onSubmit={this.handleSubmit}>
-                <input
-                    type="text"
-                    onChange={this.handleEmailChange}
-                    value={this.state.email}
-                />
+            <Form horizontal onSubmit={this.handleSubmit}>
+                <FormGroup controlId="formHorizontalEmail">
+                    <Col componentClass={ControlLabel} sm={2}>
+                        Zarejestruj się
+                    </Col>
+                    <Col sm={4}>
+                        <FormControl type="text"
+                                     placeholder="użytkownik"
+                                     onChange={this.handleEmailChange}
+                                     value={this.state.email}/>
+                    </Col>
+                </FormGroup>
 
-                <input
-                    type="password"
-                    onChange={this.handlePasswordChange}
-                    value={this.state.password}
-                />
+                <FormGroup controlId="formHorizontalEmail">
+                    <Col componentClass={ControlLabel} sm={2}></Col>
+                    <Col sm={4}>
+                        <FormControl type="password"
+                                     placeholder="hasło"
+                                     onChange={this.handlePasswordChange}
+                                     value={this.state.password}
+                        />
+                    </Col>
+                </FormGroup>
 
-                <button>Sign Up</button>
-            </form>
-        )
+                <FormGroup>
+                    <Col smOffset={2} sm={10}>
+                        <Button bsStyle="warning" type="submit">
+                            Wyloguj się
+                        </Button>
+                    </Col>
+                </FormGroup>
+            </Form>
+    );}
+
     }
-}
 
 const mapDispatchToProps = dispatch => ({
     signUpHelper: (email, password) => dispatch(signUp(email, password))
 })
+
 
 export default connect(
     null,
