@@ -5,19 +5,36 @@ import {DateRangePicker} from 'react-dates';
 import 'react-dates/lib/css/_datepicker.css';
 import {PieChart, Pie, Tooltip} from 'recharts'
 import moment from 'moment'
-
-const spendings = JSON.parse(localStorage.getItem('spendings') || '[]');
-const incomings = JSON.parse(localStorage.getItem('incomings') || '[]');
+import {database, auth} from '../firebase'
 
 class   Diagrams extends React.Component {
     state = {
         startDate: moment().startOf('month'),
         endDate: moment(),
-        currentBalance: this.getBalance(moment().startOf('month'), moment(), spendings, incomings),
-        totalTransactions: this.getTotalTransaction(moment().startOf('month'), moment(), spendings, incomings),
-        totalExpenses: this.getExpenses(moment().startOf('month'), moment(), spendings),
-        totalIncome: this.getIncome(moment().startOf('month'), moment(), incomings)
+        currentBalance: 0,
+        totalTransactions: 0,
+        totalExpenses: 0,
+        totalIncome: 0,
+        chartData: []
     };
+
+    componentDidMount() {
+        this.getBalanceFromFirebase(moment().startOf('month'), moment())
+        this.getTotalTransactionFromFirebase(moment().startOf('month'), moment())
+        this.getExpensesFromFirebase(moment().startOf('month'), moment())
+        this.getIncomeFromFirebase(moment().startOf('month'), moment())
+        this.getPieChart();
+    }
+
+    getBalanceFromFirebase(startDate, endDate){
+        database.ref(`/users/${auth.currentUser.uid}/incomings`).on('value', (incomingsSnapshot) => {
+            database.ref(`/users/${auth.currentUser.uid}/spendings`).on('value', (spendingsSnapshot) => {
+                this.getBalance(startDate, endDate,
+                    Object.values(spendingsSnapshot.val() || []),
+                    Object.values(incomingsSnapshot.val() || []))
+            })
+        })
+    }
 
 //paramatetry w funkcji pełnią rolę elementów przekazanych z zewnątrz do funkcji i są wymagane przez funkcje//
     getBalance(startDate, endDate, spendings, incomings) {
@@ -33,7 +50,15 @@ class   Diagrams extends React.Component {
         }).reduce((result, spending) => {
             return (result - parseInt(spending.value))
         }, 0);
-        return income + expenses
+        this.setState({currentBalance: income + expenses})
+    }
+
+    getTotalTransactionFromFirebase(startDate, endDate){
+        database.ref(`/users/${auth.currentUser.uid}/incomings`).on('value', (incomingsSnapshot) => {
+            database.ref(`/users/${auth.currentUser.uid}/spendings`).on('value', (spendingsSnapshot) => {
+                this.getTotalTransaction(startDate, endDate, Object.values(spendingsSnapshot.val() || []), Object.values(incomingsSnapshot.val() || []))
+            })
+        })
     }
 
     getTotalTransaction(startDate, endDate, spendings, incomings) {
@@ -45,7 +70,13 @@ class   Diagrams extends React.Component {
             const spendingDate = moment(incoming.incomingDate, "MM-DD-YYYY");
             return spendingDate.isBetween(startDate, endDate)
         }).length;
-        return spendingsCount + incomingsCount
+        this.setState({totalTransactions: incomingsCount + spendingsCount})
+    }
+
+    getExpensesFromFirebase(startDate, endDate){
+            database.ref(`/users/${auth.currentUser.uid}/spendings`).on('value', (spendingsSnapshot) => {
+                this.getExpenses(startDate, endDate, Object.values(spendingsSnapshot.val() || []))
+            })
     }
 
     getExpenses(startDate, endDate, spendings) {
@@ -55,7 +86,13 @@ class   Diagrams extends React.Component {
         }).reduce((result, spending) => {
             return (result - parseInt(spending.value))
         }, 0);
-        return expenses
+        this.setState({totalExpenses: expenses})
+    }
+
+    getIncomeFromFirebase(startDate, endDate){
+        database.ref(`/users/${auth.currentUser.uid}/incomings`).on('value', (incomingsSnapshot) => {
+            this.getIncome(startDate, endDate, Object.values(incomingsSnapshot.val() || []))
+        })
     }
 
     getIncome(startDate, endDate, incomings) {
@@ -65,25 +102,24 @@ class   Diagrams extends React.Component {
         }).reduce((result, income) => {
             return result + parseInt(income.value)
         }, 0);
-        return income
+        this.setState({totalIncome: income})
     }
 
-    /**
-     * @param spenging is required
-     */
-    getPieChart(spendings) {
-        let byCategories = new Map();
-        spendings.forEach(function (spending) {
-            if (byCategories.has(spending.spendingCategory)) {
-                let newVal = byCategories.get(spending.spendingCategory) + parseInt(spending.value);
-                byCategories.set(spending.spendingCategory, newVal);
-            } else {
-                byCategories.set(spending.spendingCategory, parseInt(spending.value))
-            }
-        });
-        return Array.from(byCategories).map(array => {
-            return {name: array[0], value: Number(array[1])};
-        });
+    getPieChart() {
+        database.ref(`/users/${auth.currentUser.uid}/spendings`).on('value', (spendingsSnapshot) => {
+            let byCategories = new Map();
+            Object.values(spendingsSnapshot.val() || []).forEach(function (spending) {
+                if (byCategories.has(spending.spendingCategory)) {
+                    let newVal = byCategories.get(spending.spendingCategory) + parseInt(spending.value);
+                    byCategories.set(spending.spendingCategory, newVal);
+                } else {
+                    byCategories.set(spending.spendingCategory, parseInt(spending.value))
+                }
+            });
+            this.setState({chartData: Array.from(byCategories).map(array => {
+                return {name: array[0], value: Number(array[1])};
+            })})
+        })
     }
 
     render() {
@@ -93,22 +129,22 @@ class   Diagrams extends React.Component {
                 <Grid>
                     <Row className="show-grid" style={{marginRight: -90 + "px"}}>
                         <Col md={2} mdOffset={6}>
-                            {/*<DateRangePicker
+                            {<DateRangePicker
                                 startDate={this.state.startDate}
                                 endDate={this.state.endDate}
                                 isOutsideRange={() => false}
                                 onDatesChange={({startDate, endDate}) => {
+                                    this.getBalanceFromFirebase(startDate, endDate)
+                                    this.getTotalTransactionFromFirebase(startDate, endDate)
+                                    this.getExpensesFromFirebase(startDate, endDate)
+                                    this.getIncomeFromFirebase(startDate, endDate)
                                     this.setState({
                                         startDate: startDate,
                                         endDate: endDate,
-                                        currentBalance: this.getBalance(startDate, endDate, spendings, incomings),
-                                        totalTransactions: this.getTotalTransaction(startDate, endDate, spendings, incomings),
-                                        totalExpenses: this.getExpenses(startDate, endDate, spendings),
-                                        totalIncome: this.getIncome(startDate, endDate, incomings)
                                     })
                                 }}
                                 focusedInput={this.state.focusedInput}
-                                onFocusChange={focusedInput => this.setState({focusedInput})}/>*/}
+                                onFocusChange={focusedInput => this.setState({focusedInput})}/>}
                         </Col>
                     </Row>
 
@@ -142,7 +178,7 @@ class   Diagrams extends React.Component {
                     </Row>
                 </Grid>
                 <PieChart width={800} height={400}>
-                    <Pie data={this.getPieChart(spendings)} startAngle={360} endAngle={0} cx={200} cy={200}
+                    <Pie data={this.state.chartData} startAngle={360} endAngle={0} cx={200} cy={200}
                          fill="#8884d8"
                          label/>
                     <Tooltip/>
