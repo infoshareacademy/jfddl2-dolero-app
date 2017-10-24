@@ -17,7 +17,7 @@ import {
 } from 'react-bootstrap'
 import './Sidebar.css'
 import moment from 'moment'
-import {database, auth} from '../firebase'
+import {database, auth, storage} from '../firebase'
 
 class Sidebar extends React.Component {
     state = {
@@ -499,8 +499,7 @@ class Sidebar extends React.Component {
 
 
                 <Col smOffset={1} sm={10}>
-                    <FormGroup
-                    >
+                    <FormGroup>
                         <InputGroup>
                             <InputGroup.Addon
                                 style={{backgroundColor: 'orange'}}
@@ -564,11 +563,18 @@ class Sidebar extends React.Component {
             </Form>
         )
 
-
         return (
             <div className="sidebar-bg">
                 <div>
                     <h2>Witaj!</h2>
+                    <img style={{
+                        display: 'block',
+                        margin: '20px auto 40px auto',
+                        maxWidth: 100,
+                        border: "1px solid lightgrey",
+                        borderRadius: 20
+                    }} src={auth.currentUser.photoURL}/>
+
                     <p>Twój aktualny stan konta wynosi</p>
                     <h3
                         style={{height: "40px"}}
