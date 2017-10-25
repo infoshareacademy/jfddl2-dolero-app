@@ -9,8 +9,10 @@ import {
     ControlLabel,
     InputGroup,
     Form,
-    Col
+    Col,
+    Modal
 } from 'react-bootstrap'
+import './style.css';
 
 function FieldGroup({id, label, help, ...props}) {
     return (
@@ -21,6 +23,8 @@ function FieldGroup({id, label, help, ...props}) {
         </FormGroup>
     );
 }
+
+
 
 
 class Settings extends React.Component {
@@ -34,6 +38,8 @@ class Settings extends React.Component {
         name: '',
         adress: ''
     }
+
+
 
     componentWillMount() {
         firebase.database().ref(`users/${firebase.auth().currentUser.uid}/invoiceData`).once('value')
@@ -70,16 +76,20 @@ class Settings extends React.Component {
     }
 
     render() {
-
+        const wellStyles = { maxWidth: 200, margin: '0 auto' };
         return (
             <div>
 
 
 <UploadProfilePhoto/>
+                <div style={wellStyles}>
                 <Button bsSize="large" bsStyle="danger" onClick={this.HunddleResetPass}>Nadaj nowe hasło</Button>
+                </div>
+
 
                 <Form onSubmit={this.saveInvoice}>
                     <h2>Dane do faktury</h2>
+                    <div className='shadow'>
                     <Col sm={6}>
                         <FormGroup>
                             <InputGroup>
@@ -185,15 +195,20 @@ class Settings extends React.Component {
                         </FormGroup>
                     </Col>
 
-                    <Button type="submit" bsStyle="warning">
+                    <Button className="btn-dom"
+                        type="submit" bsStyle="warning"
+                    >
                         Zatwierdź
                     </Button>
+
+                    </div>
                 </Form>
+
 
             </div>
 
 
-        )
+)
 
     }
 
