@@ -80,7 +80,7 @@ class ShortHistory extends React.Component {
             <Grid id='style' className='style'>
 
                 <h2>Ostatnie Wydatki</h2>
-                <BootstrapTable data={this.state.products.slice(-10).reverse()} hover={true} options={ options } search={ true } multiColumnSearch={ true } selectRow={ selectRowProp }>
+                <BootstrapTable data={this.state.products.slice(-10).reverse()} hover={true} options={ options } search={ true } multiColumnSearch={ true }>
                     <TableHeaderColumn dataField="spendingDate" isKey={true} dataSort={true} text-align="center" searchable={ false } width='150'>Data</TableHeaderColumn>
                     <TableHeaderColumn dataField="value" dataAlign="center" dataSort={true} width='200' zero={true}>Kwota wydatku</TableHeaderColumn>
                     <TableHeaderColumn dataField="spendingCategory" dataSort={true} dataAlign="center">Kategoria wydatku</TableHeaderColumn>
@@ -90,7 +90,7 @@ class ShortHistory extends React.Component {
 
 
                 <h2>Ostatnie  Przychody</h2>
-                <BootstrapTable data={this.state.incomings.slice(-7).reverse()} options={ options } search={ true } multiColumnSearch={ true } selectRow={ selectRowProp }>
+                <BootstrapTable data={this.state.incomings.slice(-7).reverse()} options={ options } search={ true } multiColumnSearch={ true }>
                     <TableHeaderColumn dataField="incomingDate" isKey={true} dataSort={true} text-align="center" searchable={ false } width='150'>Data</TableHeaderColumn>
                     <TableHeaderColumn dataField="value" dataAlign="center" dataSort={true} width='200' zero>Kwota przychodu</TableHeaderColumn>
                     <TableHeaderColumn dataField="incomingCategory" dataSort={true} dataAlign="center">Kategoria przychodu</TableHeaderColumn>
