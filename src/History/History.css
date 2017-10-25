@@ -33,3 +33,7 @@ text-align: center;
 #history .recordsList {
     margin-top: 50px;
 }
+
+#history Table tr {
+    max-width: 100%;
+}
