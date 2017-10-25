@@ -18,6 +18,7 @@ import {
 import './Sidebar.css'
 import moment from 'moment'
 import {database, auth, storage} from '../firebase'
+import { connect } from 'react-redux'
 
 class Sidebar extends React.Component {
     state = {
@@ -629,5 +630,12 @@ class Sidebar extends React.Component {
     }
 }
 
-export default Sidebar
+const mapStateToProps = state => ({
+    incomings: state.history.incomings,
+    spendings: state.history.spendings
+})
+
+export default connect(
+
+)(Sidebar)
 

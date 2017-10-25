@@ -13,7 +13,6 @@ const Auth = props => (
 
                     <SignInForm/>
 
-
                     <SignUpForm/>
                 </div>
                 :
