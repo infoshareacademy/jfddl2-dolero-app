@@ -3,6 +3,7 @@ import {database} from "../firebase";
 const SET_INCOMINGS = 'history/SET_INCOMINGS'
 const SET_SPENDINGS = 'history/SET_SPENDINGS'
 
+
 const setSpendings = spendings => ({
     type: SET_SPENDINGS,
     spendings: spendings
