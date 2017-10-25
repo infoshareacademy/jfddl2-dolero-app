@@ -3,6 +3,7 @@ import {database} from "../firebase";
 const SET_INCOMINGS = 'history/SET_INCOMINGS'
 const SET_SPENDINGS = 'history/SET_SPENDINGS'
 
+
 const setSpendings = spendings => ({
     type: SET_SPENDINGS,
     spendings: spendings
@@ -16,7 +17,6 @@ const setIncomings = incomings => ({
 export const initSpendingsSync = () => (dispatch, getState) => {
     let currentUserUID = getState().auth.user.uid
     database.ref(`users/${currentUserUID}/spendings`).on('value', snapshot => {
-        console.log('database')
         let spendings = snapshot.val()
         dispatch(setSpendings(spendings))
     },

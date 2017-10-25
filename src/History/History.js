@@ -22,6 +22,7 @@ import {
     Route,
 } from 'react-router-dom'
 import {database, auth} from "../firebase";
+import {connect} from 'react-redux'
 
 var moment = require('moment');
 
@@ -38,14 +39,14 @@ class History extends React.Component {
         isCyclic: false,
         value: {min: 0, max: 100},
         link: 0,
-        categories: []
+        categories: [],
     }
 
     componentDidMount() {
         const uid = auth.currentUser.uid
         database.ref(`/users/${uid}/spendings`).on('value', (snapshot) => {
             this.setState({
-                records: Object.values(snapshot.val() || []) || []
+                records: Object.values(snapshot.val() || {}) || []
             }, () => this.setState({
                 value: {min: 0, max: this.getMaxValue()}
             }))
@@ -54,15 +55,7 @@ class History extends React.Component {
 
         database.ref(`users/${uid}/spendingCategories`).on('value', (snapshot) => {
             this.setState({
-                    categories: snapshot.val() === null ? [
-                        "Jedzenie",
-                        "Mieszkanie",
-                        "Inne opłaty i rachunki",
-                        "Ubranie",
-                        "Relaks",
-                        "Transport",
-                        "Inne wydatki"
-                    ]
+                    categories: snapshot.val() === null ? ["Jedzenie","Mieszkanie","Inne opłaty i rachunki","Ubranie","Relaks","Transport","Inne wydatki"]
                         .map(snapshot => ({
                             value: snapshot,
                             label: snapshot
@@ -76,7 +69,7 @@ class History extends React.Component {
     }
 
     getMaxValue = () => (
-        this.state.records.reduce((max, next) =>
+        this.props.records.reduce((max, next) =>
                 Math.max(max, parseInt(next.value, 10))
 
             , 0
@@ -90,7 +83,7 @@ class History extends React.Component {
         })
 
     }
-    urlChangeBackByRow = (record) => {
+    urlChangeBackByRow = () => {
         this.setState({
             link: ''
         })
@@ -111,10 +104,10 @@ class History extends React.Component {
 
 
     handleRemoveRecord = event => {
-        // const recordId = event.target.dataset.recordId
-        // const uid = auth.currentUser.uid
-        // let ref = database.ref('users')
-        // console.log('tutaj: ', ref)
+        const recordId = event.target.dataset.recordId
+        const uid = auth.currentUser.uid
+        let ref = database.ref(`/users/${uid}/spendings/${recordId}`).set(null)
+        console.log('tutaj: ', ref)
     }
 
 
@@ -129,7 +122,6 @@ class History extends React.Component {
 
 
     render() {
-
         return (
             <Grid id='history' className='history'>
                 <Row>
@@ -230,7 +222,7 @@ class History extends React.Component {
                             </thead>
 
                             {
-                                this.state.records.filter(
+                                this.props.records.filter(
                                     record =>
                                         this.state.selectedCategories.length === 0 ?
                                             true :
@@ -250,16 +242,16 @@ class History extends React.Component {
                                 )
                                     .map(
                                         (record, index) => (
-                                            <tbody>
+                                            <tbody key={record.id}>
 
-                                            <tr key={record.id}
+                                            <tr
                                                 onClick={() => {
                                                     this.urlChangeByRow(record.id)
                                                 }}>
-                                                <td key={record.id + 1}>{record.spendingCategory}</td>
-                                                <td key={record.id + 2}>{record.value}</td>
-                                                <td key={record.id + 3}>{record.spendingDate}</td>
-                                                <td key={record.id + 4} style={{width: '3vw'}}
+                                                <td>{record.spendingCategory}</td>
+                                                <td>{record.value}</td>
+                                                <td>{record.spendingDate}</td>
+                                                <td style={{width: '3vw'}}
                                                 ><Button onClick={this.handleRemoveRecord}
                                                          data-record-id={record.id} bsStyle="danger"
                                                          bsSize="xsmall"
@@ -269,7 +261,7 @@ class History extends React.Component {
 
                                             </tr>
                                             {this.state.link === record.id &&
-                                                <Route path={"/history/" + record.id} render={() => {
+                                            <Route path={"/history/" + record.id} render={() => {
                                                 return <HistoryMore
                                                     record={record}
                                                     changeBackUrl={this.urlChangeBackByRow}
@@ -294,6 +286,19 @@ class History extends React.Component {
 }
 
 
-export default History
+const mapStateToProps = state => {
+    let records = Object.entries(state.history.spendings || {}).map(([key, val]) => ({
+        test:'test',
+        ...val,
+        id: key
+    })) || []
+    return {
+        records,
+    }
+}
+
+export default connect(
+    mapStateToProps
+)(History)
 
 
