@@ -35,7 +35,7 @@ class Settings extends React.Component {
         lastName: '',
         name: '',
         adress: '',
-        formVisible: true
+        showThisForm: true
     }
 
 
@@ -63,6 +63,7 @@ class Settings extends React.Component {
                 console.log('Invoice Data Saved')
             })
         console.log(event.target)
+        alert('Twoje dane zostały zapisane')
     }
 
     // reset hasła
@@ -73,134 +74,206 @@ class Settings extends React.Component {
         )
     }
 
+    handleFormVisible = () => {
+        this.setState({
+            showThisForm: !this.state.showThisForm
+        })
+    }
+
     render() {
         const wellStyles = {maxWidth: 200, margin: '0 auto'};
+        const FV = <Form onSubmit={this.saveInvoice}>
+            <h2>Dane do faktury</h2>
+            <div className='shadow'>
+                <Col sm={6}>
+                    <FormGroup>
+                        <InputGroup>
+                            <InputGroup.Addon>Imię</InputGroup.Addon>
+                            <FieldGroup
+                                id="formControlsText"
+                                type="text"
+                                onChange={(event) => {
+                                    this.handleInputChange(event, 'name')
+                                }}
+                                value={this.state.name}
+                                label=""
+                                placeholder="Wprowadz dane"
+                            />
+                        </InputGroup>
+                    </FormGroup>
+                </Col>
+
+                <Col sm={6}>
+                    <FormGroup>
+                        <InputGroup>
+                            <InputGroup.Addon>Nazwisko</InputGroup.Addon>
+                            <FieldGroup
+                                id="formControlsText"
+                                type="text"
+                                onChange={(event) => {
+                                    this.handleInputChange(event, 'lastName')
+                                }}
+                                value={this.state.lastName}
+                                label=""
+                                placeholder="Wprowadź dane"
+                            />
+                        </InputGroup>
+                    </FormGroup>
+                </Col>
+
+                <Col sm={8}>
+                    <FormGroup>
+                        <InputGroup>
+                            <InputGroup.Addon>Nazwa firmy</InputGroup.Addon>
+                            <FieldGroup
+                                id="formControlsText"
+                                type="text"
+                                onChange={(event) => {
+                                    this.handleInputChange(event, 'company')
+                                }}
+                                value={this.state.company}
+                                label=""
+                                placeholder="Wprowadź dane"
+                            />
+                        </InputGroup>
+                    </FormGroup>
+                </Col>
+
+                <Col sm={4}>
+                    <FormGroup>
+                        <InputGroup>
+                            <InputGroup.Addon>NIP</InputGroup.Addon>
+                            <FieldGroup
+                                id="formControlsText"
+                                type="text"
+                                onChange={(event) => {
+                                    this.handleInputChange(event, 'nip')
+                                }}
+                                value={this.state.nip}
+                                label=""
+                                placeholder="Wprowadź dane"
+                            />
+                        </InputGroup>
+                    </FormGroup>
+                </Col>
+
+                <Col sm={6}>
+                    <FormGroup>
+                        <InputGroup>
+                            <InputGroup.Addon>Kwota</InputGroup.Addon>
+                            <FieldGroup
+                                id="formControlsText"
+                                type="number"
+                                onChange={(event) => {
+                                    this.handleInputChange(event, 'kwota')
+                                }}
+                                value={this.state.kwota}
+                                label=""
+                                placeholder="Podaj wartość"
+                            />
+                        </InputGroup>
+                    </FormGroup>
+                </Col>
+
+                <Col sm={6}>
+                    <FormGroup>
+                        <InputGroup>
+                            <InputGroup.Addon>Adres</InputGroup.Addon>
+                            <FormControl componentClass="textarea" placeholder="podaj dane adresowe"
+                                         controlId="formControlsTextarea"
+                                         onChange={(event) => {
+                                             this.handleInputChange(event, 'adress')
+                                         }}
+                                         value={this.state.adress}
+                            />
+                        </InputGroup>
+                    </FormGroup>
+                </Col>
+
+                <Button className="btn-dom"
+                        type="submit" bsStyle="warning"
+                >
+                    Zatwierdź
+                </Button>
+
+            </div>
+        </Form>
+
+        const paragon = <Form onSubmit={this.saveInvoice}>
+            <h2>Dane do paragonu</h2>
+            <div className='shadow'>
+            <Col sm={6}>
+                <FormGroup>
+                    <InputGroup>
+                        <InputGroup.Addon>Imię</InputGroup.Addon>
+                        <FieldGroup
+                            id="formControlsText"
+                            type="text"
+                            onChange={(event) => {
+                                this.handleInputChange(event, 'name')
+                            }}
+                            value={this.state.name}
+                            label=""
+                            placeholder="Wprowadz dane"
+                        />
+                    </InputGroup>
+                </FormGroup>
+            </Col>
+
+            <Col sm={6}>
+                <FormGroup>
+                    <InputGroup>
+                        <InputGroup.Addon>Nazwisko</InputGroup.Addon>
+                        <FieldGroup
+                            id="formControlsText"
+                            type="text"
+                            onChange={(event) => {
+                                this.handleInputChange(event, 'lastName')
+                            }}
+                            value={this.state.lastName}
+                            label=""
+                            placeholder="Wprowadź dane"
+                        />
+                    </InputGroup>
+                </FormGroup>
+            </Col>
+            <Col sm={6}>
+                <FormGroup>
+                    <InputGroup>
+                        <InputGroup.Addon>Kwota</InputGroup.Addon>
+                        <FieldGroup
+                            id="formControlsText"
+                            type="number"
+                            onChange={(event) => {
+                                this.handleInputChange(event, 'kwota')
+                            }}
+                            value={this.state.kwota}
+                            label=""
+                            placeholder="Podaj wartość"
+                        />
+                    </InputGroup>
+                </FormGroup>
+            </Col>
+            <Button className="btn-dom"
+                    type="submit" bsStyle="warning"
+            >
+                Zatwierdź
+            </Button>
+            </div>
+        </Form>
         return (
             <div>
-
 
                 <UploadProfilePhoto/>
                 <div style={wellStyles}>
                     <Button bsSize="large" bsStyle="danger" onClick={this.HunddleResetPass}>Nadaj nowe hasło</Button>
                 </div>
-
-
-                <Form onSubmit={this.saveInvoice}>
-                    <h2>Dane do faktury</h2>
-                    <div className='shadow'>
-                        <Col sm={6}>
-                            <FormGroup>
-                                <InputGroup>
-                                    <InputGroup.Addon>Imię</InputGroup.Addon>
-                                    <FieldGroup
-                                        id="formControlsText"
-                                        type="text"
-                                        onChange={(event) => {
-                                            this.handleInputChange(event, 'name')
-                                        }}
-                                        value={this.state.name}
-                                        label=""
-                                        placeholder="Wprowadz dane"
-                                    />
-                                </InputGroup>
-                            </FormGroup>
-                        </Col>
-
-                        <Col sm={6}>
-                            <FormGroup>
-                                <InputGroup>
-                                    <InputGroup.Addon>Nazwisko</InputGroup.Addon>
-                                    <FieldGroup
-                                        id="formControlsText"
-                                        type="text"
-                                        onChange={(event) => {
-                                            this.handleInputChange(event, 'lastName')
-                                        }}
-                                        value={this.state.lastName}
-                                        label=""
-                                        placeholder="Wprowadź dane"
-                                    />
-                                </InputGroup>
-                            </FormGroup>
-                        </Col>
-
-                        <Col sm={8}>
-                            <FormGroup>
-                                <InputGroup>
-                                    <InputGroup.Addon>Nazwa firmy</InputGroup.Addon>
-                                    <FieldGroup
-                                        id="formControlsText"
-                                        type="text"
-                                        onChange={(event) => {
-                                            this.handleInputChange(event, 'company')
-                                        }}
-                                        value={this.state.company}
-                                        label=""
-                                        placeholder="Wprowadź dane"
-                                    />
-                                </InputGroup>
-                            </FormGroup>
-                        </Col>
-
-                        <Col sm={4}>
-                            <FormGroup>
-                                <InputGroup>
-                                    <InputGroup.Addon>NIP</InputGroup.Addon>
-                                    <FieldGroup
-                                        id="formControlsText"
-                                        type="text"
-                                        onChange={(event) => {
-                                            this.handleInputChange(event, 'nip')
-                                        }}
-                                        value={this.state.nip}
-                                        label=""
-                                        placeholder="Wprowadź dane"
-                                    />
-                                </InputGroup>
-                            </FormGroup>
-                        </Col>
-
-                        <Col sm={6}>
-                            <FormGroup>
-                                <InputGroup>
-                                    <InputGroup.Addon>Kwota</InputGroup.Addon>
-                                    <FieldGroup
-                                        id="formControlsText"
-                                        type="number"
-                                        onChange={(event) => {
-                                            this.handleInputChange(event, 'kwota')
-                                        }}
-                                        value={this.state.kwota}
-                                        label=""
-                                        placeholder="Podaj wartość"
-                                    />
-                                </InputGroup>
-                            </FormGroup>
-                        </Col>
-
-                        <Col sm={6}>
-                            <FormGroup>
-                                <InputGroup>
-                                    <InputGroup.Addon>Adres</InputGroup.Addon>
-                                    <FormControl componentClass="textarea" placeholder="podaj dane adresowe"
-                                                 controlId="formControlsTextarea"
-                                                 onChange={(event) => {
-                                                     this.handleInputChange(event, 'adress')
-                                                 }}
-                                                 value={this.state.adress}
-                                    />
-                                </InputGroup>
-                            </FormGroup>
-                        </Col>
-
-                        <Button className="btn-dom"
-                                type="submit" bsStyle="warning"
-                        >
-                            Zatwierdź
-                        </Button>
-
-                    </div>
-                </Form>
+                <Button
+                    bsStyle="warning"
+                    onClick={this.handleFormVisible}
+                >{this.state.showThisForm ? 'Przejdź do  Faktury Vat' : 'Przejdź do Paragonu'}
+                </Button>
+                {this.state.showThisForm ? paragon : FV}
 
 
             </div>
