@@ -68,4 +68,9 @@ body {
     color: #fff;
 }
 
+div.dropdown ul.dropdown-menu {
+    overflow: scroll;
+    max-height: 20vh;
+}
+
 

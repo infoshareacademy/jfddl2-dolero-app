@@ -385,9 +385,6 @@ class Sidebar extends React.Component {
                                 title={this.state.newSpendingCategory}
                                 id="bg-nested-dropdown"
                                 onSelect={this.handleCategorySelect}
-                                style={{
-                                    width: '200px'
-                                }}
                             >
                                 {
                                     this.state.spendingCategories.map(category => (
