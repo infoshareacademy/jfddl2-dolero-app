@@ -1,0 +1,222 @@
+Index: src/UploadProfilePhoto/UploadProfilePhoto.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/UploadProfilePhoto/UploadProfilePhoto.js	(revision 2d03c400f840774f52ded1753aeaca955876eca5)
++++ src/UploadProfilePhoto/UploadProfilePhoto.js	(revision 2d03c400f840774f52ded1753aeaca955876eca5)
+@@ -0,0 +1,65 @@
++import React, {Component} from 'react';
++
++import {storage, auth, database} from '../firebase'
++
++class UploadProfilePhoto extends Component {
++
++    state = {
++        file: null,
++        downloadURL: undefined,
++        progress: undefined
++    }
++
++    handleFileChange = (event) => {
++        this.setState({
++            file: event.target.files[0]
++        })
++    }
++
++    handleFileUpload = () => {
++        this.setState({
++            downloadURL: undefined,
++            progress: 1
++        })
++
++        let uploadTask = storage.ref(`profile-photo-${Date.now()}`).put(this.state.file);
++
++        uploadTask.on('state_changed', (snapshot) => {
++                var progress =
++                    (snapshot.bytesTransferred /
++                        snapshot.totalBytes) * 100;
++                this.setState({
++                    progress
++                })
++                console.log('Upload is ' + progress + '% done');
++            }, (error) => {
++                console.log(error)
++            }, () => {
++                this.setState({
++                        downloadURL: uploadTask.snapshot.downloadURL
++                    },
++                    () => {
++                        auth.currentUser.updateProfile({
++                            photoURL: uploadTask.snapshot.downloadURL
++                        }).then(() => {
++                            console.log('photo updated')
++                        })
++                    }
++                )
++
++    }
++)
++    ;
++}
++
++render()
++{
++    return <div className="App">
++        <input type="file" onChange={this.handleFileChange}/>
++        <button onClick={this.handleFileUpload}>Upload</button>
++        {this.state.progress ? <progress value={this.state.progress} max="100"></progress> : null}
++    </div>
++}
++}
++
++export default UploadProfilePhoto;
+Index: src/UploadProfilePhoto/index.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/UploadProfilePhoto/index.js	(revision 2d03c400f840774f52ded1753aeaca955876eca5)
++++ src/UploadProfilePhoto/index.js	(revision 2d03c400f840774f52ded1753aeaca955876eca5)
+@@ -0,0 +1,1 @@
++export { default } from './UploadProfilePhoto'
+\ No newline at end of file
+Index: src/Settings/Settings.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/Settings/Settings.js	(date 1508769699000)
++++ src/Settings/Settings.js	(date 1508858832000)
+@@ -1,47 +1,36 @@
+ import React from 'react'
+ import firebase from "firebase"
+-import {Button} from 'react-bootstrap'
++import {
++    Button,
++    FormGroup,
++    FormControl,
++    ControlLabel
++} from 'react-bootstrap'
++import UploadProfilePhoto from "../UploadProfilePhoto";
+ 
+ class Settings extends React.Component {
+ 
+-
+-            // reset hasła
+-                HunddleResetPass=() => {
+-                    const email = firebase.auth().currentUser.email
+-                    firebase.auth().sendPasswordResetEmail(email).then(
+-                        () => alert('Sprawdź e-maila i kilknij w link')
+-                    )
+-                }
++    // reset hasła
++    HunddleResetPass = () => {
++        const email = firebase.auth().currentUser.email
++        firebase.auth().sendPasswordResetEmail(email).then(
++            () => alert('Sprawdź e-maila i kilknij w link')
++        )
++    }
+ 
+-
+-render(){
+-    return(
+-        <div>
+-            {/*reset hasła*/}
+-
+-            <form>
+-                <input
+-                    type="file"
+-                />
+-
+-                <Button
+-                    type="submit"
+-                    bsSize="large"
+-                    bsStyle="warning"
+-                >
+-                    Dodaj zdjęcie profilowe
+-                </Button>
+-            </form>
+-            <Button bsSize="large" bsStyle="danger" onClick={this.HunddleResetPass}>Nadaj nowe hasło</Button>
+-        </div>
++    render() {
++        return (
++            <div>
++                <UploadProfilePhoto />
++                <Button bsSize="large" bsStyle="danger" onClick={this.HunddleResetPass}>Nadaj nowe hasło</Button>
++            </div>
+ 
+ 
+-    )
++        )
+ 
+-}
++    }
+ 
+ 
+-
+ }
+ 
+ export default Settings
+\ No newline at end of file
+Index: src/Sidebar/Sidebar.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/Sidebar/Sidebar.js	(date 1508769699000)
++++ src/Sidebar/Sidebar.js	(date 1508858832000)
+@@ -17,7 +17,7 @@
+ } from 'react-bootstrap'
+ import './Sidebar.css'
+ import moment from 'moment'
+-import {database, auth} from '../firebase'
++import {database, auth, storage} from '../firebase'
+ 
+ class Sidebar extends React.Component {
+     state = {
+@@ -499,8 +499,7 @@
+ 
+ 
+                 <Col smOffset={1} sm={10}>
+-                    <FormGroup
+-                    >
++                    <FormGroup>
+                         <InputGroup>
+                             <InputGroup.Addon
+                                 style={{backgroundColor: 'orange'}}
+@@ -564,11 +563,18 @@
+             </Form>
+         )
+ 
+-
+         return (
+             <div className="sidebar-bg">
+                 <div>
+                     <h2>Witaj!</h2>
++                    <img style={{
++                        display: 'block',
++                        margin: '20px auto 40px auto',
++                        maxWidth: 100,
++                        border: "1px solid lightgrey",
++                        borderRadius: 20
++                    }} src={auth.currentUser.photoURL}/>
++
+                     <p>Twój aktualny stan konta wynosi</p>
+                     <h3
+                         style={{height: "40px"}}
+Index: src/firebase.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/firebase.js	(date 1508769699000)
++++ src/firebase.js	(date 1508858832000)
+@@ -13,6 +13,7 @@
+ 
+ export const googleProvider= new firebase.auth.GoogleAuthProvider();
+ export const database = firebaseApp.database();
++export const storage = firebaseApp.storage();
+ export const auth = firebaseApp.auth();
+ 
+ console.log('A')
