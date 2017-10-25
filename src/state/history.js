@@ -17,7 +17,6 @@ const setIncomings = incomings => ({
 export const initSpendingsSync = () => (dispatch, getState) => {
     let currentUserUID = getState().auth.user.uid
     database.ref(`users/${currentUserUID}/spendings`).on('value', snapshot => {
-        console.log('database')
         let spendings = snapshot.val()
         dispatch(setSpendings(spendings))
     },

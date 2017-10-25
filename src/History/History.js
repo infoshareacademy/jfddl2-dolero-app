@@ -55,15 +55,7 @@ class History extends React.Component {
 
         database.ref(`users/${uid}/spendingCategories`).on('value', (snapshot) => {
             this.setState({
-                    categories: snapshot.val() === null ? [
-                        "Jedzenie",
-                        "Mieszkanie",
-                        "Inne opłaty i rachunki",
-                        "Ubranie",
-                        "Relaks",
-                        "Transport",
-                        "Inne wydatki"
-                    ]
+                    categories: snapshot.val() === null ? ["Jedzenie","Mieszkanie","Inne opłaty i rachunki","Ubranie","Relaks","Transport","Inne wydatki"]
                         .map(snapshot => ({
                             value: snapshot,
                             label: snapshot
@@ -130,7 +122,6 @@ class History extends React.Component {
 
 
     render() {
-        console.log('HOSTROY PORPS', this.props)
         return (
             <Grid id='history' className='history'>
                 <Row>
