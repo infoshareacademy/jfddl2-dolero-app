@@ -54,11 +54,11 @@ class ShortHistory extends React.Component {
 
         const uid = auth.currentUser.uid
         database.ref(`/users/${uid}/spendings`).on('value', (snapshot) => {
-            this.setState({ products: Object.values(snapshot.val()) || []})
+            this.setState({ products: Object.values(snapshot.val() || {}) || []})
             console.log(this.state.products)
         })
         database.ref(`/users/${uid}/incomings`).on('value', (snapshot) => {
-            this.setState({ incomings: Object.values(snapshot.val()) || []})
+            this.setState({ incomings: Object.values(snapshot.val() || {}) || []})
             console.log(this.state.incomings)
     })
     }
