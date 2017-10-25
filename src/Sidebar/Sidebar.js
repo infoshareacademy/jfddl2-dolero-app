@@ -385,7 +385,9 @@ class Sidebar extends React.Component {
                                 title={this.state.newSpendingCategory}
                                 id="bg-nested-dropdown"
                                 onSelect={this.handleCategorySelect}
-                                style={{width: '200px'}}
+                                style={{
+                                    width: '200px'
+                                }}
                             >
                                 {
                                     this.state.spendingCategories.map(category => (
@@ -588,18 +590,20 @@ class Sidebar extends React.Component {
                             left: '80%'
                         }}
                     >
-                        <Button
-                            bsStyle="warning"
-                            style={{
-                                borderRadius: '20%'
-                            }}
-                            onClick={this.handleSpendingFormVisible}
-                        >
-                            {this.state.spendingFormVisible ? '+' : '-'}
-                        </Button>
+
                     </ButtonToolbar>
                 </div>
-
+                <Button
+                    bsStyle="warning"
+                    style={{
+                        maxWidth: '50%',
+                        margin: '0 auto 2vh',
+                        display: 'block'
+                    }}
+                    onClick={this.handleSpendingFormVisible}
+                >
+                    {this.state.spendingFormVisible ? 'Przejdź do przychodów' : 'Przejdź do wydatków'}
+                </Button>
                 {this.state.spendingFormVisible ? spendingForm : incomeForm}
 
                 {/*<div className="facebookBtn">*/}
