@@ -1,5 +1,5 @@
 import React from 'react'
-import {connect} from 'react-redux'
+import UploadProfilePhoto from "../UploadProfilePhoto"
 import firebase from "firebase"
 import {
     Button,
@@ -74,20 +74,8 @@ class Settings extends React.Component {
         return (
             <div>
 
-                <form>
-                    <input
-                        type="file"
-                    />
 
-                    <Button
-                        type="submit"
-                        bsSize="large"
-                        bsStyle="warning"
-                    >
-                        Dodaj zdjęcie profilowe
-                    </Button>
-                </form>
-
+<UploadProfilePhoto/>
                 <Button bsSize="large" bsStyle="danger" onClick={this.HunddleResetPass}>Nadaj nowe hasło</Button>
 
                 <Form onSubmit={this.saveInvoice}>
