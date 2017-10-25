@@ -3,9 +3,10 @@ import {Panel} from 'react-bootstrap'
 import {Grid, Row, Col} from 'react-bootstrap'
 import {DateRangePicker} from 'react-dates';
 import 'react-dates/lib/css/_datepicker.css';
-import {PieChart, Pie, Tooltip} from 'recharts'
+import {PieChart, Pie, Tooltip, Cell} from 'recharts'
 import moment from 'moment'
 import {database, auth} from '../firebase'
+const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#00F86A', '#FC840D'];
 
 class   Diagrams extends React.Component {
     state = {
@@ -106,6 +107,7 @@ class   Diagrams extends React.Component {
     }
 
     getPieChart() {
+
         database.ref(`/users/${auth.currentUser.uid}/spendings`).on('value', (spendingsSnapshot) => {
             let byCategories = new Map();
             Object.values(spendingsSnapshot.val() || []).forEach(function (spending) {
@@ -180,7 +182,9 @@ class   Diagrams extends React.Component {
                 <PieChart width={800} height={400}>
                     <Pie data={this.state.chartData} startAngle={360} endAngle={0} cx={200} cy={200}
                          fill="#8884d8"
-                         label/>
+                         label>{
+                        this.state.chartData.map((entry, index) => <Cell fill={COLORS[index % COLORS.length]}/>)
+                    } </Pie>
                     <Tooltip/>
                 </PieChart>
 
