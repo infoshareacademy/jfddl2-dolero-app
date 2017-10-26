@@ -229,7 +229,7 @@ class History extends React.Component {
                                     .filter(
                                         record => this.state.isCyclic === false ? true : (record.isCyclic === true))
                                     .filter(
-                                        record => record.spending.includes(this.state.currentSearchPhrase))
+                                        record => record.spending.toLowerCase().includes(this.state.currentSearchPhrase.toLowerCase()))
                                     .filter(
                                         record => parseInt(record.value, 10) <= this.state.value.max && parseInt(record.value, 10) >= this.state.value.min)
                                     .filter(
