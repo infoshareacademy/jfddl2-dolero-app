@@ -63,6 +63,7 @@ class History extends React.Component {
     }
 
     getMaxValue = () => (
+
         this.props.records.reduce((max, next) =>
                 Math.max(max, parseInt(next.value, 10))
 
@@ -100,8 +101,7 @@ class History extends React.Component {
     handleRemoveRecord = event => {
         const recordId = event.target.dataset.recordId
         const uid = auth.currentUser.uid
-        let ref = database.ref(`/users/${uid}/spendings/${recordId}`).set(null)
-        console.log('tutaj: ', ref)
+        database.ref(`/users/${uid}/spendings/${recordId}`).set(null)
     }
 
 
@@ -150,7 +150,7 @@ class History extends React.Component {
 
                         <FormGroup className='slider' controlId="formHorizontalText">
                             <InputRange
-                                maxValue={this.getMaxValue()}
+                                maxValue={this.getMaxValue() || 1}
                                 minValue={0}
                                 value={this.state.value}
                                 onChange={value => this.setState({value})}/>
