@@ -37,3 +37,7 @@ text-align: center;
 #history Table tr {
     max-width: 100%;
 }
+
+.DateInput__display-text {
+    padding-left: 15% !important;
+}
