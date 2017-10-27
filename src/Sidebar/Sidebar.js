@@ -252,12 +252,14 @@ class Sidebar extends React.Component {
     }
 
     ifExistsSpendingCaregory = () => {
-        return this.state.spendingCategories.includes(this.state.addedSpendingCategory)
+
+        let b = (this.state.spendingCategories).includes(this.state.addedSpendingCategory);
+        console.log('b', b, 'this.state.spendingCategory', this.state.spendingCategories, 'this.state.addedSpendingCategory: ', this.state.addedSpendingCategory )
+        return b
     }
 
 
     addNewSpendingCategory = () => {
-
         this.setState({
             spendingCategories: this.state.spendingCategories.concat(this.state.addedSpendingCategory),
             addedSpendingCategory: ''
@@ -287,7 +289,6 @@ class Sidebar extends React.Component {
 
         const popoverRightInSpendingForm = (
             <Popover id="popover-positioned-right" title="Dodaj kategorię wydatku">
-
                 <input
                     onChange={this.newSpendingCategoryValue}
                     value={this.state.addedSpendingCategory}
@@ -296,7 +297,7 @@ class Sidebar extends React.Component {
                 <Button
                     bsSize="xsmall"
                     bsStyle="warning"
-                    onClick={this.addNewSpendingCategory}
+                    onClick={this.ifExistsSpendingCaregory() ? this.categoryAlert : this.addNewSpendingCategory}
                 >
                     Dodaj
                 </Button>
@@ -378,13 +379,14 @@ class Sidebar extends React.Component {
 
 
                 <ButtonGroup sm={12}>
-                    <Col smOffset={1} sm={6}>
+                    <Col smOffset={1} sm={4}>
                         <FormGroup controlId="formControlsSelect">
                             <ControlLabel className="control-label">Kategorie wydatków</ControlLabel>
                             <DropdownButton
                                 title={this.state.newSpendingCategory}
                                 id="bg-nested-dropdown"
                                 onSelect={this.handleCategorySelect}
+                                style={{width: '200px'}}
                             >
                                 {
                                     this.state.spendingCategories.map(category => (
@@ -483,13 +485,10 @@ class Sidebar extends React.Component {
                                 $
                             </InputGroup.Addon>
                             <FormControl
-
                                 type="number" step="0.01"
                                 placeholder="Wprowadź kwotę przychodu"
                                 value={this.state.newIncomeValue}
                                 onChange={this.handleIncomingValueChange}
-
-
                             />
 
                         </InputGroup>
