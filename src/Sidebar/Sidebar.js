@@ -112,7 +112,7 @@ class Sidebar extends React.Component {
             spendingCategory: newSpendingCategory,
             value: newSpendingValue,
             isCyclic,
-            spendingDate: moment().format('L')
+            spendingDate: moment().format('DD.MM.YYYY')
         }
 
         this.setState({
@@ -197,7 +197,7 @@ class Sidebar extends React.Component {
             id: Date.now(),
             name: newIncomeName || ' ',
             value: newIncomeValue,
-            incomingDate: moment().format('L'),
+            incomingDate: moment().format('DD.MM.YYYY'),
             incomingCategory: newIncomingCategory
         }
 
@@ -378,7 +378,7 @@ class Sidebar extends React.Component {
 
 
                 <ButtonGroup sm={12}>
-                    <Col smOffset={1} sm={4}>
+                    <Col smOffset={1} sm={6}>
                         <FormGroup controlId="formControlsSelect">
                             <ControlLabel className="control-label">Kategorie wydatków</ControlLabel>
                             <DropdownButton
