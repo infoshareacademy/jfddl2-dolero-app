@@ -252,16 +252,25 @@ class Sidebar extends React.Component {
     }
 
     ifExistsSpendingCaregory = () => {
-
-        let b = (this.state.spendingCategories).includes(this.state.addedSpendingCategory);
-        console.log('b', b, 'this.state.spendingCategory', this.state.spendingCategories, 'this.state.addedSpendingCategory: ', this.state.addedSpendingCategory )
-        return b
+        let spendingCategoriesToLowerCase = this.state.spendingCategories.map(category => category.toLowerCase())
+        let result = spendingCategoriesToLowerCase.includes(this.state.addedSpendingCategory.toLowerCase())
+        return result
     }
 
 
     addNewSpendingCategory = () => {
         this.setState({
-            spendingCategories: this.state.spendingCategories.concat(this.state.addedSpendingCategory),
+            spendingCategories: this.state.spendingCategories.concat(
+                this.state.addedSpendingCategory
+                    .split('')
+                    .shift()
+                    .toUpperCase()
+                    .concat(
+                        this.state.addedSpendingCategory
+                            .slice(1)
+                            .toLowerCase()
+                    )
+            ),
             addedSpendingCategory: ''
         }, () => {
             database.ref(`/users/${auth.currentUser.uid}/spendingCategories`).set(this.state.spendingCategories)
@@ -276,11 +285,29 @@ class Sidebar extends React.Component {
 
     addNewIncomeCategory = () => {
         this.setState({
-            incomeCategories: this.state.incomeCategories.concat(this.state.addedIncomeCategory),
+            incomeCategories: this.state.incomeCategories.concat(
+                this.state.addedIncomeCategory
+                    .split('')
+                    .shift()
+                    .toUpperCase()
+                    .concat(
+                        this.state.addedIncomeCategory
+                            .slice(1)
+                            .toLowerCase()
+                    )
+            ),
             addedIncomeCategory: ''
         }, () => {
             database.ref(`/users/${auth.currentUser.uid}/incomeCategories`).set(this.state.incomeCategories)
         })
+    }
+
+    ifExistsIncomeCategory = () => {
+
+        let incomeCategoriesToLowerCase = this.state.incomeCategories.map(category => category.toLowerCase())
+        let result = incomeCategoriesToLowerCase.includes(this.state.addedIncomeCategory.toLowerCase())
+        return result
+
     }
 
     // ------ /new Sprint -------
@@ -315,7 +342,7 @@ class Sidebar extends React.Component {
                 <Button
                     bsSize="xsmall"
                     bsStyle="warning"
-                    onClick={this.addNewIncomeCategory}
+                    onClick={this.ifExistsIncomeCategory() ? this.categoryAlert : this.addNewIncomeCategory}
                 >
                     Dodaj
                 </Button>
