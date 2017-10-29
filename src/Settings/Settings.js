@@ -163,6 +163,7 @@ class Settings extends React.Component {
                             <InputGroup.Addon>Kwota</InputGroup.Addon>
                             <FieldGroup
                                 id="formControlsText"
+                                step="0.01"
                                 type="number"
                                 onChange={(event) => {
                                     this.handleInputChange(event, 'kwota')
@@ -181,6 +182,7 @@ class Settings extends React.Component {
                             <InputGroup.Addon>Adres</InputGroup.Addon>
                             <FormControl componentClass="textarea" placeholder="podaj dane adresowe"
                                          controlId="formControlsTextarea"
+                                         he
                                          onChange={(event) => {
                                              this.handleInputChange(event, 'adress')
                                          }}
@@ -243,6 +245,7 @@ class Settings extends React.Component {
                         <InputGroup.Addon>Kwota</InputGroup.Addon>
                         <FieldGroup
                             id="formControlsText"
+                            step="0.01"
                             type="number"
                             onChange={(event) => {
                                 this.handleInputChange(event, 'kwota')
@@ -265,10 +268,12 @@ class Settings extends React.Component {
             <div>
 
                 <UploadProfilePhoto/>
+                <h2>Reset hasła</h2>
+                <h4>Jeżeli chcesz zniemić swoje dotychczasowe hasło, kliknij w przycisk poniżej</h4>
                 <div style={wellStyles}>
                     <Button bsSize="large" bsStyle="danger" onClick={this.HunddleResetPass}>Nadaj nowe hasło</Button>
                 </div>
-                <Button
+                <Button className="FV"
                     bsStyle="warning"
                     onClick={this.handleFormVisible}
                 >{this.state.showThisForm ? 'Przejdź do  Faktury Vat' : 'Przejdź do Paragonu'}
