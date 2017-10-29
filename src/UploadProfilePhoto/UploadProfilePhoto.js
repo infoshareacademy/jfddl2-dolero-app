@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {Button,
         Col
 } from 'react-bootstrap'
-import {storage, auth, database} from '../firebase'
+import {storage, auth} from '../firebase'
 import './photo.css'
 
 class UploadProfilePhoto extends Component {

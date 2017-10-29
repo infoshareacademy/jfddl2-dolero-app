@@ -30,7 +30,11 @@ class Sidebar extends React.Component {
         addedSpendingCategory: '',
         addedIncomeCategory: '',
         spendingCategories: ["Jedzenie", "Mieszkanie", "Inne opłaty i rachunki", "Ubranie", "Relaks", "Transport", "Inne wydatki"],
-        incomeCategories: ["Wypłata", "Premia", "Zasiłek", "Emerytura/Renta"]
+        incomeCategories: ["Wypłata", "Premia", "Zasiłek", "Emerytura/Renta"],
+        newSpendingValue: '',
+        newIncomeName: '',
+        newIncomeValue: '',
+        newSpendingName: ''
     }
 
     componentDidMount() {
@@ -276,7 +280,7 @@ class Sidebar extends React.Component {
 
     removeSpendingCategory = event => {
         let confirm = window.confirm('Czy na pewno chcesz usunąć kategorię wydatków?')
-        if(confirm) {
+        if (confirm) {
             let categoryId = event.target.dataset.categoryId
             this.setState({
                 spendingCategories: this.state.spendingCategories.filter(
@@ -288,9 +292,7 @@ class Sidebar extends React.Component {
                 })
                 database.ref(`/users/${auth.currentUser.uid}/spendingCategories`).set(this.state.spendingCategories)
             })
-            return true
         }
-        return false
     }
 
     newIncomeCategoryValue = event => {
@@ -327,15 +329,20 @@ class Sidebar extends React.Component {
     }
 
     removeIncomeCategory = event => {
-        let categoryId = event.target.dataset.categoryId
-
-        this.setState({
-            incomeCategories: this.state.incomeCategories.filter(
-                category => categoryId !== category
-            )
-        }, () => {
-            database.ref(`/users/${auth.currentUser.uid}/incomeCategories`).set(this.state.incomeCategories)
-        })
+        let confirm = window.confirm('Czy na pewno chcesz usunąć kategorię przychodów?')
+        if (confirm) {
+            let categoryId = event.target.dataset.categoryId
+            this.setState({
+                incomeCategories: this.state.incomeCategories.filter(
+                    category => categoryId !== category
+                )
+            }, () => {
+                this.setState({
+                    newIncomingCategory: 'Wybierz przychód'
+                })
+                database.ref(`/users/${auth.currentUser.uid}/incomeCategories`).set(this.state.incomeCategories)
+            })
+        }
     }
 
     // ------ /new Sprint -------
@@ -383,7 +390,7 @@ class Sidebar extends React.Component {
                 onSubmit={
                     this.state.newSpendingValue < 0 ? this.CorrentInputValue : this.addSpendings
                     && this.state.newSpendingCategory === 'Wybierz wydatek' ? this.categorySelectAlert : this.addSpendings
-                    && this.state.newSpendingValue == null || this.state.newSpendingValue == "" ? this.valueAlert : this.addSpendings
+                    && this.state.newSpendingValue !== null && this.state.newSpendingValue !== "" ? this.valueAlert : this.addSpendings
                 }
             >
 
@@ -535,7 +542,7 @@ class Sidebar extends React.Component {
                 onSubmit={
                     this.state.newIncomeValue < 0 ? this.CorrentInputValue : this.addIncomings
                     && this.state.newIncomingCategory === 'Wybierz przychód' ? this.categorySelectAlert : this.addIncomings
-                    && this.state.newIncomeValue == null || this.state.newIncomeValue == "" ? this.valueAlert : this.addIncomings
+                    && this.state.newIncomeValue !== null && this.state.newIncomeValue !== "" ? this.valueAlert : this.addIncomings
                 }
             >
                 <Col smOffset={1} sm={10}>
@@ -654,7 +661,7 @@ class Sidebar extends React.Component {
                             backgroundSize: 'cover'
 
                         }}
-                        src={auth.currentUser.photoURL}
+                        src={auth.currentUser.photoURL || 'http://www.m1m.com/wp-content/uploads/2015/06/default-user-avatar.png'}
                         alt='profile'
                     />
 
@@ -689,22 +696,23 @@ class Sidebar extends React.Component {
 
                 <div className="facebookBtn">
 
-                <script>
-                {(function (d, s, id) {
-                var js, fjs = d.getElementsByTagName(s)[0];
-                if (d.getElementById(id)) return;
-                js = d.createElement(s);
-                js.id = id;
-                js.src = "//connect.facebook.net/pl_PL/sdk.js#xfbml=1&version=v2.10"
-                fjs.parentNode.insertBefore(js, fjs)
-                }(document, 'script', 'facebook-jssdk'))}
-                </script>
-                <div className="fb-share-button" data-href="http://app.dolero.jfddl2.is-academy.pl/"
-                data-layout="button_count"
-                data-size="large" data-mobile-iframe="true"><a className="fb-xfbml-parse-ignore"
-                target="_blank"
-                href="http://app.dolero.jfddl2.is-academy.pl/">Udostępnij</a>
-                </div>
+                    <script>
+                        {(function (d, s, id) {
+                            var js, fjs = d.getElementsByTagName(s)[0];
+                            if (d.getElementById(id)) return;
+                            js = d.createElement(s);
+                            js.id = id;
+                            js.src = "//connect.facebook.net/pl_PL/sdk.js#xfbml=1&version=v2.10"
+                            fjs.parentNode.insertBefore(js, fjs)
+                        }(document, 'script', 'facebook-jssdk'))}
+                    </script>
+                    <div className="fb-share-button" data-href="http://app.dolero.jfddl2.is-academy.pl/"
+                         data-layout="button_count"
+                         data-size="large" data-mobile-iframe="true"><a className="fb-xfbml-parse-ignore"
+                                                                        target="_blank"
+                                                                        rel="noopener noreferrer"
+                                                                        href="http://app.dolero.jfddl2.is-academy.pl/">Udostępnij</a>
+                    </div>
 
                 </div>
 
