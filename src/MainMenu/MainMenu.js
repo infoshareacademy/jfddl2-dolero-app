@@ -40,10 +40,7 @@ const MainMenu = () => (
                     Wyloguj się
                 </NavItem>
             </LinkContainer>
-
         </Nav>
-
-
     </Navbar>
 )
 
