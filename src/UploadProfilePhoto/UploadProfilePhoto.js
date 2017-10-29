@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 
-import {storage, auth, database} from '../firebase'
+import {storage, auth} from '../firebase'
 
 class UploadProfilePhoto extends Component {
 

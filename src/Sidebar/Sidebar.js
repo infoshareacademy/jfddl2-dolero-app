@@ -17,18 +17,15 @@ import {
 } from 'react-bootstrap'
 import './Sidebar.css'
 import moment from 'moment'
-import {database, auth, storage} from '../firebase'
+import {database, auth} from '../firebase'
 
 class Sidebar extends React.Component {
     state = {
-        userName: 'Piotr',
         newSpendingCategory: 'Wybierz wydatek',
         newIncomingCategory: 'Wybierz przychód',
         userBalance: 0,
         IncommingValue: 0,
         isCyclic: false,
-        spendings: JSON.parse(localStorage.getItem('spendings')) || [],
-        incomings: JSON.parse(localStorage.getItem('incomings')) || [],
         spendingFormVisible: true,
         addedSpendingCategory: '',
         addedIncomeCategory: '',
@@ -277,6 +274,23 @@ class Sidebar extends React.Component {
         })
     }
 
+    removeSpendingCategory = event => {
+        let confirm = window.confirm('Czy na pewno chcesz usunąć kategorię wydatków?')
+        if(confirm) {
+            let categoryId = event.target.dataset.categoryId
+            this.setState({
+                newSpendingCategory: 'Wybierz wydatek',
+                spendingCategories: this.state.spendingCategories.filter(
+                    category => categoryId !== category
+                )
+            }, () => {
+                database.ref(`/users/${auth.currentUser.uid}/spendingCategories`).set(this.state.spendingCategories)
+            })
+            return true
+        }
+        return false
+    }
+
     newIncomeCategoryValue = event => {
         this.setState({
             addedIncomeCategory: event.target.value
@@ -308,6 +322,18 @@ class Sidebar extends React.Component {
         let result = incomeCategoriesToLowerCase.includes(this.state.addedIncomeCategory.toLowerCase())
         return result
 
+    }
+
+    removeIncomeCategory = event => {
+        let categoryId = event.target.dataset.categoryId
+
+        this.setState({
+            incomeCategories: this.state.incomeCategories.filter(
+                category => categoryId !== category
+            )
+        }, () => {
+            database.ref(`/users/${auth.currentUser.uid}/incomeCategories`).set(this.state.incomeCategories)
+        })
     }
 
     // ------ /new Sprint -------
@@ -417,7 +443,17 @@ class Sidebar extends React.Component {
                             >
                                 {
                                     this.state.spendingCategories.map(category => (
-                                        <MenuItem eventKey={category}>{category}</MenuItem>
+                                        <MenuItem
+                                            eventKey={category}
+                                        >
+                                            <i
+                                                data-category-id={category}
+                                                className="fa fa-times-circle-o task-remove__button"
+                                                aria-hidden="true"
+                                                onClick={this.removeSpendingCategory}
+                                            />
+                                            {category}
+                                        </MenuItem>
                                     ))
                                 }
                             </DropdownButton>
@@ -553,7 +589,17 @@ class Sidebar extends React.Component {
                             >
                                 {
                                     this.state.incomeCategories.map(category => (
-                                        <MenuItem eventKey={category}>{category}</MenuItem>
+                                        <MenuItem
+                                            eventKey={category}
+                                        >
+                                            <i
+                                                data-category-id={category}
+                                                className="fa fa-times-circle-o task-remove__button"
+                                                aria-hidden="true"
+                                                onClick={this.removeIncomeCategory}
+                                            />
+                                            {category}
+                                        </MenuItem>
                                     ))
                                 }
                             </DropdownButton>
@@ -592,13 +638,17 @@ class Sidebar extends React.Component {
             <div className="sidebar-bg">
                 <div>
                     <h2>Witaj!</h2>
-                    <img style={{
-                        display: 'block',
-                        margin: '20px auto 40px auto',
-                        maxWidth: 100,
-                        border: "1px solid lightgrey",
-                        borderRadius: 20
-                    }} src={auth.currentUser.photoURL}/>
+                    <img
+                        style={{
+                            display: 'block',
+                            margin: '20px auto 40px auto',
+                            maxWidth: 100,
+                            border: "1px solid lightgrey",
+                            borderRadius: 20
+                        }}
+                        src={auth.currentUser.photoURL}
+                        alt='profile'
+                    />
 
                     <p>Twój aktualny stan konta wynosi</p>
                     <h3
