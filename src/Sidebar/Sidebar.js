@@ -390,7 +390,7 @@ class Sidebar extends React.Component {
                 onSubmit={
                     this.state.newSpendingValue < 0 ? this.CorrentInputValue : this.addSpendings
                     && this.state.newSpendingCategory === 'Wybierz wydatek' ? this.categorySelectAlert : this.addSpendings
-                    && this.state.newSpendingValue !== null && this.state.newSpendingValue !== "" ? this.valueAlert : this.addSpendings
+                    && this.state.newSpendingValue ? this.addSpendings : this.valueAlert
                 }
             >
 
@@ -542,7 +542,7 @@ class Sidebar extends React.Component {
                 onSubmit={
                     this.state.newIncomeValue < 0 ? this.CorrentInputValue : this.addIncomings
                     && this.state.newIncomingCategory === 'Wybierz przychód' ? this.categorySelectAlert : this.addIncomings
-                    && this.state.newIncomeValue !== null && this.state.newIncomeValue !== "" ? this.valueAlert : this.addIncomings
+                    && this.state.newIncomeValue ? this.addIncomings : this.valueAlert
                 }
             >
                 <Col smOffset={1} sm={10}>
