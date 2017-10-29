@@ -162,7 +162,9 @@ class Settings extends React.Component {
                         <InputGroup>
                             <InputGroup.Addon>Kwota</InputGroup.Addon>
                             <FieldGroup
+                                pattern="[0-9]+([\.,][0-9]+)?"
                                 id="formControlsText"
+                                min="0"
                                 step="0.01"
                                 type="number"
                                 onChange={(event) => {
@@ -244,6 +246,8 @@ class Settings extends React.Component {
                     <InputGroup>
                         <InputGroup.Addon>Kwota</InputGroup.Addon>
                         <FieldGroup
+                            pattern="[0-9]+([\.,][0-9]+)?"
+                            min="0"
                             id="formControlsText"
                             step="0.01"
                             type="number"
