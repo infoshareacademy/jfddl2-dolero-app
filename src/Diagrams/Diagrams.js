@@ -39,13 +39,13 @@ class   Diagrams extends React.Component {
 //paramatetry w funkcji pełnią rolę elementów przekazanych z zewnątrz do funkcji i są wymagane przez funkcje//
     getBalance(startDate, endDate, spendings, incomings) {
         const income = incomings.filter(function (incoming) {
-            let spendingDate = moment(incoming.incomingDate, "MM-DD-YYYY");
+            let spendingDate = moment(incoming.incomingDate, "DD-MM-YYYY");
             return spendingDate.isBetween(startDate, endDate)
         }).reduce((result, income) => {
             return result + parseInt(income.value,10)
         }, 0);
         const expenses = spendings.filter(function (spending) {
-            let spendingDate = moment(spending.spendingDate, "MM-DD-YYYY");
+            let spendingDate = moment(spending.spendingDate, "DD-MM-YYYY");
             return spendingDate.isBetween(startDate, endDate)
         }).reduce((result, spending) => {
             return (result - parseInt(spending.value,10))
@@ -63,11 +63,11 @@ class   Diagrams extends React.Component {
 
     getTotalTransaction(startDate, endDate, spendings, incomings) {
         const spendingsCount = spendings.filter(function (spending) {
-            const spendingDate = moment(spending.spendingDate, "MM-DD-YYYY");
+            const spendingDate = moment(spending.spendingDate, "DD-MM-YYYY");
             return spendingDate.isBetween(startDate, endDate)
         }).length;
         const incomingsCount = incomings.filter(function (incoming) {
-            const spendingDate = moment(incoming.incomingDate, "MM-DD-YYYY");
+            const spendingDate = moment(incoming.incomingDate, "DD-MM-YYYY");
             return spendingDate.isBetween(startDate, endDate)
         }).length;
         this.setState({totalTransactions: incomingsCount + spendingsCount})
@@ -81,7 +81,7 @@ class   Diagrams extends React.Component {
 
     getExpenses(startDate, endDate, spendings) {
         const expenses = spendings.filter(function (spending) {
-            const spendingDate = moment(spending.spendingDate, "MM-DD-YYYY");
+            const spendingDate = moment(spending.spendingDate, "DD-MM-YYYY");
             return spendingDate.isBetween(startDate, endDate)
         }).reduce((result, spending) => {
             return (result - parseInt(spending.value, 10))
@@ -97,7 +97,7 @@ class   Diagrams extends React.Component {
 
     getIncome(startDate, endDate, incomings) {
         const income = incomings.filter(function (incoming) {
-            const spendingDate = moment(incoming.incomingDate, "MM-DD-YYYY");
+            const spendingDate = moment(incoming.incomingDate, "DD-MM-YYYY");
             return spendingDate.isBetween(startDate, endDate)
         }).reduce((result, income) => {
             return result + parseInt(income.value,10)

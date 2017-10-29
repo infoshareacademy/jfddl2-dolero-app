@@ -48,7 +48,7 @@ class SignUpForm extends React.Component {
                 <FormGroup>
                     <Col smOffset={2} sm={10}>
                         <Button bsStyle="warning" type="submit">
-                            Wyloguj się
+                            Zarejestruj się
                         </Button>
                     </Col>
                 </FormGroup>
