@@ -23,7 +23,7 @@ class Sidebar extends React.Component {
     state = {
         newSpendingCategory: 'Wybierz wydatek',
         newIncomingCategory: 'Wybierz przychód',
-        userBalance: 0,
+        userBalance: 'Ładowanie..',
         IncommingValue: 0,
         isCyclic: false,
         spendingFormVisible: true,
@@ -279,11 +279,13 @@ class Sidebar extends React.Component {
         if(confirm) {
             let categoryId = event.target.dataset.categoryId
             this.setState({
-                newSpendingCategory: 'Wybierz wydatek',
                 spendingCategories: this.state.spendingCategories.filter(
                     category => categoryId !== category
                 )
             }, () => {
+                this.setState({
+                    newSpendingCategory: 'Wybierz wydatek'
+                })
                 database.ref(`/users/${auth.currentUser.uid}/spendingCategories`).set(this.state.spendingCategories)
             })
             return true
@@ -444,6 +446,7 @@ class Sidebar extends React.Component {
                                 {
                                     this.state.spendingCategories.map(category => (
                                         <MenuItem
+                                            key={category}
                                             eventKey={category}
                                         >
                                             <i
@@ -459,7 +462,7 @@ class Sidebar extends React.Component {
                             </DropdownButton>
                             <ButtonToolbar>
                                 <OverlayTrigger trigger="click" placement="right"
-                                                overlay={popoverRightInSpendingForm}>
+                                                overlay={popoverRightInSpendingForm} rootClose>
                                     <Button
                                         bsSize="xsmall"
                                         bsStyle="warning"
@@ -590,6 +593,7 @@ class Sidebar extends React.Component {
                                 {
                                     this.state.incomeCategories.map(category => (
                                         <MenuItem
+                                            key={category}
                                             eventKey={category}
                                         >
                                             <i
@@ -605,7 +609,7 @@ class Sidebar extends React.Component {
                             </DropdownButton>
                             <ButtonToolbar>
                                 <OverlayTrigger trigger="click" placement="right"
-                                                overlay={popoverRightInIncomeForm}>
+                                                overlay={popoverRightInIncomeForm} rootClose>
                                     <Button
                                         bsSize="xsmall"
                                         bsStyle="warning"
@@ -642,9 +646,13 @@ class Sidebar extends React.Component {
                         style={{
                             display: 'block',
                             margin: '20px auto 40px auto',
-                            maxWidth: 100,
+                            width: 100,
+                            height: 100,
                             border: "1px solid lightgrey",
-                            borderRadius: 20
+                            borderRadius: 20,
+                            backgroundImage: "url('http://www.m1m.com/wp-content/uploads/2015/06/default-user-avatar.png')",
+                            backgroundSize: 'cover'
+
                         }}
                         src={auth.currentUser.photoURL}
                         alt='profile'
@@ -679,26 +687,26 @@ class Sidebar extends React.Component {
                 </Button>
                 {this.state.spendingFormVisible ? spendingForm : incomeForm}
 
-                {/*<div className="facebookBtn">*/}
+                <div className="facebookBtn">
 
-                {/*<script>*/}
-                {/*{(function (d, s, id) {*/}
-                {/*var js, fjs = d.getElementsByTagName(s)[0];*/}
-                {/*if (d.getElementById(id)) return;*/}
-                {/*js = d.createElement(s);*/}
-                {/*js.id = id;*/}
-                {/*js.src = "//connect.facebook.net/pl_PL/sdk.js#xfbml=1&version=v2.10"*/}
-                {/*fjs.parentNode.insertBefore(js, fjs)*/}
-                {/*}(document, 'script', 'facebook-jssdk'))}*/}
-                {/*</script>*/}
-                {/*<div className="fb-share-button" data-href="https://developers.facebook.com/docs/plugins/"*/}
-                {/*data-layout="button_count"*/}
-                {/*data-size="large" data-mobile-iframe="true"><a className="fb-xfbml-parse-ignore"*/}
-                {/*target="_blank"*/}
-                {/*href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdevelopers.facebook.com%2Fdocs%2Fplugins%2F&amp;src=sdkpreparse">Udostępnij</a>*/}
-                {/*</div>*/}
+                <script>
+                {(function (d, s, id) {
+                var js, fjs = d.getElementsByTagName(s)[0];
+                if (d.getElementById(id)) return;
+                js = d.createElement(s);
+                js.id = id;
+                js.src = "//connect.facebook.net/pl_PL/sdk.js#xfbml=1&version=v2.10"
+                fjs.parentNode.insertBefore(js, fjs)
+                }(document, 'script', 'facebook-jssdk'))}
+                </script>
+                <div className="fb-share-button" data-href="http://app.dolero.jfddl2.is-academy.pl/"
+                data-layout="button_count"
+                data-size="large" data-mobile-iframe="true"><a className="fb-xfbml-parse-ignore"
+                target="_blank"
+                href="http://app.dolero.jfddl2.is-academy.pl/">Udostępnij</a>
+                </div>
 
-                {/*</div>*/}
+                </div>
 
                 <p className="copyRights">Made by Dolero</p>
             </div>
