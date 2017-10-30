@@ -28,6 +28,7 @@ const MainMenu = () => (
                     Wykresy
                 </NavItem>
             </LinkContainer>
+
             <LinkContainer to="/settings">
                 <NavItem>
                     Ustawienia
@@ -38,9 +39,14 @@ const MainMenu = () => (
                     Wyloguj się
                 </NavItem>
             </LinkContainer>
+
+            <LinkContainer to="/signOutForm">
+                <NavItem>
+                    Wyloguj się
+                </NavItem>
+            </LinkContainer>
+
         </Nav>
-
-
     </Navbar>
 )
 

@@ -24,7 +24,7 @@ class SignUpForm extends React.Component {
             <Form horizontal onSubmit={this.handleSubmit}>
                 <FormGroup controlId="formHorizontalEmail">
                     <Col componentClass={ControlLabel} sm={2}>
-                        Zarejestruj się
+                        <div className="auth-bg" style={{color:'#FFFFFF'}}>Załóż konto</div>
                     </Col>
                     <Col sm={4}>
                         <FormControl type="text"
@@ -34,21 +34,12 @@ class SignUpForm extends React.Component {
                     </Col>
                 </FormGroup>
 
-                <FormGroup controlId="formHorizontalEmail">
-                    <Col componentClass={ControlLabel} sm={2}></Col>
-                    <Col sm={4}>
-                        <FormControl type="password"
-                                     placeholder="hasło"
-                                     onChange={this.handlePasswordChange}
-                                     value={this.state.password}
-                        />
-                    </Col>
-                </FormGroup>
+
 
                 <FormGroup>
                     <Col smOffset={2} sm={10}>
                         <Button bsStyle="warning" type="submit">
-                            Wyloguj się
+                            Zarejestruj się
                         </Button>
                     </Col>
                 </FormGroup>
