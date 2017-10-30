@@ -1,5 +1,5 @@
 .components {
-  overflow-y: hidden;
+  /*overflow-y: hidden;*/
   overflow-x: hidden;
   height: 100vh;
 }

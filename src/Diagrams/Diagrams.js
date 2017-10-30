@@ -199,10 +199,10 @@ class Diagrams extends React.Component {
 
     render() {
         return (
-            <div style={{marginLeft: 15 + "px"}}>
-                <Grid>
+                <Grid style={{marginLeft: '15px', width: '100%'}}>
+
                     <Row className="show-grid">
-                        <Col md={6} mdOffset={9}>
+                        <Col md={6} mdOffset={6}>
                              <h4 className="header">Zakres dat</h4>
                             {<DateRangePicker md={6}
                                 startDate={this.state.startDate}
@@ -253,7 +253,7 @@ class Diagrams extends React.Component {
                         </Col>
                     </Row>
                     <Row>
-                        <Col md={6}>
+                        <Col sm={12} md={12} lg={12}>
                             <Panel header="Bilans">
                                 <LineChart width={500} height={400} data={this.state.dailyBalance}>
                                     <XAxis dataKey="name"/>
@@ -265,7 +265,7 @@ class Diagrams extends React.Component {
                                 </LineChart>
                             </Panel>
                         </Col>
-                        <Col md={6}>
+                        <Col sm={12} md={12} lg={12}>
                             <Panel header="Suma wydatków">
                                 <PieChart width={450} height={400}>
                                     <Pie data={this.state.chartData} startAngle={360} endAngle={0} cx={200} cy={200}
@@ -281,7 +281,6 @@ class Diagrams extends React.Component {
                 </Grid>
 
 
-            </div>
         )
     }
 }
