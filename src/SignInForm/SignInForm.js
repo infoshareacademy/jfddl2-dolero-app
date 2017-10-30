@@ -59,7 +59,7 @@ class SignInForm extends React.Component {
                 </FormGroup>
                 <FormGroup>
                     <Col smOffset={2} sm={10}>
-                        <Button bsStyle="danger" type="submit" onSubmit={this.handleLoginByGoogle} >
+                        <Button bsStyle="danger" onClick={this.props.signInByGoogleHelper} >
                             Zaloguj się z google
                         </Button>
                     </Col>
