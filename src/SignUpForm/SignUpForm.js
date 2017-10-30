@@ -33,7 +33,16 @@ class SignUpForm extends React.Component {
                                      value={this.state.email}/>
                     </Col>
                 </FormGroup>
-
+                <FormGroup controlId="formHorizontalEmail">
+                    <Col componentClass={ControlLabel} sm={2}></Col>
+                    <Col sm={4}>
+                        <FormControl type="password"
+                                     placeholder="hasło"
+                                     onChange={this.handlePasswordChange}
+                                     value={this.state.password}
+                        />
+                    </Col>
+                </FormGroup>
 
 
                 <FormGroup>
