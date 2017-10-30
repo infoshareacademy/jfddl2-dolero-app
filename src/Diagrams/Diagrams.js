@@ -7,8 +7,6 @@ import {PieChart, Pie, Tooltip, LineChart, XAxis, YAxis, CartesianGrid, Legend, 
 import moment from 'moment'
 import {connect} from 'react-redux'
 import {database, auth} from '../firebase'
-import './style.css';
-
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#00F86A', '#FC840D'];
 
 class Diagrams extends React.Component {
@@ -201,7 +199,7 @@ class Diagrams extends React.Component {
 
     render() {
         return (
-            <div className='diagrams' style={{marginLeft: 15 + "px"}}>
+            <div style={{marginLeft: 15 + "px"}}>
                 <Grid>
                     <Row className="show-grid">
                         <Col md={6} mdOffset={9}>
