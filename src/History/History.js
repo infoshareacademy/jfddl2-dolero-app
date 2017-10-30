@@ -234,41 +234,41 @@ class History extends React.Component {
                                         record => parseInt(record.value, 10) <= this.state.value.max && parseInt(record.value, 10) >= this.state.value.min)
                                     .filter(
                                         record => record.spendingDate >= this.state.startDate.format('DD.MM.YYYY') && record.spendingDate <= this.state.endDate.format('DD.MM.YYYY'))
-                                            .map(
-                                                (record, index) => (
-                                                    <tbody key={record.id}>
+                                    .map(
+                                        (record, index) => (
+                                            <tbody>
 
-                                                    <tr
-                                                        onClick={() => {
-                                                            this.urlChangeByRow(record.id)
-                                                        }}>
-                                                        <td>{record.spendingCategory}</td>
-                                                        <td>{record.value}</td>
-                                                        <td>{record.spendingDate}</td>
-                                                        <td style={{width: '3vw'}}
-                                                        ><Button onClick={this.handleRemoveRecord}
-                                                                 data-record-id={record.id} bsStyle="danger"
-                                                                 bsSize="xsmall"
-                                                                 key={record.id + 6}
+                                            <tr key={record.id}
+                                                onClick={() => {
+                                                    this.urlChangeByRow(record.id)
+                                                }}>
 
-                                                        >Usuń</Button></td>
+                                                <td>{record.spendingCategory}</td>
+                                                <td>{record.value}</td>
+                                                <td>{record.spendingDate}</td>
+                                                <td style={{width: '3vw'}}
+                                                ><Button onClick={this.handleRemoveRecord}
+                                                         data-record-id={record.id} bsStyle="danger"
+                                                         bsSize="xsmall"
+                                                         key={record.id + 6}
 
-                                                    </tr>
-                                                    {this.state.link === record.id &&
-                                                    <Route path={"/history/" + record.id} render={() => {
-                                                        return <HistoryMore
-                                                            record={record}
-                                                            changeBackUrl={this.urlChangeBackByRow}
-                                                        />
-                                                    }}/>
-                                                    }
+                                                >Usuń</Button></td>
 
-                                                    </tbody>
-
-                                                )
-                                            )}
+                                            </tr>
+                                            {this.state.link === record.id &&
+                                            <Route path={"/history/" + record.id} render={() => {
+                                                return <HistoryMore
+                                                    record={record}
+                                                    changeBackUrl={this.urlChangeBackByRow}
+                                                />
+                                            }}/>
+                                            }
 
 
+                                            </tbody>
+
+                                        )
+                                    )}
                         </Table>
                     </Col>
 
