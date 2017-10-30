@@ -21,6 +21,11 @@ export const init = () => dispatch => {
     )
 }
 
+export const signInByGoogle = (email, password) => dispatch => {
+    const provider = new auth.GoogleAuthProvider()
+    auth().signInWithPopup(provider)
+}
+
 export const signIn = (email, password) => dispatch => {
     auth.signInWithEmailAndPassword(email, password)
 }
