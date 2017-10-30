@@ -11,11 +11,7 @@ const Auth = props => (
     <div className="auth-bg">
 
         <Row className="show-grid" style={{}}>
-            <Col md={12}>
-                <Jumbotron>
-                    <h1>SAVE MONEY</h1>
-                </Jumbotron>
-            </Col>
+
             <Col md={12}>
                 {
                     props.user === null ?

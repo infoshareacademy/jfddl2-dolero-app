@@ -24,7 +24,7 @@ class SignUpForm extends React.Component {
             <Form horizontal onSubmit={this.handleSubmit}>
                 <FormGroup controlId="formHorizontalEmail">
                     <Col componentClass={ControlLabel} sm={2}>
-                        <div style={{color:'#FFFFFF'}}>Załóż konto</div>
+                        <div className="auth-bg" style={{color:'#FFFFFF'}}>Załóż konto</div>
                     </Col>
                     <Col sm={4}>
                         <FormControl type="text"

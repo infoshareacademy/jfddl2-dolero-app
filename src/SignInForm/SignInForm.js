@@ -22,6 +22,7 @@ class SignInForm extends React.Component {
         return (
             <Form horizontal onSubmit={this.handleSubmit}>
                 <FormGroup controlId="formHorizontalEmail">
+                        <h1>SAVE MONEY</h1>
                     <Col componentClass={ControlLabel} sm={2}>
                         <div style={{color:'#FFFFFF'}}>Zaloguj się</div>
                     </Col>
