@@ -236,9 +236,9 @@ class History extends React.Component {
                                         record => record.spendingDate >= this.state.startDate.format('DD.MM.YYYY') && record.spendingDate <= this.state.endDate.format('DD.MM.YYYY'))
                                     .map(
                                         (record, index) => (
-                                            <tbody>
+                                            <tbody key={record.id}>
 
-                                            <tr key={record.id}
+                                            <tr
                                                 onClick={() => {
                                                     this.urlChangeByRow(record.id)
                                                 }}>
