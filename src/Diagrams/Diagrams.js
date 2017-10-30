@@ -3,10 +3,11 @@ import {Panel} from 'react-bootstrap'
 import {Grid, Row, Col} from 'react-bootstrap'
 import {DateRangePicker} from 'react-dates';
 import 'react-dates/lib/css/_datepicker.css';
-import {PieChart, Pie, Tooltip, LineChart, XAxis, YAxis, CartesianGrid, Legend, Line} from 'recharts'
+import {PieChart, Pie, Tooltip, LineChart, XAxis, YAxis, CartesianGrid, Legend, Line, Cell} from 'recharts'
 import moment from 'moment'
 import {connect} from 'react-redux'
 import {database, auth} from '../firebase'
+const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#00F86A', '#FC840D'];
 
 class Diagrams extends React.Component {
     state = {
@@ -199,11 +200,11 @@ class Diagrams extends React.Component {
     render() {
         return (
             <div style={{marginLeft: 15 + "px"}}>
-                <h1>Diagramy</h1>
                 <Grid>
                     <Row className="show-grid">
-                        <Col md={4} mdOffset={4}><Panel header={"Zakres dat"}>
-                            {<DateRangePicker md={4}
+                        <Col md={6} mdOffset={9}>
+                             <h4 className="header">Zakres dat</h4>
+                            {<DateRangePicker md={6}
                                 startDate={this.state.startDate}
                                 endDate={this.state.endDate}
                                 isOutsideRange={() => false}
@@ -219,10 +220,10 @@ class Diagrams extends React.Component {
                                     })
                                 }}
                                 focusedInput={this.state.focusedInput}
-                                onFocusChange={focusedInput => this.setState({focusedInput})}/>}</Panel>
+                                onFocusChange={focusedInput => this.setState({focusedInput})}/>}
                         </Col>
                     </Row>
-
+                        <br/>
                     <Row>
                         <Col md={3}>
                             <Panel header="Balans">
@@ -253,8 +254,8 @@ class Diagrams extends React.Component {
                     </Row>
                     <Row>
                         <Col md={6}>
-                            <Panel header="Suma wydatków">
-                                <LineChart width={300} height={400} data={this.state.dailyBalance}>
+                            <Panel header="Bilans">
+                                <LineChart width={500} height={400} data={this.state.dailyBalance}>
                                     <XAxis dataKey="name"/>
                                     <YAxis/>
                                     <CartesianGrid strokeDasharray="3 3"/>
@@ -269,7 +270,9 @@ class Diagrams extends React.Component {
                                 <PieChart width={450} height={400}>
                                     <Pie data={this.state.chartData} startAngle={360} endAngle={0} cx={200} cy={200}
                                          fill="#8884d8"
-                                         label/>
+                                         label>{
+                                    this.state.chartData.map((entry, index) => <Cell fill={COLORS[index % COLORS.length]}/>)
+                                } </Pie>
                                     <Tooltip/>
                                 </PieChart>
                             </Panel>

@@ -1,4 +1,37 @@
+.auth-bg{
+background: rgb(30,87,153); /* Old browsers */
+background: -moz-linear-gradient(top, rgba(30,87,153,1) 0%, rgba(19,22,102,1) 0%, rgba(32,124,202,1) 100%, rgba(0,71,196,1) 100%); /* FF3.6-15 */
+background: -webkit-linear-gradient(top, rgba(30,87,153,1) 0%,rgba(19,22,102,1) 0%,rgba(32,124,202,1) 100%,rgba(0,71,196,1) 100%); /* Chrome10-25,Safari5.1-6 */
+background: linear-gradient(to bottom, rgba(30,87,153,1) 0%,rgba(19,22,102,1) 0%,rgba(32,124,202,1) 100%,rgba(0,71,196,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#1e5799', endColorstr='#0047c4',GradientType=0 ); /* IE6-9 */
+}
+
+
 .loginForm{
    margin: 0 auto;
     width:70%;
+}
+
+.logUpForm{
+    margin: 0 auto;
+    width:70%;
+}
+h1{
+    margin: 0 auto;
+padding-left: 20px;
+    width:100%;
+    font-family: Lato;
+
+
+}
+
+h4{
+    margin: 0 auto;
+    width:70%;
+}
+
+#Logo{
+   fill: mediumblue;
+    height: 10%;
+    width: 100%;
 }

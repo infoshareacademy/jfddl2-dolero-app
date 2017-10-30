@@ -3,18 +3,23 @@ import {connect} from 'react-redux'
 import SignInForm from '../SignInForm'
 import SignUpForm from '../SignUpForm'
 import './Auth.css';
-import {Col, Panel, Row} from "react-bootstrap";
-
+import {Button, Col, Jumbotron, Panel, Row} from "react-bootstrap";
 
 
 const Auth = props => (
-    <Row className="show-grid" style={{}}>
-        <Col md={12}>
-            {
-                props.user === null ?
-                    <div>
-            <Panel header="Zaloguj się">
-                <div>
+
+    <div className="auth-bg">
+
+        <Row className="show-grid" style={{}}>
+            <Col md={12}>
+                <Jumbotron>
+                    <h1>SAVE MONEY</h1>
+                </Jumbotron>
+            </Col>
+            <Col md={12}>
+                {
+                    props.user === null ?
+                        <div>
 
                             <div className='loginForm'>
 
@@ -22,24 +27,19 @@ const Auth = props => (
 
                             </div>
 
-                </div>
-            </Panel>
-            <Panel header="Nie masz jeszcze konta">
-                <div>
-                    <div>
-                        <SignUpForm/>
+                            <div className='logUpForm'>
+                                <SignUpForm/>
 
-                    </div>
-                </div>
-            </Panel></div>
-                    :
-                    props.children
-            }
+                            </div>
+                        </div>
+                        :
+                        props.children
+                }
             </Col>
 
-    </Row>
+        </Row>
 
-
+    </div>
 )
 
 const mapStateToProps = state => ({
