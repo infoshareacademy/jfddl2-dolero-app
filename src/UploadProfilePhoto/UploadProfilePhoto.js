@@ -1,6 +1,9 @@
 import React, {Component} from 'react';
-
-import {storage, auth, database} from '../firebase'
+import {Button,
+        Col
+} from 'react-bootstrap'
+import {storage, auth} from '../firebase'
+import './photo.css'
 
 class UploadProfilePhoto extends Component {
 
@@ -55,9 +58,19 @@ class UploadProfilePhoto extends Component {
 render()
 {
     return <div className="App">
-        <input type="file" onChange={this.handleFileChange}/>
-        <button onClick={this.handleFileUpload}>Upload</button>
+        <h2>Dodaj swoje zdjęcie</h2>
+        <h4>Aby dodać zdjęcie kliknij w przycisk:"Wybierz plik", a następnie wybierz:"Zapisz"</h4>
+        <Col sm={3}>
+        </Col>
+        <Col sm={4}>
+        <input
+            type="file"onChange={this.handleFileChange}/>
+</Col>
+        <Button
+            bsStyle="warning"
+            onClick={this.handleFileUpload}>Zapisz</Button>
         {this.state.progress ? <progress value={this.state.progress} max="100"></progress> : null}
+
     </div>
 }
 }

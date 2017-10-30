@@ -17,23 +17,24 @@ import {
 } from 'react-bootstrap'
 import './Sidebar.css'
 import moment from 'moment'
-import {database, auth, storage} from '../firebase'
+import {database, auth} from '../firebase'
 
 class Sidebar extends React.Component {
     state = {
-        userName: 'Piotr',
         newSpendingCategory: 'Wybierz wydatek',
         newIncomingCategory: 'Wybierz przychód',
-        userBalance: 0,
+        userBalance: 'Ładowanie..',
         IncommingValue: 0,
         isCyclic: false,
-        spendings: JSON.parse(localStorage.getItem('spendings')) || [],
-        incomings: JSON.parse(localStorage.getItem('incomings')) || [],
         spendingFormVisible: true,
         addedSpendingCategory: '',
         addedIncomeCategory: '',
         spendingCategories: ["Jedzenie", "Mieszkanie", "Inne opłaty i rachunki", "Ubranie", "Relaks", "Transport", "Inne wydatki"],
-        incomeCategories: ["Wypłata", "Premia", "Zasiłek", "Emerytura/Renta"]
+        incomeCategories: ["Wypłata", "Premia", "Zasiłek", "Emerytura/Renta"],
+        newSpendingValue: '',
+        newIncomeName: '',
+        newIncomeValue: '',
+        newSpendingName: ''
     }
 
     componentDidMount() {
@@ -277,6 +278,23 @@ class Sidebar extends React.Component {
         })
     }
 
+    removeSpendingCategory = event => {
+        let confirm = window.confirm('Czy na pewno chcesz usunąć kategorię wydatków?')
+        if (confirm) {
+            let categoryId = event.target.dataset.categoryId
+            this.setState({
+                spendingCategories: this.state.spendingCategories.filter(
+                    category => categoryId !== category
+                )
+            }, () => {
+                this.setState({
+                    newSpendingCategory: 'Wybierz wydatek'
+                })
+                database.ref(`/users/${auth.currentUser.uid}/spendingCategories`).set(this.state.spendingCategories)
+            })
+        }
+    }
+
     newIncomeCategoryValue = event => {
         this.setState({
             addedIncomeCategory: event.target.value
@@ -308,6 +326,23 @@ class Sidebar extends React.Component {
         let result = incomeCategoriesToLowerCase.includes(this.state.addedIncomeCategory.toLowerCase())
         return result
 
+    }
+
+    removeIncomeCategory = event => {
+        let confirm = window.confirm('Czy na pewno chcesz usunąć kategorię przychodów?')
+        if (confirm) {
+            let categoryId = event.target.dataset.categoryId
+            this.setState({
+                incomeCategories: this.state.incomeCategories.filter(
+                    category => categoryId !== category
+                )
+            }, () => {
+                this.setState({
+                    newIncomingCategory: 'Wybierz przychód'
+                })
+                database.ref(`/users/${auth.currentUser.uid}/incomeCategories`).set(this.state.incomeCategories)
+            })
+        }
     }
 
     // ------ /new Sprint -------
@@ -355,7 +390,7 @@ class Sidebar extends React.Component {
                 onSubmit={
                     this.state.newSpendingValue < 0 ? this.CorrentInputValue : this.addSpendings
                     && this.state.newSpendingCategory === 'Wybierz wydatek' ? this.categorySelectAlert : this.addSpendings
-                    && this.state.newSpendingValue == null || this.state.newSpendingValue == "" ? this.valueAlert : this.addSpendings
+                    && this.state.newSpendingValue ? this.addSpendings : this.valueAlert
                 }
             >
 
@@ -417,13 +452,24 @@ class Sidebar extends React.Component {
                             >
                                 {
                                     this.state.spendingCategories.map(category => (
-                                        <MenuItem eventKey={category}>{category}</MenuItem>
+                                        <MenuItem
+                                            key={category}
+                                            eventKey={category}
+                                        >
+                                            <i
+                                                data-category-id={category}
+                                                className="fa fa-times-circle-o task-remove__button"
+                                                aria-hidden="true"
+                                                onClick={this.removeSpendingCategory}
+                                            />
+                                            {category}
+                                        </MenuItem>
                                     ))
                                 }
                             </DropdownButton>
                             <ButtonToolbar>
                                 <OverlayTrigger trigger="click" placement="right"
-                                                overlay={popoverRightInSpendingForm}>
+                                                overlay={popoverRightInSpendingForm} rootClose>
                                     <Button
                                         bsSize="xsmall"
                                         bsStyle="warning"
@@ -496,7 +542,7 @@ class Sidebar extends React.Component {
                 onSubmit={
                     this.state.newIncomeValue < 0 ? this.CorrentInputValue : this.addIncomings
                     && this.state.newIncomingCategory === 'Wybierz przychód' ? this.categorySelectAlert : this.addIncomings
-                    && this.state.newIncomeValue == null || this.state.newIncomeValue == "" ? this.valueAlert : this.addIncomings
+                    && this.state.newIncomeValue ? this.addIncomings : this.valueAlert
                 }
             >
                 <Col smOffset={1} sm={10}>
@@ -553,13 +599,24 @@ class Sidebar extends React.Component {
                             >
                                 {
                                     this.state.incomeCategories.map(category => (
-                                        <MenuItem eventKey={category}>{category}</MenuItem>
+                                        <MenuItem
+                                            key={category}
+                                            eventKey={category}
+                                        >
+                                            <i
+                                                data-category-id={category}
+                                                className="fa fa-times-circle-o task-remove__button"
+                                                aria-hidden="true"
+                                                onClick={this.removeIncomeCategory}
+                                            />
+                                            {category}
+                                        </MenuItem>
                                     ))
                                 }
                             </DropdownButton>
                             <ButtonToolbar>
                                 <OverlayTrigger trigger="click" placement="right"
-                                                overlay={popoverRightInIncomeForm}>
+                                                overlay={popoverRightInIncomeForm} rootClose>
                                     <Button
                                         bsSize="xsmall"
                                         bsStyle="warning"
@@ -592,13 +649,21 @@ class Sidebar extends React.Component {
             <div className="sidebar-bg">
                 <div>
                     <h2>Witaj!</h2>
-                    <img style={{
-                        display: 'block',
-                        margin: '20px auto 40px auto',
-                        maxWidth: 100,
-                        border: "1px solid lightgrey",
-                        borderRadius: 20
-                    }} src={auth.currentUser.photoURL}/>
+                    <img
+                        style={{
+                            display: 'block',
+                            margin: '20px auto 40px auto',
+                            width: 100,
+                            height: 100,
+                            border: "1px solid lightgrey",
+                            borderRadius: 20,
+                            backgroundImage: "url('http://www.m1m.com/wp-content/uploads/2015/06/default-user-avatar.png')",
+                            backgroundSize: 'cover'
+
+                        }}
+                        src={auth.currentUser.photoURL || 'http://www.m1m.com/wp-content/uploads/2015/06/default-user-avatar.png'}
+                        alt='profile'
+                    />
 
                     <p>Twój aktualny stan konta wynosi</p>
                     <h3
@@ -629,26 +694,27 @@ class Sidebar extends React.Component {
                 </Button>
                 {this.state.spendingFormVisible ? spendingForm : incomeForm}
 
-                {/*<div className="facebookBtn">*/}
+                <div className="facebookBtn">
 
-                {/*<script>*/}
-                {/*{(function (d, s, id) {*/}
-                {/*var js, fjs = d.getElementsByTagName(s)[0];*/}
-                {/*if (d.getElementById(id)) return;*/}
-                {/*js = d.createElement(s);*/}
-                {/*js.id = id;*/}
-                {/*js.src = "//connect.facebook.net/pl_PL/sdk.js#xfbml=1&version=v2.10"*/}
-                {/*fjs.parentNode.insertBefore(js, fjs)*/}
-                {/*}(document, 'script', 'facebook-jssdk'))}*/}
-                {/*</script>*/}
-                {/*<div className="fb-share-button" data-href="https://developers.facebook.com/docs/plugins/"*/}
-                {/*data-layout="button_count"*/}
-                {/*data-size="large" data-mobile-iframe="true"><a className="fb-xfbml-parse-ignore"*/}
-                {/*target="_blank"*/}
-                {/*href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdevelopers.facebook.com%2Fdocs%2Fplugins%2F&amp;src=sdkpreparse">Udostępnij</a>*/}
-                {/*</div>*/}
+                    <script>
+                        {(function (d, s, id) {
+                            var js, fjs = d.getElementsByTagName(s)[0];
+                            if (d.getElementById(id)) return;
+                            js = d.createElement(s);
+                            js.id = id;
+                            js.src = "//connect.facebook.net/pl_PL/sdk.js#xfbml=1&version=v2.10"
+                            fjs.parentNode.insertBefore(js, fjs)
+                        }(document, 'script', 'facebook-jssdk'))}
+                    </script>
+                    <div className="fb-share-button" data-href="http://app.dolero.jfddl2.is-academy.pl/"
+                         data-layout="button_count"
+                         data-size="large" data-mobile-iframe="true"><a className="fb-xfbml-parse-ignore"
+                                                                        target="_blank"
+                                                                        rel="noopener noreferrer"
+                                                                        href="http://app.dolero.jfddl2.is-academy.pl/">Udostępnij</a>
+                    </div>
 
-                {/*</div>*/}
+                </div>
 
                 <p className="copyRights">Made by Dolero</p>
             </div>

@@ -73,4 +73,15 @@ div.dropdown ul.dropdown-menu {
     max-height: 20vh;
 }
 
+.sidebar-bg i.task-remove__button:hover {
+    transform: scale(1.2) rotate(90deg);
+    cursor: pointer;
+    color: #ff0000;
+}
+
+.sidebar-bg i.task-remove__button {
+    transition: 0.4s;
+    margin-right: 10px;
+}
+
 

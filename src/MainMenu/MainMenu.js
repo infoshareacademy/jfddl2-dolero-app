@@ -34,12 +34,18 @@ const MainMenu = () => (
                     Ustawienia
                 </NavItem>
             </LinkContainer>
+            <LinkContainer to="/signOutForm">
+                <NavItem>
+                    Wyloguj się
+                </NavItem>
+            </LinkContainer>
 
             <LinkContainer to="/signOutForm">
                 <NavItem>
                     Wyloguj się
                 </NavItem>
             </LinkContainer>
+
         </Nav>
     </Navbar>
 )
