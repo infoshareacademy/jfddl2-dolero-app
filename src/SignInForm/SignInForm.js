@@ -1,6 +1,6 @@
 import React from 'react'
 import {connect} from 'react-redux'
-import {signIn} from "../state/auth";
+import {signIn, signInByGoogle} from "../state/auth";
 import {Button, Col, ControlLabel, Form, FormControl, FormGroup} from "react-bootstrap";
 
 class SignInForm extends React.Component {
@@ -16,6 +16,11 @@ class SignInForm extends React.Component {
     handleSubmit = event => {
         event.preventDefault()
         this.props.signInHelper(this.state.email, this.state.password)
+    }
+
+    handleLoginByGoogle = event => {
+        event.preventDefault()
+        this.props.signInByGoogleHelper()
     }
 
     render() {
@@ -52,6 +57,13 @@ class SignInForm extends React.Component {
                         </Button>
                     </Col>
                 </FormGroup>
+                <FormGroup>
+                    <Col smOffset={2} sm={10}>
+                        <Button bsStyle="danger" type="submit" onSubmit={this.handleLoginByGoogle} >
+                            Zaloguj się z google
+                        </Button>
+                    </Col>
+                </FormGroup>
             </Form>
         );}
 
@@ -60,7 +72,8 @@ class SignInForm extends React.Component {
 }
 
 const mapDispatchToProps = dispatch => ({
-    signInHelper: (email, password) => dispatch(signIn(email, password))
+    signInHelper: (email, password) => dispatch(signIn(email, password)),
+    signInByGoogleHelper: ()=>dispatch(signInByGoogle())
 })
 
 export default connect(
